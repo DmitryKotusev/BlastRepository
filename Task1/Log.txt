@@ -1,0 +1,12 @@
+$ git log
+commit e09ebf0b9ed56e80f1136c34b7eba3db23c404c0 (HEAD -> master)
+Author: Dmitry <dssa-1966@yandex.ru>
+Date:   Wed Feb 7 18:57:25 2018 +0300
+
+    Now I saved Status file
+
+commit bc8770183696df09388d1b5bf0fb99bbe42c394e
+Author: Dmitry <dssa-1966@yandex.ru>
+Date:   Wed Feb 7 18:14:22 2018 +0300
+
+    I added .gitignore

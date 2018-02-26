@@ -38,9 +38,11 @@ body {
     float: left;
     width: 15%;
     background: #dcdcdc;
-    min-height: 25em;
+    height: 80%;
+    position: fixed;
 }
 #mainbox {
+    position: static;
     align-self: auto;
     background: white;
     width: 60%;
@@ -48,4 +50,46 @@ body {
     margin-left: auto;
     margin-right: auto;
     margin-top: 70px;
+    margin-bottom: 70px;
+}
+footer {
+    background: linear-gradient(to right, #b0cae5, #5067d9);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 0;
+    padding: 0; 
+    margin: 0px; 
+    height: 70px;
+    width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.footerelements {
+    position: relative;
+    display: flex;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    justify-content: space-between;
+}
+.base {
+    margin-left: 10px;
+}
+.base2 {
+    margin-left: 10px;
+    margin-top: 5px;
+}
+.post {
+    display: flex;
+
+}
+.justlist li {
+    list-style-type: none;
+    font-size: 20px;
+}
+@media screen and (max-width: 960px) {
+    
+}
+@media screen and (max-width: 768px) {
+    
 }

@@ -3,8 +3,11 @@ header {
     height: 70px;
     width: 100%;
     padding: 0; 
-    margin: 0; 
+    margin: 0px; 
     position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     border: 0;
 }
 button {
@@ -12,9 +15,37 @@ button {
     border-radius: 10px;
     font-size: 20px;
     border-color: black;
-    margin: 20px;
+    margin: 20px 20px 10px 10px;
     position: relative;
+    float: right;
 }
 .headeralign {
     text-align: right;
+}
+body {
+    margin: 0;
+    background: #cadef6;
+}
+.nicknamealign {
+    text-align: left;
+    margin-left: 20px;
+    font-size: 24px;
+    font-family: 'Times New Roman', Times, serif;
+    float: left;
+}
+#filter {
+    margin-top: 0px;
+    float: left;
+    width: 15%;
+    background: #dcdcdc;
+    min-height: 25em;
+}
+#mainbox {
+    align-self: auto;
+    background: white;
+    width: 60%;
+    min-height: 45em;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 70px;
 }

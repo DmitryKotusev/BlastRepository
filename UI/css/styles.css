@@ -70,10 +70,14 @@ footer {
     display: flex;
     margin-top: 15px;
     margin-bottom: 15px;
-    
+    justify-content: space-between;
 }
 .base {
     margin-left: 10px;
+}
+.base2 {
+    margin-left: 10px;
+    margin-top: 5px;
 }
 .post {
     display: flex;

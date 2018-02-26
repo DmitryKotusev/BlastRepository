@@ -18,8 +18,35 @@
             <button type="button">Add photo</button>
         </div>
     </header>
-    <div id="filter"></div>
-    <div id="mainbox"></div>
+    <div id="filter">
+        <div class="filterelements">
+            <div class="base3">
+                <p style="font-size: 24px;">Filter:</p>
+            </div>
+            <div class="base4">
+                <input style="float:left; margin-top: 30px;" name="authorcheck" type="checkbox" checked>
+                <p style="font-size: 22px;">Author's name</p>
+                <input type="text" name="author">
+            </div>
+            <div class="base4">
+                <input style="float:left; margin-top: 30px;" name="hashtagcheck" type="checkbox" checked>
+                <p style="font-size: 22px;">Hashtag</p>
+                <input type="text" name="hashtag">
+            </div>
+            <div class="base4">
+                <input style="float:left; margin-top: 30px;" name="datecheck" type="checkbox" checked>
+                <p style="font-size: 22px;">Date</p>
+                <input type="text" name="day" maxlength="2" size="1" placeholder="dd">
+                <span>/</span>
+                <input type="text" name="month" maxlength="2" size="1" placeholder="mm">
+                <span>/</span>
+                <input type="text" name="year" maxlength="4" size="2" placeholder="yyyy">
+            </div>
+        </div>
+    </div>
+    <div id="mainbox">
+
+    </div>
     <footer>
         <div class = "footerelements">
                 <div>

@@ -83,9 +83,21 @@ footer {
     display: flex;
 
 }
-.justlist li {
-    list-style-type: none;
-    font-size: 20px;
+.filterelements {
+    position: relative;
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.base3 {
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+}
+.base4 {
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
 }
 @media screen and (max-width: 960px) {
     

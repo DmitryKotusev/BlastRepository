@@ -66,8 +66,22 @@ footer {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 .footerelements {
+    position: relative;
+    display: flex;
+    margin-top: 15px;
+    margin-bottom: 15px;
     
-    display: inline-block;
+}
+.base {
+    margin-left: 10px;
+}
+.post {
+    display: flex;
+
+}
+.justlist li {
+    list-style-type: none;
+    font-size: 20px;
 }
 @media screen and (max-width: 960px) {
     

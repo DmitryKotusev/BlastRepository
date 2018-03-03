@@ -103,7 +103,7 @@ footer {
     display: flex;
     margin-top: 1vw;
     margin-bottom: 6vw;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
 .base {
     margin-left: 10px;
@@ -178,8 +178,8 @@ footer {
 }
 @media screen and (max-width: 960px) {
     .post {
-        width: 33%;
-        height: 40%;
+        width: 46%;
+        height: 56%;
         margin: 4px;
     }
     .mainplacing {
@@ -199,11 +199,33 @@ footer {
         flex-direction: column;
         justify-content: space-between;
     }
+    .nickandicons {
+        width: 100%;
+        max-height: calc(100%*2/16);
+        border-style: none;
+        text-align: left;
+        font-size: 3vw;
+        text-decoration-style: wavy;
+    }
+    .buttonset {
+        background: white;
+        border: 0;
+        margin: 0;
+        width: 17%;
+        height: 17%;
+        float: none;
+    }
+    .date {
+        width: 100%;
+        max-height: calc(100%*2/16);
+        font-size: 2vw;
+        text-align: left;
+    }
 }
 @media screen and (max-width: 768px) {
     .post {
-        width: 33%;
-        height: 40%;
+        width: 55%;
+        height: 67%;
         margin: 3px;
     }
     .mainplacing {
@@ -222,5 +244,27 @@ footer {
         margin-bottom: 30px;
         flex-direction: column;
         justify-content: space-between;
+    }
+    .nickandicons {
+        width: 100%;
+        max-height: calc(100%*2/16);
+        border-style: none;
+        text-align: left;
+        font-size: 4vw;
+        text-decoration-style: wavy;
+    }
+    .buttonset {
+        background: white;
+        border: 0;
+        margin: 0;
+        width: 19%;
+        height: 19%;
+        float: none;
+    }
+    .date {
+        width: 100%;
+        max-height: calc(100%*2/16);
+        font-size: 3vw;
+        text-align: left;
     }
 }

@@ -1,4 +1,6 @@
-function Photopost (id, description, createdAt, author, photolink, likes, hashtags)
+(function()
+{
+    function Photopost (id, description, createdAt, author, photolink, likes, hashtags)
 {
     this.id = id;
     this.description = description;
@@ -30,8 +32,6 @@ var photoPosts = [
     new Photopost("19", "description19", new Date("2018-02-26T23:00:00"), "Magamed", "link", ["Vasia", "Petia"], ["#cool", "#2018"]),
     new Photopost("20", "description20", new Date("2018-03-14T16:20:00"), "Vasia", "link", ["Vasia", "Petia"], ["#cool", "#2018"])
 ]
-//(function()
-//{
     function datesort(a, b)
     {
         var dif = a.createdAt - b.createdAt;
@@ -245,8 +245,7 @@ var photoPosts = [
             return false;
         }
     }
-//}())
-/////////////////////Проверки//////////////////////////////////////////////////////////////////////
+    /////////////////////Проверки//////////////////////////////////////////////////////////////////////
 var ob = getPhotoPost("4");
 console.log(ob);
 var ob1 = new Photopost("20", "description20", new Date("2018-03-14T16:20:00"), "Vasia", "link", ["Vasia", "Petia"], ["#cool", "#2018"]);
@@ -262,3 +261,4 @@ console.log(getPhotoPosts(0, 21));
 console.log(photoPosts[10]);
 editPhotoPost("2", {description: "Hello, world!!!", photolink: "newphotolink", likes: ["Vasia", "Kolia"], hashtags: ["#2018", "wronghash", "#NewYear"]});
 console.log(photoPosts[10]);
+}())

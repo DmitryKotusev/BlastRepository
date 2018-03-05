@@ -113,6 +113,9 @@ var photoPosts = [
         if (typeof(photoPost.id) !== "string" || typeof(photoPost.description) !== "string" || typeof(photoPost.author) !== "string" || typeof(photoPost.photolink) !== "string") {
             return false;
         }
+        if (photoPost.description.length >= 200) {
+            return false;
+        }
         if (photoPost.createdAt == "Invalid Date") {
             return false;
         }
@@ -146,11 +149,23 @@ var photoPosts = [
         {
             return false;
         }
+        for (var index = 0; index < photoPosts.length; index++) {
+            if (photoPosts[index].id === photoPost.id) {
+                return false;
+            }
+        }
         return true;
     }
     function addPhotoPost(photoPost)//: boolean
     {
-
+        if (validatePhotoPost(photoPost)) {
+            photoPosts.push(photoPost);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     function editPhotoPost(id, photoPost)//: boolean
     {
@@ -158,13 +173,30 @@ var photoPosts = [
     }
     function removePhotoPost(id)//: boolean
     {
-
+        if (typeof(id) === "string") {
+            for (var index = 0; index < photoPosts.length; index++) {
+                if (photoPosts[index].id === id) {
+                    photoPosts.splice(index, 1);
+                    return true;
+                }
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
 //}())
+/////////////////////Проверки//////////////////////////////////////////////////////////////////////
 var ob = getPhotoPost("4");
 console.log(ob);
-var ob1 = new Photopost("21", "description20", new Date("2018-03-14T16:20:00"), "Vasia", "link", ["Vasia", "Petia"], ["#cool", "#2018"]);
+var ob1 = new Photopost("20", "description20", new Date("2018-03-14T16:20:00"), "Vasia", "link", ["Vasia", "Petia"], ["#cool", "#2018"]);
 console.log(ob1);
 console.log(validatePhotoPost(ob1));
 console.log(getPhotoPosts(0, 10));
 console.log(getPhotoPosts(0, 10, {author: "Dima"}));
+console.log(removePhotoPost("3"));
+console.log(removePhotoPost(5));
+console.log(addPhotoPost(new Photopost("3", "description20", new Date("2016-03-16T02:20:00"), "Kolia", "link", ["Vasia", "Petia"], ["#summer", "#2018"])));
+console.log(photoPosts);
+console.log(getPhotoPosts(0, 21));

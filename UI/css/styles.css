@@ -1,6 +1,6 @@
 header {
     background: linear-gradient(to right, #b0cae5, #5067d9);
-    height: 10.5vh;
+    height: 6vw;
     width: 100%;
     padding: 0; 
     margin: 0px; 
@@ -10,15 +10,20 @@ header {
     right: 0;
     border: 0;
     z-index: 1;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 .buttonusual {
     background: #6a82dc;
     border-radius: 10px;
     font-size: 1.8vw;
     border-color: black;
-    margin: 3vh 1vw 3vh 1vw;
+    top: auto;
     position: relative;
     float: right;
+    margin: 4px;
 }
 .buttonusual2 {
     background: #6a82dc;
@@ -37,7 +42,12 @@ header {
     float: none;
 }
 .headeralign {
-    text-align: right;
+    position: relative;
+    right: 0%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
 }
 body {
     margin: 0;
@@ -57,24 +67,38 @@ body {
     font-family: 'Times New Roman', Times, serif;
     float: left;
 }
-#filter {
+aside {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
     margin-top: 0px;
-    float: left;
     width: 15%;
     background: #dcdcdc;
-    height: 100vh;
+    height: 90vh;
     position: fixed;
     z-index: 0;
 }
-#filter input {
+aside input {
     height: 2vw;
-    font-size: 1vw;
+    font-size: 2vw;
+    width: 10vw;
 }
-#filter select {
-    height: 2vw;
-    font-size: 1vw;
+aside select {
+    height: 2.5vw;
+    font-size: 2vw;
+    width: 9vw;
 }
-#mainbox {
+.inputcheckbox {
+    width: 3vw;
+}
+.inputdate {
+    width: 2.7vw;
+}
+.inputyear {
+    width: 4.4vw;
+}
+main {
     align-self: auto;
     background: white;
     width: 60%;
@@ -94,23 +118,48 @@ footer {
     border: 0;
     padding: 0; 
     margin: 0px; 
-    height: 11vh;
+    height: 6vw;
     width: 100%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-self: flex-start;
+}
+.blasterstyle {
+    width: 4vw;
+    height: 2vw;
+}
+.textnameofsite {
+    font-size: 2.5vw;
+}
+.footertextstylebigger {
+    font-size: 1.9vw;
+}
+.footertextstylesmaller {
+    font-size: 1.4vw;
 }
 .footerelements {
     position: relative;
     display: flex;
     margin-top: 1vw;
     margin-bottom: 6vw;
+    height: 100%;
     justify-content: flex-start;
+    align-items: flex-start;
 }
 .base {
-    margin-left: 10px;
+    display: block;
+    margin-top: 0;
+    margin-left: 1vw;
+    margin-right: 1vw;
+    line-height: 0.9;
 }
 .base2 {
-    margin-left: 10px;
-    margin-top: 5px;
+    margin-top: 0;
+    margin-left: 1vw;
+    margin-right: 0.9;
 }
 .post {
     width: 33%;
@@ -119,19 +168,19 @@ footer {
 }
 .photo {
     text-align: center;
-    border-collapse: collapse;
-    border-color: black;
-    border-radius: 3px;
+    border-radius: 8px;
     border-width: 3px;
+    border-style: solid;
     width: 100%;
-    
-    border-style: groove;
+    overflow: hidden;
+    height: 15vmax;
     padding: 0;
 }
 .imgstyle {
-    width: 100%;
-    max-height: 100%;
     object-fit: cover;
+    height: 100%;
+    width: 100%;
+    object-position: 50% 50%;
 }
 .iconstyles {
     width: 100%;
@@ -157,16 +206,19 @@ footer {
     flex-direction: row;
     justify-content: space-around;
     flex-wrap: wrap;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin-top: 6vw;
+    margin-bottom: 6vw;
 }
 .filterelements {
     position: relative;
     display: flex;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin-top: 10vw;
+    margin-bottom: 10vw;
+    padding-top: 8vw;
+    padding-bottom: 5vw;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
 }
 .base3 {
     text-align: center;
@@ -176,21 +228,36 @@ footer {
     text-align: center;
     font-family: 'Times New Roman', Times, serif;
 }
+.filtertext {
+    font-size: 1.5vw;
+    text-align: left;
+}
 @media screen and (max-width: 960px) {
+    .filtertext {
+        font-size: 1.8vw;
+    }
+    .nicknamealign {
+        text-align: left;
+        margin-left: 18px;
+        font-size: 2.2vw;
+        font-family: 'Times New Roman', Times, serif;
+        float: left;
+    }
+    .buttonusual {
+        background: #6a82dc;
+        border-radius: 10px;
+        font-size: 2.2vw;
+        border-color: black;
+        margin: 3vh 1vw 3vh 1vw;
+        position: relative;
+        float: right;
+    }
     .post {
         width: 46%;
         height: 56%;
         margin: 4px;
     }
-    .mainplacing {
-        align-items: center;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        flex-wrap: wrap;
-        margin-top: 40px;
-        margin-bottom: 40px;
-    }
+    
     .filterelements {
         position: relative;
         display: flex;
@@ -223,20 +290,31 @@ footer {
     }
 }
 @media screen and (max-width: 768px) {
+    .filtertext {
+        font-size: 2.2vw;
+    }
+    .nicknamealign {
+        text-align: left;
+        margin-left: 12px;
+        font-size: 2.6vw;
+        font-family: 'Times New Roman', Times, serif;
+        float: left;
+    }
+    .buttonusual {
+        background: #6a82dc;
+        border-radius: 10px;
+        font-size: 2.6vw;
+        border-color: black;
+        margin: 3vh 1vw 3vh 1vw;
+        position: relative;
+        float: right;
+    }
     .post {
         width: 55%;
         height: 67%;
         margin: 3px;
     }
-    .mainplacing {
-        align-items: center;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        flex-wrap: wrap;
-        margin-top: 30px;
-        margin-bottom: 30px;
-    }
+    
     .filterelements {
         position: relative;
         display: flex;

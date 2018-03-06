@@ -14,23 +14,21 @@
             <p>User123456</p>
         </div>
         <div class="headeralign">
+            <button type="button" class="buttonusual">Add photo</button>
             <button type="button" class="buttonusual">Exit</button>
-            <button type="button"class="buttonusual">Add photo</button>
         </div>
     </header>
-    <div id="filter">
+    <aside>
         <div class="filterelements">
             <div class="base3">
-                <p style="font-size: 2.5vw;">Filter:</p>
+                    <button type="button" class="buttonusual">Filter</button>
             </div>
             <div class="base4">
-                <input style="float:left; margin-top: 30px;" name="authorcheck" type="checkbox" checked>
-                <p style="font-size: 2vw;">Author's name</p>
+                <p class="filtertext"><input name="authorcheck" class="inputcheckbox" type="checkbox" checked>Author</p>
                 <input type="text" name="author">
-            </div>
-            <div class="base4">
-                <input style="float:left; margin-top: 30px;" name="hashtagcheck" type="checkbox" checked>
-                <p style="font-size: 2vw;">Hashtag</p>
+            
+            
+                <p class="filtertext"><input name="hashtagcheck" class="inputcheckbox" type="checkbox" checked>Hashtag</p>
                 <input type="text" name="hashtag">
                 <p><select>
                     <option>#2K18</option> 
@@ -38,19 +36,18 @@
                     <option>#VR</option> 
                     <option>#Olypmics</option> 
                 </select></p>
-            </div>
-            <div class="base4">
-                <input style="float:left; margin-top: 30px;" name="datecheck" type="checkbox" checked>
-                <p style="font-size: 2vw;">Date</p>
-                <input type="text" name="day" maxlength="2" size="1" placeholder="dd">
+            
+            
+                <p class="filtertext"><input name="datecheck" class="inputcheckbox" type="checkbox" checked>Date</p>
+                <input type="text" name="day" maxlength="2" class="inputdate" placeholder="dd">
                 <span>/</span>
-                <input type="text" name="month" maxlength="2" size="1" placeholder="mm">
+                <input type="text" name="month" maxlength="2" class="inputdate" placeholder="mm">
                 <span>/</span>
-                <input type="text" name="year" maxlength="4" size="2" placeholder="yyyy">
+                <input type="text" name="year" maxlength="4" class="inputyear" placeholder="yyyy">
             </div>
         </div>
-    </div>
-    <div id="mainbox">
+    </aside>
+    <main>
         <div class="mainplacing">
             <div class="post">
                 <div class="photo">
@@ -71,7 +68,7 @@
             </div>
             <div class="post">
                     <div class="photo">
-                        <img class="imgstyle" src="../ImagesAndIcons/Mat.jpg" alt="Mat">
+                        <img class="imgstyle" src="../ImagesAndIcons/1477469507_autumn-panorama.jpg" alt="Mat">
                     </div>
                     <div class="nickandicons">
                         VasiaPupkin
@@ -122,7 +119,7 @@
             </div>
             <div class="post">
                     <div class="photo">
-                        <img class="imgstyle" src="../ImagesAndIcons/Mat.jpg" alt="Mat">
+                        <img class="imgstyle" src="../ImagesAndIcons/priroda-new-zeland-4.jpg" alt="Mat">
                     </div>
                     <div class="nickandicons">
                         VasiaPupkin
@@ -139,7 +136,7 @@
             </div>
             <div class="post">
                     <div class="photo">
-                        <img class="imgstyle" src="../ImagesAndIcons/Mat.jpg" alt="Mat">
+                        <img class="imgstyle" src="../ImagesAndIcons/tmp852896240201891842.jpg" alt="Mat">
                     </div>
                     <div class="nickandicons">
                         VasiaPupkin
@@ -190,7 +187,7 @@
             </div>
             <div class="post">
                     <div class="photo">
-                        <img class="imgstyle" src="../ImagesAndIcons/Mat.jpg" alt="Mat">
+                        <img class="imgstyle" src="../ImagesAndIcons/1477469601_nature_gora.jpg" alt="Mat">
                     </div>
                     <div class="nickandicons">
                         VasiaPupkin
@@ -226,27 +223,27 @@
         <div class="mainplacing">
             <button type="button" class="buttonusual2">Load more</button>
         </div>
-    </div>
+    </main>
     <footer>
         <div class = "footerelements">
                 <div>
-                    <strong style="font-size: 2.5vw;">BlasterGram</strong>
-                    <img src="../ImagesAndIcons/BlackBlasterD1.png" width="50vw" height="25vh" alt="BlasterEmblem">
+                    <strong class="textnameofsite">BlasterGram</strong>
+                    <img src="../ImagesAndIcons/BlackBlasterD1.png" class="blasterstyle" alt="BlasterEmblem">
                 </div>
                 <div class="base2">
-                    <strong style="font-size: 2vw;">Info:</strong>
+                    <strong class="footertextstylebigger">Info:</strong>
                 </div>
                 <div class="base">
-                    <strong style="font-size: 1.5vw;">Author: Dmitry Kotusev<br>Group 13, 2nd course</strong>
+                    <strong class="footertextstylesmaller">Author: Dmitry Kotusev<br>Group 13, 2nd course</strong>
                 </div>
                 <div class="base2">
-                        <strong style="font-size: 2vw;">Contacts:</strong>
+                        <strong class="footertextstylebigger">Contacts:</strong>
                 </div>
                 <div class="base">
-                    <strong style="font-size: 1.5vw;">Mail: dssa-1966/@yandex.ru<br>Number: +375293060189</strong>
+                    <strong class="footertextstylesmaller">Mail: dssa-1966/@yandex.ru<br>Number: +375293060189</strong>
                 </div>
                 <div class="base">
-                    <strong style="font-size: 1.5vw;">Latest changes:<br> <output>11:00 26.02.2018</output> </strong>
+                    <strong class="footertextstylesmaller">Latest changes:<br> <output>11:00 26.02.2018</output> </strong>
                 </div>
         </div>
     </footer>

@@ -70,7 +70,7 @@ let module = (function () {
         }
         top = top || 10;
         if (typeof (top) !== "number") {
-            top = 0;
+            top = 10;
         }
         photoPosts.sort(datesort);
         //Тут ещё будет фильтр
@@ -262,4 +262,4 @@ console.log(photoPosts);
 console.log(getPhotoPosts(0, 21));*/
 console.log(photoPosts[10]);
 module.editPhotoPost("2", {description: "Hello, world!!!", photolink: "newphotolink", likes: ["Vasia", "Kolia"], hashtags: ["#2018", "wronghash", "#NewYear"]});
-console.log(photoPosts[10]);
+console.log(photoPosts[10]);    

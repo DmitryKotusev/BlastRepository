@@ -18,7 +18,13 @@ var dom = function() {
     function showphotopost(post) {
         var main = document.getElementsByClassName("mainplacing")[0];
         var post = document.createElement("div");
-        post.className = "post"; 
+        post.className = "post";
+        var photo = document.createElement("div");
+        photo.className = "nickandicons";
+        var icons = document.createElement("div");
+        icons.className = "nickandicons";
+        var date = document.createElement("div");
+        date.className = "date"; 
     }
 
     return {

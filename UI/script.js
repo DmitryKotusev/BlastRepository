@@ -1,3 +1,4 @@
+"use strict";
 function Photopost(id, description, createdAt, author, photolink, likes, hashtags) {
     this.id = id;
     this.description = description;
@@ -40,7 +41,7 @@ let module = (function () {
         return clone;
     }
     function datesort(a, b) {
-        var dif = a.createdAt - b.createdAt;
+        var dif = b.createdAt - a.createdAt;
         if (dif > 0) {
             return 1;
         }
@@ -247,20 +248,21 @@ let module = (function () {
     }
     /////////////////////Проверки//////////////////////////////////////////////////////////////////////
 }());
-console.log(module.getPhotoPosts(0, 10));
+/*console.log(module.getPhotoPosts(0, 10));
 var ob = module.getPhotoPost("4");
 console.log(ob);
 var ob1 = new Photopost("20", "description20", new Date("2018-03-14T16:20:00"), "Vasia", "link", ["Vasia", "Petia"], ["#cool", "#2018"]);
 console.log(ob1);
-console.log(module.validatePhotoPost(ob1));
+console.log(module.validatePhotoPost(ob1));*/
 /*console.log(getPhotoPosts(0, 10));
 console.log(getPhotoPosts(0, 10, {author: "Dima", hashtags: ["#2018"], createdAt: new Date(2018, 1, 26)}));
 console.log(removePhotoPost("3"));
 console.log(removePhotoPost(5));
+
 console.log(addPhotoPost(new Photopost("3", "description20", new Date("2016-03-16T02:20:00"), "Kolia", "link", ["Vasia", "Petia"], ["#summer", "#2018"])));
 console.log(photoPosts);
 console.log(getPhotoPosts(0, 21));*/
-console.log(photoPosts[10]);
+/*console.log(photoPosts[10]);
 module.editPhotoPost("2", {description: "Hello, world!!!", photolink: "newphotolink", likes: ["Vasia", "Kolia"], hashtags: ["#2018", "wronghash", "#NewYear"]});
-console.log(photoPosts[10]);
+console.log(photoPosts[10]);*/
    

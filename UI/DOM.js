@@ -4,6 +4,28 @@ var top0 = 0;        //Данное поле хранит количество �
 var filterConfig0;   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
 
 var dom = function() {
+    var hashtags = [];
+    function findUniqueHashtags() {
+        for (let index = 0; index < photoPosts.length; index++) {
+            for (let index2 = 0; index2 < photoPosts[index].hashtags.length; index2++) {
+                if (hashtags.every(item => item !== photoPosts[index].hashtags[index2])) {
+                    hashtags.push(photoPosts[index].hashtags[index2]);
+                }
+            }
+        }
+    }
+
+    function showHashtags() {
+        var elem = document.getElementById("filterselectors");
+        elem.innerHTML = "";
+        findUniqueHashtags();
+        for (let index = 0; index < hashtags.length && index < 10; index++) {
+            var option = document.createElement("option");
+            option.innerHTML = hashtags[index];
+            elem.appendChild(option);
+        }
+    }
+
     function checklogin(username) {
         var islogined = (username !== undefined);
         if(islogined)
@@ -91,7 +113,8 @@ var dom = function() {
         checklogin: checklogin,
         addphotopost: addphotopost,
         deletephotopost: deletephotopost,
-        editpost: editpost
+        editpost: editpost,
+        showHashtags: showHashtags
     }
 }();
 
@@ -139,6 +162,11 @@ function editpost(id, photoPost) {
     }
 }
 
+function showHashtags(){//Отображает список возможных хештегов, но не более 10
+    dom.showHashtags();
+}
+
 //editpost("9", {description: "Hello, world!!!", photolink: "", likes: ["Vasia", "Kolia"], hashtags: ["#2018", "wronghash", "#NewYear"]});
 //showposts(0, 10);
 //showposts(10, 1);
+//showHashtags();

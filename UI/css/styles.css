@@ -224,7 +224,8 @@ footer {
     text-align: left;
 }
 .mainplacing {
-    align-items: center;
+    align-items: flex-start;
+    align-content: flex-start;
     display: flex;
     flex-direction: row;
     justify-content: space-around;

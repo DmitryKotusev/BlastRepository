@@ -76,13 +76,6 @@ body {
     font-family: 'Times New Roman', Times, serif;
     float: left;
 }
-.nicknamealign2 {
-    text-align: left;
-    margin: 5px 0px 0px 0px;
-    font-size: 18px;
-    font-family: 'Times New Roman', Times, serif;
-    float: left;
-}
 aside {
     border-radius: 5px;
     border-style: solid;
@@ -91,14 +84,24 @@ aside {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    margin-top: 6vw;
+    margin-top: 5vw;
     width: 15%;
     background: #dcdcdc;
-    max-height: 72vh;
+    max-height: 74vh;
     min-height: 230px;
     position: fixed;
-    z-index: 0;
+    z-index: 1;
     align-items: center;    
+}
+.asideform {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0;
+    overflow: auto;
+    border-top: solid;
+    padding-left: 0.2vw;
 }
 aside input {
     height: 2vw;
@@ -172,14 +175,14 @@ footer {
     justify-content: flex-start;
     align-items: flex-start;
 }
-.base {
+.footercontent {
     display: block;
     margin-top: 0;
     margin-left: 1vw;
     margin-right: 1vw;
     line-height: 0.9;
 }
-.base2 {
+.footerfieldnames {
     margin-top: 0;
     margin-left: 1vw;
     margin-right: 0.9;
@@ -217,6 +220,10 @@ footer {
     font-size: 2vw;
     text-decoration-style: wavy;
 }
+.nickandicons span {
+    text-align: left;
+    color: #b0cae5;
+}
 .date {
     width: 100%;
     max-height: calc(100%*2/16);
@@ -248,13 +255,14 @@ footer {
 }
 .filterelements .buttonusual 
 {
-    margin-top: 10px;
+    margin-top: 0px;
 }
-.base3 {
+.filtermainbutton {
     text-align: center;
     font-family: 'Times New Roman', Times, serif;
+    margin-top: 0.1vw;
 }
-.base4 {
+.filtercontent {
     width: 100%;
     text-align: left;
     font-family: 'Times New Roman', Times, serif;
@@ -314,9 +322,11 @@ footer {
         background: white;
         border: 0;
         margin: 0;
-        width: 17%;
-        height: 17%;
-        float: none;
+        width: 11%;
+        height: 11%;
+        padding: 0;
+        margin-right: 0.1vw;
+        
     }
     .date {
         width: 100%;
@@ -376,8 +386,8 @@ footer {
         background: white;
         border: 0;
         margin: 0;
-        width: 19%;
-        height: 19%;
+        width: 18%;
+        height: 18%;
         float: none;
     }
     .date {
@@ -389,11 +399,20 @@ footer {
 }
 @media screen and (max-height: 400px)
 {
-    .base4 {
+    .filtercontent {
         width: 20vw;
         text-align: left;
         font-family: 'Times New Roman', Times, serif;
         
+    }
+    .asideform {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 0;
+        overflow: auto;
+        border-top: none;
     }
     .filterelements {
         position: relative;
@@ -403,7 +422,7 @@ footer {
     /*    padding-top: 3vw;*/
         padding-bottom: 1vw;
         height: 100%;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         overflow: auto;

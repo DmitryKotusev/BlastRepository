@@ -69,12 +69,14 @@ let module = (function () {
         if (typeof (skip) !== "number") {
             skip = 0;
         }
+
         top = top || 10;
         if (typeof (top) !== "number") {
             top = 10;
         }
+
         photoPosts.sort(datesort);
-        //Тут ещё будет фильтр
+        
         if (typeof (filterConfig) !== "undefined") {
             function filtfunc(param) {
                 if (filterConfig.author !== undefined) {
@@ -113,8 +115,9 @@ let module = (function () {
         }
         else 
         {
-            var buffmass = photoPosts;//Фильтрация не нужна, так объект не поступил
+            var buffmass = photoPosts;//Фильтрация не нужна, так как объект не поступил
         }
+        
         return buffmass.slice(skip, skip + top);//отбрасывание первых skip элементов массива и взятие последующих top элементов
     }
     function getPhotoPost(id) {
@@ -164,9 +167,7 @@ let module = (function () {
             photoPosts.push(photoPost);
             return true;
         }
-        else {
-            return false;
-        }
+        return false;
     }
     function editPhotoPost(id, photoPost) {
         if (typeof (id) !== "string") {

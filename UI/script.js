@@ -77,7 +77,8 @@ let module = (function () {
 
         photoPosts.sort(datesort);
         
-        if (typeof (filterConfig) !== "undefined") {
+        if (filterConfig !== undefined) {
+            //Функция фильтрации
             function filtfunc(param) {
                 if (filterConfig.author !== undefined) {
                     if (typeof (filterConfig.author) === "string") {
@@ -109,6 +110,7 @@ let module = (function () {
                         }
                     }
                 }
+                //////////
                 return true;
             }
             var buffmass = photoPosts.filter(filtfunc);//фильтрация
@@ -155,11 +157,7 @@ let module = (function () {
         if (!photoPosts.every(item => item.id !== photoPost.id)) {
             return false;
         }
-        /*for (var index = 0; index < photoPosts.length; index++) {
-            if (photoPosts[index].id === photoPost.id) {
-                return false;
-            }
-        }*/
+        
         return true;
     }
     function addPhotoPost(photoPost) {

@@ -1,9 +1,37 @@
 
-var skip0 = 0;       //Данное поле хранит количество записей, которое нужно было пропустить в последний раз 
-var top0 = 0;        //Данное поле хранит количество записей, которое нужно было вывести на экран в последний раз
-var filterConfig0;   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
 
 var dom = function() {
+    var latestSkip = 0;       //Данное поле хранит количество записей, которое нужно было пропустить в последний раз 
+    var latestTop = 0;        //Данное поле хранит количество записей, которое нужно было вывести на экран в последний раз
+    var latestFilterConfig;   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
+    var currentName = "";     //Хранит текущий ник пользователя
+
+    function addLike(id)
+    {
+        if (currentName === "") {
+            return;
+        }
+        if (typeof(id) !== "string") {
+            return;
+        }
+        for (let index = 0; index < module.getPhotoPost(id).likes.length; index++) {
+            if (module.getPhotoPost(id).likes[index] === currentName) {
+                module.getPhotoPost(id).likes.splice(index, 1);
+
+                var post = document.getElementById(id);
+                var amountOfLikes = post.getElementsByTagName("span")[0];
+                amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;
+
+                return;
+            }   
+        }
+        module.getPhotoPost(id).likes.push(currentName);
+
+        var post = document.getElementById(id);
+        var amountOfLikes = post.getElementsByTagName("span")[0];
+        amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;
+    }
+
     var hashtags = [];
     function findUniqueHashtags() {
         for (let index = 0; index < photoPosts.length; index++) {
@@ -11,6 +39,15 @@ var dom = function() {
                 if (hashtags.every(item => item !== photoPosts[index].hashtags[index2])) {
                     hashtags.push(photoPosts[index].hashtags[index2]);
                 }
+            }
+        }
+    }
+
+    var authorNames = [];
+    function findUniqueNames() {
+        for (let index = 0; index < photoPosts.length; index++) {
+            if (authorNames.every(item => item !== photoPosts[index].author)) {
+                authorNames.push(photoPosts[index].author);
             }
         }
     }
@@ -26,47 +63,64 @@ var dom = function() {
         }
     }
 
-    function checklogin(username) {
+    function showAuthors() {
+        var elem = document.getElementById("authorselectors");
+        elem.innerHTML = "";
+        findUniqueNames();
+        for (let index = 0; index < authorNames.length && index < 10; index++) {
+            var option = document.createElement("option");
+            option.innerHTML = authorNames[index];
+            elem.appendChild(option);
+        }
+    }
+
+    function checkLogin(username) {
         var islogined = (username !== undefined);
         if(islogined)
         {
             document.getElementsByClassName("nicknamealign")[0].innerHTML = "<p>" + username + "</p>";
-            document.getElementsByClassName("headeralign")[0].innerHTML = "<button type=\"button\" class=\"buttonusual\">" +
+            document.getElementsByClassName("headeralign")[0].innerHTML = "<button type='button' class='buttonusual'>" +
             "Add photo</button>" +
-            "<button type=\"button\" class=\"buttonusual\">Exit</button>";
+            "<button type='button' class='buttonusual'>Exit</button>";
+            currentName = username;
         }
         else
         {
             document.getElementsByClassName("nicknamealign")[0].innerHTML = "";
-            document.getElementsByClassName("headeralign")[0].innerHTML = "<button type=\"button\" class=\"buttonusual\">Login</button>";
+            document.getElementsByClassName("headeralign")[0].innerHTML = "<button type='button' class='buttonusual'>Login</button>";
+            username = "";
         }
     }
 
-    function showphotopost(post0) {
+    function showPhotopost(photopost) {
         var main = document.getElementsByClassName("mainplacing")[0];
+
+        var temp = document.createElement("template");
         
         var post = document.createElement("div");
         post.className = "post";
+        post.id = photopost.id;
         
         var photo = document.createElement("div");
         photo.className = "photo";
-        photo.innerHTML = "<img class=\"imgstyle\" src=\"" + post0.photolink + "\" alt=\"Mat\">";
+        photo.innerHTML = "<img class='imgstyle' src='" + photopost.photolink + "' alt='Mat'>";
         
         var nick = document.createElement("div");
         nick.className = "nickandicons";
-        nick.innerHTML = post0.author;
+        nick.innerHTML = photopost.author;
 
         var icons = document.createElement("div");
         icons.className = "nickandicons";
         icons.innerHTML = 
-        "<button type=\"button\" class=\"buttonset\"><img class=\"iconstyles\" src=\"../ImagesAndIcons/delete-512.png\" alt=\"Bin\"></button>" +
-        "<button type=\"button\" class=\"buttonset\"><img class=\"iconstyles\" src=\"../ImagesAndIcons/221649.png\" alt=\"Edit\"></button>" +
-        "<button type=\"button\" class=\"buttonset\"><img class=\"iconstyles\" src=\"../ImagesAndIcons/comments.png\" alt=\"Bin\"></button>" +
-        "<button type=\"button\" class=\"buttonset\"><img class=\"iconstyles\" src=\"../ImagesAndIcons/filled-like.png\" alt=\"Bin\"></button>";
+        "<button type='button' class='buttonset'><img class='iconstyles' src='../ImagesAndIcons/delete-512.png' alt='Bin'></button>" +
+        "<button type='button' class='buttonset'><img class='iconstyles' src='../ImagesAndIcons/221649.png' alt='Edit'></button>" +
+        "<button type='button' class='buttonset'><img class='iconstyles' src='../ImagesAndIcons/comments.png' alt='Bin'></button>" +
+        "<button type='button' class='buttonset'><img class='iconstyles' src='../ImagesAndIcons/filled-like.png' alt='Bin'>" + 
+        "<span>" + photopost.likes.length + "</span>" + "</button>";
         
         var date = document.createElement("div");
         date.className = "date";
-        date.innerHTML = getformatDate(post0);
+        date.innerHTML = getformatDate(photopost);
 
         //Объявление элементов завершено, приступаем к связыванию и добавлению в дерево
 
@@ -75,7 +129,9 @@ var dom = function() {
         post.appendChild(icons);
         post.appendChild(date);
 
-        main.appendChild(post);
+        temp.content.appendChild(post);
+
+        main.appendChild(temp.content);
     }
 
     function getformatDate(post) {
@@ -96,77 +152,80 @@ var dom = function() {
         return day + "." + month + "." + year;
     }
 
-    function addphotopost(photopost) {
-        return module.addPhotoPost(photopost);
+    function addPhotopost(photopost) {
+        if(module.addPhotoPost(photopost))
+        {
+            showPosts(latestSkip, latestTop, latestFilterConfig);
+        }
     }
 
     function deletephotopost(id) {
-        return module.removePhotoPost(id);
+        if(module.removePhotoPost(id))
+        {
+            showPosts(latestSkip, latestTop, latestFilterConfig);
+        }
     }
 
-    function editpost(id, photoPost) {
-        return module.editPhotoPost(id, photoPost);
+    function editPost(id, photoPost) {
+        if(module.editPhotoPost(id, photoPost))
+        {
+            showPosts(latestSkip, latestTop, latestFilterConfig);
+        }
+    }
+
+    function showPosts(skip, top, filterConfig) {
+        document.getElementsByClassName("mainplacing")[0].innerHTML = "";
+        var photoPosts = module.getPhotoPosts(skip, top, filterConfig);
+    
+        if (photoPosts === undefined) {
+            return;
+        }
+    
+        for (var i = 0; i < photoPosts.length; i++)
+        {
+            showPhotopost(photoPosts[i]);
+        }
+        latestSkip = skip;
+        latestTop = top;
+        latestFilterConfig = filterConfig;
     }
 
     return {
-        showphotopost: showphotopost,
-        checklogin: checklogin,
-        addphotopost: addphotopost,
-        deletephotopost: deletephotopost,
-        editpost: editpost,
-        showHashtags: showHashtags
+        showPhotopost: showPhotopost,
+        checkLogin: checkLogin,
+        addPhotopost: addPhotopost,
+        deletePhotopost: deletephotopost,
+        editPost: editPost,
+        showHashtags: showHashtags,
+        showPosts: showPosts,
+        showAuthors: showAuthors,
+        addLike: addLike
     }
 }();
 
-function login(username)
-{
-    dom.checklogin(username);
-}
+//Отображаение первых 10 постов
+dom.showPosts(0, 10);
 
-//Функция отображает фотопосты (укзанное количество с указанного места с указанными фильтрами)
-function showPosts(skip, top, filterConfig) {
-    document.getElementsByClassName("mainplacing")[0].innerHTML = "";
-    var photoPosts = module.getPhotoPosts(skip, top, filterConfig);
+//Редактирование
+dom.editPost("9", {description: "Hello, world!!!", photolink: "../ImagesAndIcons/tmp852896240201891842.jpg", likes: ["Vasia", "Kolia"], hashtags: ["#2018", "wronghash", "#NewYear"]});
 
-    if (photoPosts === undefined) {
-        return;
-    }
+//Вывод тегов
+dom.showHashtags();
 
-    for (var i = 0; i < photoPosts.length; i++)
-    {
-        dom.showphotopost(photoPosts[i]);
-    }
-    skip0 = skip;
-    top0 = top;
-    filterConfig0 = filterConfig;
-}
+//Вывод авторов
+dom.showAuthors();
 
-//Добавляет фотопост, после чего обновляет список выведенных фотопостов, если вставка прошла успешно
-function addPost(photopost) {
-    if (dom.addphotopost(photopost)) {
-        showPosts(skip0, top0, filterConfig0);    
-    }
-}
+//Удаление фотопоста с id = 9
+dom.deletePhotopost("9");
 
-//Удалаяет фотопост, после чего обновляет список выведенных фотопостов, если удаление прошло успешно
-function deletePost(id) {
-    if(dom.deletephotopost(id)) {
-        showPosts(skip0, top0, filterConfig0);
-    }
-}
+//Добавление нового фотопоста с id = 9
+dom.addPhotopost(new Photopost("9", "description20", new Date("2018-03-16T02:20:00"), "Kolia", "../ImagesAndIcons/1477469601_nature_gora.jpg", ["Vasia", "Petia"], ["#summer", "#2018"]));
 
-//Изменеяет фотопост, после чего обновляет список выведенных фотопостов, если редактирование прошло успешно
-function editpost(id, photoPost) {
-    if (dom.editpost(id, photoPost)) {
-        showPosts(skip0, top0, filterConfig0);
-    }
-}
+//Логин
+dom.checkLogin("User123456");
 
-function showHashtags(){//Отображает список возможных хештегов, но не более 10
-    dom.showHashtags();
-}
+//Ставим лайк посту с ID = 9
+dom.addLike("9");
 
-//editpost("9", {description: "Hello, world!!!", photolink: "", likes: ["Vasia", "Kolia"], hashtags: ["#2018", "wronghash", "#NewYear"]});
-//showposts(0, 10);
-//showposts(10, 1);
-//showHashtags();
+//Убираем лайк всё тому же посту с ID = 9
+dom.addLike("9");

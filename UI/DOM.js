@@ -17,10 +17,19 @@ var dom = function() {
         for (let index = 0; index < module.getPhotoPost(id).likes.length; index++) {
             if (module.getPhotoPost(id).likes[index] === currentName) {
                 module.getPhotoPost(id).likes.splice(index, 1);
+
+                var post = document.getElementById(id);
+                var amountOfLikes = post.getElementsByTagName("span")[0];
+                amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;
+
                 return;
             }   
         }
         module.getPhotoPost(id).likes.push(currentName);
+
+        var post = document.getElementById(id);
+        var amountOfLikes = post.getElementsByTagName("span")[0];
+        amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;
     }
 
     var hashtags = [];
@@ -120,9 +129,9 @@ var dom = function() {
         post.appendChild(icons);
         post.appendChild(date);
 
-        //temp.appendChild(post);
+        temp.content.appendChild(post);
 
-        main.appendChild(post);
+        main.appendChild(temp.content);
     }
 
     function getformatDate(post) {
@@ -189,19 +198,34 @@ var dom = function() {
         editPost: editPost,
         showHashtags: showHashtags,
         showPosts: showPosts,
-        showAuthors: showAuthors
+        showAuthors: showAuthors,
+        addLike: addLike
     }
 }();
-
 
 //Отображаение первых 10 постов
 dom.showPosts(0, 10);
 
 //Редактирование
-dom.editPost("9", {description: "Hello, world!!!", photolink: "", likes: ["Vasia", "Kolia"], hashtags: ["#2018", "wronghash", "#NewYear"]});
+dom.editPost("9", {description: "Hello, world!!!", photolink: "../ImagesAndIcons/tmp852896240201891842.jpg", likes: ["Vasia", "Kolia"], hashtags: ["#2018", "wronghash", "#NewYear"]});
 
 //Вывод тегов
 dom.showHashtags();
 
 //Вывод авторов
 dom.showAuthors();
+
+//Удаление фотопоста с id = 9
+dom.deletePhotopost("9");
+
+//Добавление нового фотопоста с id = 9
+dom.addPhotopost(new Photopost("9", "description20", new Date("2018-03-16T02:20:00"), "Kolia", "../ImagesAndIcons/1477469601_nature_gora.jpg", ["Vasia", "Petia"], ["#summer", "#2018"]));
+
+//Логин
+dom.checkLogin("User123456");
+
+//Ставим лайк посту с ID = 9
+dom.addLike("9");
+
+//Убираем лайк всё тому же посту с ID = 9
+dom.addLike("9");

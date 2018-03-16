@@ -31,7 +31,7 @@ header {
     float: right;
     margin: 4px;
 }
-.buttonusual2 {
+.buttonusualadd {
     cursor: pointer;
     background: #6a82dc;
     border-radius: 10px;
@@ -45,7 +45,7 @@ header {
     background-color: white;
 
 }
-.buttonusual2:hover {
+.buttonusualadd:hover {
     background-color: white;
 }
 .buttonset {
@@ -55,6 +55,12 @@ header {
     width: 15%;
     height: 15%;
     float: none;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.buttonset span {
+    font-size: 1.5vw;
 }
 .headeralign {
     position: relative;
@@ -219,6 +225,8 @@ footer {
     text-align: left;
     font-size: 2vw;
     text-decoration-style: wavy;
+    display: flex;
+    justify-content: flex-start;
 }
 .nickandicons span {
     text-align: left;
@@ -389,6 +397,9 @@ footer {
         width: 18%;
         height: 18%;
         float: none;
+    }
+    .buttonset span {
+        font-size: 4vw;
     }
     .date {
         width: 100%;

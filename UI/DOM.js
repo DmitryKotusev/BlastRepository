@@ -102,15 +102,16 @@ var dom = function() {
         if(islogined)
         {
             document.getElementsByClassName('nicknamealign')[0].innerHTML = `<p> ${username} </p>`;
-            document.getElementsByClassName('headeralign')[0].innerHTML = '<button type="button" class="buttonusual">' +
-            'Add photo</button>' +
-            '<button type="button" class="buttonusual">Exit</button>';
+            document.getElementsByClassName('headeralign')[0].innerHTML = 
+            `<button type="button" class="buttonusual">
+            Add photo</button>
+            <button type="button" class="buttonusual">Exit</button>`;
             currentName = username;
         }
         else
         {
             document.getElementsByClassName('nicknamealign')[0].innerHTML = '';
-            document.getElementsByClassName('headeralign')[0].innerHTML = '<button type="button" class="buttonusual">Login</button>';
+            document.getElementsByClassName('headeralign')[0].innerHTML = `button type="button" class="buttonusual">Login</button>`;
             username = '';
         }
     }
@@ -135,11 +136,11 @@ var dom = function() {
         var icons = document.createElement('div');
         icons.className = 'nickandicons';
         icons.innerHTML = 
-        `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/delete-512.png" alt="Bin"></button>` +
-        `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/221649.png" alt="Edit"></button>` +
-        `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></button>` +
-        `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin">` + 
-        `<span class="likesamount">${photopost.likes.length}</span></button>`;
+        `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/delete-512.png" alt="Bin"></button>
+        <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/221649.png" alt="Edit"></button>
+        <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></button>
+        <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin"> 
+        <span class="likesamount">${photopost.likes.length}</span></button>`;
         
         var date = document.createElement('div');
         date.className = 'date';

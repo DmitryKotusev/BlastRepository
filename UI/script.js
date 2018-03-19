@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 function Photopost(id, description, createdAt, author, photolink, likes, hashtags) {
     this.id = id;
     this.description = description;
@@ -9,26 +9,26 @@ function Photopost(id, description, createdAt, author, photolink, likes, hashtag
     this.hashtags = hashtags || [];
 }
 var photoPosts = [
-    new Photopost("1", "description1", new Date("2018-02-26T23:00:00"), "Vasia", "../ImagesAndIcons/Mat.jpg", ["Vasia", "Petia", "Kolia", "Anatolij"], ["#cool", "#2018"]),
-    new Photopost("2", "description2", new Date("2018-02-26T23:00:00"), "Vova", "../ImagesAndIcons/1477469507_autumn-panorama.jpg", ["Vasia", "Petia"], ["#cool", "#2018"]),
-    new Photopost("3", "description3", new Date("2018-02-26T23:00:00"), "Petia", "../ImagesAndIcons/Mat.jpg", ["Vasia", "Petia"], ["#cool", "#2018"]),
-    new Photopost("4", "description4", new Date("2018-02-26T23:00:00"), "Dima", "../ImagesAndIcons/Mat.jpg", ["Vasia", "Petia"], ["#cool", "#2019"]),
-    new Photopost("5", "description5", new Date("2018-01-18T12:33:50"), "Vasia", "../ImagesAndIcons/priroda-new-zeland-4.jpg", ["Vasia", "Petia"], ["#cool", "#2018"]),
-    new Photopost("6", "description6", new Date("2018-02-26T23:00:00"), "Vasia", "../ImagesAndIcons/tmp852896240201891842.jpg", ["Vasia", "Petia"], ["#cool", "#2017"]),
-    new Photopost("7", "description7", new Date("2018-02-26T23:00:00"), "Dima", "../ImagesAndIcons/Mat.jpg", ["Vasia", "Petia"], ["#cool", "#2018"]),
-    new Photopost("8", "description8", new Date("2018-03-14T15:00:09"), "Dima", "../ImagesAndIcons/Mat.jpg", ["Vasia", "Petia", "Dima"], ["#cool", "#2016"]),
-    new Photopost("9", "description9", new Date("2018-03-14T22:10:00"), "Vasia", "../ImagesAndIcons/1477469601_nature_gora.jpg", ["Vasia", "Petia"], ["#cool", "#2018"]),
-    new Photopost("10", "description10", new Date("2018-02-26T23:00:00"), "Vasia", "../ImagesAndIcons/Mat.jpg", ["Vasia", "Petia"], ["#cool", "#2018"]),
-    new Photopost("11", "description11", new Date("2018-02-26T23:00:00"), "Vasia", "../ImagesAndIcons/Mat.jpg", ["Vasia", "Petia"], ["#cool", "#2018"]),
-    new Photopost("12", "description12", new Date("2018-02-23T23:00:00"), "Dima", "../ImagesAndIcons/Mat.jpg", ["Vasia", "Petia", "Katia", "Dima", "Anatolij"], ["#cool", "#2018"]),
-    new Photopost("13", "description13", new Date("2017-10-11T23:07:11"), "Kolia", "../ImagesAndIcons/Mat.jpg", ["Vasia", "Petia"], ["#cool", "#2018"]),
-    new Photopost("14", "description14", new Date("2018-02-26T23:00:00"), "Vova", "../ImagesAndIcons/Mat.jpg", ["Vasia", "Petia"], ["#cool", "#2018"]),
-    new Photopost("15", "description15", new Date("2018-02-26T23:00:00"), "Vasia", "../ImagesAndIcons/Mat.jpg", ["Vasia", "Petia"], ["#cool"]),
-    new Photopost("16", "description16", new Date("2018-02-26T23:00:00"), "Vasia", "../ImagesAndIcons/Mat.jpg", ["Vasia", "Petia"], ["#cool", "#2018"]),
-    new Photopost("17", "description17", new Date("2018-02-26T23:00:00"), "Anastasia", "../ImagesAndIcons/Mat.jpg", ["Vasia", "Petia"], ["#cool", "#2018"]),
-    new Photopost("18", "description18", new Date("2018-02-28T12:32:01"), "Vasia", "../ImagesAndIcons/Mat.jpg", ["Vasia", "Petia"], ["#cool", "#2018"]),
-    new Photopost("19", "description19", new Date("2018-02-26T23:00:00"), "Magamed", "../ImagesAndIcons/Mat.jpg", ["Vasia", "Petia"], ["#cool", "#2018"]),
-    new Photopost("20", "description20", new Date("2018-03-14T16:20:00"), "Vasia", "../ImagesAndIcons/Mat.jpg", ["Vasia", "Petia"], ["#cool", "#2018"])
+    new Photopost('1', 'description1', new Date('2018-02-26T23:00:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia', 'Kolia', 'Anatolij'], ['#cool', '#2018']),
+    new Photopost('2', 'description2', new Date('2018-02-26T23:00:00'), 'Vova', '../ImagesAndIcons/1477469507_autumn-panorama.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('3', 'description3', new Date('2018-02-26T23:00:00'), 'Petia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('4', 'description4', new Date('2018-02-26T23:00:00'), 'Dima', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2019']),
+    new Photopost('5', 'description5', new Date('2018-01-18T12:33:50'), 'Vasia', '../ImagesAndIcons/priroda-new-zeland-4.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('6', 'description6', new Date('2018-02-26T23:00:00'), 'Vasia', '../ImagesAndIcons/tmp852896240201891842.jpg', ['Vasia', 'Petia'], ['#cool', '#2017']),
+    new Photopost('7', 'description7', new Date('2018-02-26T23:00:00'), 'Dima', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('8', 'description8', new Date('2018-03-14T15:00:09'), 'Dima', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia', 'Dima'], ['#cool', '#2016']),
+    new Photopost('9', 'description9', new Date('2018-03-14T22:10:00'), 'Vasia', '../ImagesAndIcons/1477469601_nature_gora.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('10', 'description10', new Date('2018-02-26T23:00:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('11', 'description11', new Date('2018-02-26T23:00:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('12', 'description12', new Date('2018-02-23T23:00:00'), 'Dima', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia', 'Katia', 'Dima', 'Anatolij'], ['#cool', '#2018']),
+    new Photopost('13', 'description13', new Date('2017-10-11T23:07:11'), 'Kolia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('14', 'description14', new Date('2018-02-26T23:00:00'), 'Vova', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('15', 'description15', new Date('2018-02-26T23:00:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool']),
+    new Photopost('16', 'description16', new Date('2018-02-26T23:00:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('17', 'description17', new Date('2018-02-26T23:00:00'), 'Anastasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('18', 'description18', new Date('2018-02-28T12:32:01'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('19', 'description19', new Date('2018-02-26T23:00:00'), 'Magamed', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('20', 'description20', new Date('2018-03-14T16:20:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018'])
 ]
 let module = (function () {
     function clone(params) {
@@ -51,14 +51,14 @@ let module = (function () {
         return 0;
     }
     function validhash(item) {
-        if (typeof (item) !== "string") {
+        if (typeof (item) !== 'string') {
             return false;
         }
-        if (item.charAt(0) !== "#") {
+        if (item.charAt(0) !== '#') {
             return false;
         }
         for (let index = 1; index < item.length; index++) {
-            if (item.charAt(index) === " ") {
+            if (item.charAt(index) === ' ') {
                 return false;
             }
         }
@@ -66,12 +66,12 @@ let module = (function () {
     }
     function getPhotoPosts(skip, top, filterConfig) {
         skip = skip || 0;
-        if (typeof (skip) !== "number") {
+        if (typeof (skip) !== 'number') {
             skip = 0;
         }
 
         top = top || 10;
-        if (typeof (top) !== "number") {
+        if (typeof (top) !== 'number') {
             top = 10;
         }
 
@@ -81,21 +81,21 @@ let module = (function () {
             //Функция фильтрации
             function filtfunc(param) {
                 if (filterConfig.author !== undefined) {
-                    if (typeof (filterConfig.author) === "string") {
+                    if (typeof (filterConfig.author) === 'string') {
                         if (filterConfig.author !== param.author) {
                             return false;
                         }
                     }
                 }
                 if (filterConfig.createdAt !== undefined) {
-                    if (typeof (filterConfig.createdAt) === "object") {
+                    if (typeof (filterConfig.createdAt) === 'object') {
                         if (filterConfig.createdAt.getFullYear() !== param.createdAt.getFullYear() || filterConfig.createdAt.getMonth() !== param.createdAt.getMonth() || filterConfig.createdAt.getDate() !== param.createdAt.getDate()) {
                             return false;
                         }
                     }
                 }
                 if (filterConfig.hashtags !== undefined) {
-                    if (typeof (filterConfig.hashtags) === "object") {
+                    if (typeof (filterConfig.hashtags) === 'object') {
                         for (var index = 0; index < filterConfig.hashtags.length; index++) {
                             var flag = false;
                             for (var index2 = 0; index2 < param.hashtags.length; index2++) {
@@ -130,13 +130,13 @@ let module = (function () {
         };
     }
     function validatePhotoPost(photoPost) {
-        if (typeof (photoPost.id) !== "string" || typeof (photoPost.description) !== "string" || typeof (photoPost.author) !== "string" || typeof (photoPost.photolink) !== "string") {
+        if (typeof (photoPost.id) !== 'string' || typeof (photoPost.description) !== 'string' || typeof (photoPost.author) !== 'string' || typeof (photoPost.photolink) !== 'string') {
             return false;
         }
         if (photoPost.description.length >= 200) {
             return false;
         }
-        if (photoPost.createdAt === "Invalid Date") {
+        if (photoPost.createdAt === 'Invalid Date') {
             return false;
         }
         if (!(Array.isArray(photoPost.likes))) {
@@ -146,7 +146,7 @@ let module = (function () {
             return false;
         }
         function isString(item) {
-            return (typeof (item) === "string");
+            return (typeof (item) === 'string');
         }
         if (!photoPost.hashtags.every(validhash)) {
             return false;
@@ -168,7 +168,7 @@ let module = (function () {
         return false;
     }
     function editPhotoPost(id, photoPost) {
-        if (typeof (id) !== "string") {
+        if (typeof (id) !== 'string') {
             return false;
         }
         if (photoPost === undefined) {
@@ -185,10 +185,10 @@ let module = (function () {
             return false;
         }
         var buff = clone(photoPosts[i]);
-        if (photoPost.description !== undefined && typeof (photoPost.description) === "string") {
+        if (photoPost.description !== undefined && typeof (photoPost.description) === 'string') {
             buff.description = photoPost.description;
         }
-        if (photoPost.photolink !== undefined && typeof (photoPost.photolink) === "string") {
+        if (photoPost.photolink !== undefined && typeof (photoPost.photolink) === 'string') {
             buff.photolink = photoPost.photolink;
         }
         if ((Array.isArray(photoPost.likes))) {
@@ -227,7 +227,7 @@ let module = (function () {
         return true;
     }
     function removePhotoPost(id) {
-        if (typeof (id) === "string") {
+        if (typeof (id) === 'string') {
             for (var index = 0; index < photoPosts.length; index++) {
                 if (photoPosts[index].id === id) {
                     photoPosts.splice(index, 1);
@@ -248,20 +248,20 @@ let module = (function () {
     /////////////////////Проверки//////////////////////////////////////////////////////////////////////
 }());
 /*console.log(module.getPhotoPosts(0, 10));
-var ob = module.getPhotoPost("4");
+var ob = module.getPhotoPost('4');
 console.log(ob);
-var ob1 = new Photopost("20", "description20", new Date("2018-03-14T16:20:00"), "Vasia", "link", ["Vasia", "Petia"], ["#cool", "#2018"]);
+var ob1 = new Photopost('20', 'description20', new Date('2018-03-14T16:20:00'), 'Vasia', 'link', ['Vasia', 'Petia'], ['#cool', '#2018']);
 console.log(ob1);
 console.log(module.validatePhotoPost(ob1));*/
 /*console.log(getPhotoPosts(0, 10));
-console.log(getPhotoPosts(0, 10, {author: "Dima", hashtags: ["#2018"], createdAt: new Date(2018, 1, 26)}));
-console.log(removePhotoPost("3"));
+console.log(getPhotoPosts(0, 10, {author: 'Dima', hashtags: ['#2018'], createdAt: new Date(2018, 1, 26)}));
+console.log(removePhotoPost('3'));
 console.log(removePhotoPost(5));
 
-console.log(addPhotoPost(new Photopost("3", "description20", new Date("2016-03-16T02:20:00"), "Kolia", "link", ["Vasia", "Petia"], ["#summer", "#2018"])));
+console.log(addPhotoPost(new Photopost('3', 'description20', new Date('2016-03-16T02:20:00'), 'Kolia', 'link', ['Vasia', 'Petia'], ['#summer', '#2018'])));
 console.log(photoPosts);
 console.log(getPhotoPosts(0, 21));*/
 /*console.log(photoPosts[10]);
-module.editPhotoPost("2", {description: "Hello, world!!!", photolink: "newphotolink", likes: ["Vasia", "Kolia"], hashtags: ["#2018", "wronghash", "#NewYear"]});
+module.editPhotoPost('2', {description: 'Hello, world!!!', photolink: 'newphotolink', likes: ['Vasia', 'Kolia'], hashtags: ['#2018', 'wronghash', '#NewYear']});
 console.log(photoPosts[10]);*/
    

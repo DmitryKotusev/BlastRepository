@@ -26,13 +26,17 @@ var dom = function() {
             }   
         }*/
 
+        if (module.getPhotoPost(id) === undefined) {
+            return;
+        }
+
         if(!module.getPhotoPost(id).likes.every(function(like, index) {
             if (like === currentName) {
                 module.getPhotoPost(id).likes.splice(index, 1);
 
                 var post = document.getElementById(id);
                 if (post !== null) {
-                    var amountOfLikes = post.getElementsByTagName('span')[0];
+                    var amountOfLikes = post.getElementsByClassName('likesamount')[0];
                     amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;   
                 }
                 return false;
@@ -46,17 +50,17 @@ var dom = function() {
 
         var post = document.getElementById(id);
         if (post !== null) {
-            var amountOfLikes = post.getElementsByTagName('span')[0];
+            var amountOfLikes = post.getElementsByClassName('likesamount')[0];
             amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;   
         }
     }
 
     var hashtags = [];
     function findUniqueHashtags() {
-        for (let index = 0; index < photoPosts.length; index++) {
-            for (let index2 = 0; index2 < photoPosts[index].hashtags.length; index2++) {
-                if (hashtags.every(item => item !== photoPosts[index].hashtags[index2])) {
-                    hashtags.push(photoPosts[index].hashtags[index2]);
+        for (let i = 0; i < photoPosts.length; i++) {
+            for (let j = 0; j < photoPosts[i].hashtags.length; j++) {
+                if (hashtags.every(item => item !== photoPosts[i].hashtags[j])) {
+                    hashtags.push(photoPosts[i].hashtags[j]);
                 }
             }
         }
@@ -64,9 +68,9 @@ var dom = function() {
 
     var authorNames = [];
     function findUniqueNames() {
-        for (let index = 0; index < photoPosts.length; index++) {
-            if (authorNames.every(item => item !== photoPosts[index].author)) {
-                authorNames.push(photoPosts[index].author);
+        for (let i = 0; i < photoPosts.length; i++) {
+            if (authorNames.every(item => item !== photoPosts[i].author)) {
+                authorNames.push(photoPosts[i].author);
             }
         }
     }
@@ -75,9 +79,9 @@ var dom = function() {
         var elem = document.getElementById('filterselectors');
         elem.innerHTML = '';
         findUniqueHashtags();
-        for (let index = 0; index < hashtags.length && index < 10; index++) {
+        for (let i = 0; i < hashtags.length && i < 10; i++) {
             var option = document.createElement('option');
-            option.innerHTML = hashtags[index];
+            option.innerHTML = hashtags[i];
             elem.appendChild(option);
         }
     }
@@ -86,9 +90,9 @@ var dom = function() {
         var elem = document.getElementById('authorselectors');
         elem.innerHTML = '';
         findUniqueNames();
-        for (let index = 0; index < authorNames.length && index < 10; index++) {
+        for (let i = 0; i < authorNames.length && i < 10; i++) {
             var option = document.createElement('option');
-            option.innerHTML = authorNames[index];
+            option.innerHTML = authorNames[i];
             elem.appendChild(option);
         }
     }
@@ -97,7 +101,7 @@ var dom = function() {
         var islogined = (username !== undefined);
         if(islogined)
         {
-            document.getElementsByClassName('nicknamealign')[0].innerHTML = '<p>' + username + '</p>';
+            document.getElementsByClassName('nicknamealign')[0].innerHTML = `<p> ${username} </p>`;
             document.getElementsByClassName('headeralign')[0].innerHTML = '<button type="button" class="buttonusual">' +
             'Add photo</button>' +
             '<button type="button" class="buttonusual">Exit</button>';
@@ -122,7 +126,7 @@ var dom = function() {
         
         var photo = document.createElement('div');
         photo.className = 'photo';
-        photo.innerHTML = '<img class="imgstyle" src="' + photopost.photolink + '" alt="Mat">';
+        photo.innerHTML = `<img class="imgstyle" src="${photopost.photolink}" alt="Mat">`;
         
         var nick = document.createElement('div');
         nick.className = 'nickandicons';
@@ -131,11 +135,11 @@ var dom = function() {
         var icons = document.createElement('div');
         icons.className = 'nickandicons';
         icons.innerHTML = 
-        '<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/delete-512.png" alt="Bin"></button>' +
-        '<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/221649.png" alt="Edit"></button>' +
-        '<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></button>' +
-        '<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin">' + 
-        '<span>' + photopost.likes.length + '</span>' + '</button>';
+        `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/delete-512.png" alt="Bin"></button>` +
+        `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/221649.png" alt="Edit"></button>` +
+        `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></button>` +
+        `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin">` + 
+        `<span class="likesamount">${photopost.likes.length}</span></button>`;
         
         var date = document.createElement('div');
         date.className = 'date';
@@ -214,11 +218,11 @@ var dom = function() {
         if (photoPosts === undefined) {
             return;
         }
-    
-        for (var i = 0; i < photoPosts.length; i++)
-        {
-            showPhotopost(photoPosts[i]);
-        }
+
+        photoPosts.forEach(function (photopost) {
+            showPhotopost(photopost);
+        });
+        
         latestSkip = skip;
         latestTop = top;
         latestFilterConfig = filterConfig;

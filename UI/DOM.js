@@ -14,7 +14,7 @@ var dom = function() {
         if (typeof(id) !== 'string') {
             return;
         }
-        for (let index = 0; index < module.getPhotoPost(id).likes.length; index++) {
+        /*for (let index = 0; index < module.getPhotoPost(id).likes.length; index++) {
             if (module.getPhotoPost(id).likes[index] === currentName) {
                 module.getPhotoPost(id).likes.splice(index, 1);
 
@@ -24,12 +24,31 @@ var dom = function() {
 
                 return;
             }   
+        }*/
+
+        if(!module.getPhotoPost(id).likes.every(function(like, index) {
+            if (like === currentName) {
+                module.getPhotoPost(id).likes.splice(index, 1);
+
+                var post = document.getElementById(id);
+                if (post !== null) {
+                    var amountOfLikes = post.getElementsByTagName('span')[0];
+                    amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;   
+                }
+                return false;
+            }
+            return true;
+        })) {
+            return;
         }
+
         module.getPhotoPost(id).likes.push(currentName);
 
         var post = document.getElementById(id);
-        var amountOfLikes = post.getElementsByTagName('span')[0];
-        amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;
+        if (post !== null) {
+            var amountOfLikes = post.getElementsByTagName('span')[0];
+            amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;   
+        }
     }
 
     var hashtags = [];

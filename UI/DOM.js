@@ -148,7 +148,10 @@ var dom = function() {
             <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/221649.png" alt="Edit"></button>
             <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></button>
             <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin"> 
-            <span class="likesamount">${photopost.likes.length}</span></button>`;  
+            <span class="likesamount">${photopost.likes.length}</span></button>`;
+
+            let likes = icons.getElementsByTagName('button')[3];
+            likes.addEventListener('click', eve.like);  
         }
         else
         {
@@ -156,6 +159,9 @@ var dom = function() {
             `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></button>
             <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin"> 
             <span class="likesamount">${photopost.likes.length}</span></button>`;
+
+            let likes = icons.getElementsByTagName('button')[1];
+            likes.addEventListener('click', eve.like);
         }
         
         var date = document.createElement('div');

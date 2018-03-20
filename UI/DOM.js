@@ -98,6 +98,12 @@ var dom = function() {
     }
 
     function checkLogin(username) {
+        if (username === '') {
+            return;
+        }
+        if (username === currentName) {
+            return;
+        }
         var islogined = (username !== undefined);
         if(islogined)
         {
@@ -111,9 +117,10 @@ var dom = function() {
         else
         {
             document.getElementsByClassName('nicknamealign')[0].innerHTML = '';
-            document.getElementsByClassName('headeralign')[0].innerHTML = `button type="button" class="buttonusual">Login</button>`;
-            username = '';
+            document.getElementsByClassName('headeralign')[0].innerHTML = `<button type="button" class="buttonusual">Login</button>`;
+            currentName = '';
         }
+        showPosts(latestSkip, latestTop, latestFilterConfig);
     }
 
     function showPhotopost(photopost) {
@@ -135,16 +142,25 @@ var dom = function() {
 
         var icons = document.createElement('div');
         icons.className = 'nickandicons';
-        icons.innerHTML = 
-        `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/delete-512.png" alt="Bin"></button>
-        <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/221649.png" alt="Edit"></button>
-        <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></button>
-        <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin"> 
-        <span class="likesamount">${photopost.likes.length}</span></button>`;
+        if (currentName === photopost.author) {
+            icons.innerHTML = 
+            `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/delete-512.png" alt="Bin"></button>
+            <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/221649.png" alt="Edit"></button>
+            <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></button>
+            <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin"> 
+            <span class="likesamount">${photopost.likes.length}</span></button>`;  
+        }
+        else
+        {
+            icons.innerHTML = 
+            `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></button>
+            <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin"> 
+            <span class="likesamount">${photopost.likes.length}</span></button>`;
+        }
         
         var date = document.createElement('div');
         date.className = 'date';
-        date.innerHTML = getformatDate(photopost);
+        date.innerHTML = photopost.createdAt.toLocaleDateString();
 
         //Объявление элементов завершено, приступаем к связыванию и добавлению в дерево
 
@@ -158,7 +174,7 @@ var dom = function() {
         main.appendChild(temp.content);
     }
 
-    function getformatDate(post) {
+    /*function getformatDate(post) {
         var date = post.createdAt;
 
         var day = date.getDate();
@@ -174,7 +190,7 @@ var dom = function() {
         var year = date.getFullYear();
 
         return day + '.' + month + '.' + year;
-    }
+    }*/
 
     function addPhotopost(photopost) {
         if(module.addPhotoPost(photopost))
@@ -261,10 +277,12 @@ dom.deletePhotopost('9');
 dom.addPhotopost(new Photopost('9', 'description20', new Date('2018-03-16T02:20:00'), 'Kolia', '../ImagesAndIcons/1477469601_nature_gora.jpg', ['Vasia', 'Petia'], ['#summer', '#2018']));
 
 //Логин
-dom.checkLogin('User123456');
+dom.checkLogin('Vasia');
 
 //Ставим лайк посту с ID = 9
 dom.addLike('9');
 
 //Убираем лайк всё тому же посту с ID = 9
 dom.addLike('9');
+
+dom.checkLogin();

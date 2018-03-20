@@ -5,7 +5,14 @@ var eve = function() {
         dom.addLike(id);
     }
 
+    function addMore(event) {
+        dom.addMorePosts();
+    }
+
     return {
-        like: like
+        like: like,
+        addMore: addMore
     }
 }();
+
+document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0].addEventListener('click', eve.addMore);

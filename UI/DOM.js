@@ -120,7 +120,7 @@ var dom = function() {
             document.getElementsByClassName('headeralign')[0].innerHTML = `<button type="button" class="buttonusual">Login</button>`;
             currentName = '';
         }
-        showPosts(latestSkip, latestTop, latestFilterConfig);
+        showPosts(0, 10);//Поменял параметры фильтра
     }
 
     function showPhotopost(photopost) {
@@ -201,7 +201,7 @@ var dom = function() {
     function addPhotopost(photopost) {
         if(module.addPhotoPost(photopost))
         {
-            showPosts(latestSkip, latestTop, latestFilterConfig);
+            showPosts(0, 10);//Поменял параметры фильтра
         }
     }
 
@@ -215,7 +215,7 @@ var dom = function() {
         }
         if(module.removePhotoPost(id))
         {
-            showPosts(latestSkip, latestTop, latestFilterConfig);
+            showPosts(0, 10);//Поменял параметры фильтра
         }
     }
 
@@ -229,13 +229,16 @@ var dom = function() {
         }
         if(module.editPhotoPost(id, photoPost))
         {
-            showPosts(latestSkip, latestTop, latestFilterConfig);
+            showPosts(0, 10);//Поменял параметры фильтра
         }
         return true;
     }
 
     function showPosts(skip, top, filterConfig) {
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
+        document.getElementsByClassName('mainplacing')[1].innerHTML = `<button type="button" 
+        class="buttonusualadd">Load more</button>`;
+
         var photoPosts = module.getPhotoPosts(skip, top, filterConfig);
     
         if (photoPosts === undefined) {
@@ -249,6 +252,31 @@ var dom = function() {
         latestSkip = skip;
         latestTop = top;
         latestFilterConfig = filterConfig;
+        if (module.getPhotoPosts(skip, top, filterConfig).length === 0) {
+            document.getElementsByClassName('mainplacing')[1].innerHTML = '';
+            return;
+        }
+
+        var loadMorButton = document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0];
+        loadMorButton.addEventListener('click', eve.addMore);
+    }
+
+    function addMorePosts() {
+        latestSkip = latestSkip + 10;
+
+        var photoPosts = module.getPhotoPosts(latestSkip, latestTop, latestFilterConfig);
+    
+        if (photoPosts === undefined) {
+            return;
+        }
+
+        photoPosts.forEach(function (photopost) {
+            showPhotopost(photopost);
+        });
+
+        if (module.getPhotoPosts(latestSkip + 10, latestTop, latestFilterConfig).length === 0) {
+            document.getElementsByClassName('mainplacing')[1].innerHTML = '';
+        }
     }
 
     return {
@@ -260,13 +288,15 @@ var dom = function() {
         showHashtags: showHashtags,
         showPosts: showPosts,
         showAuthors: showAuthors,
-        addLike: addLike
+        addLike: addLike,
+        addMorePosts: addMorePosts
     }
 }();
 
 //Отображаение первых 10 постов
 dom.showPosts(0, 10);
 
+/*
 //Редактирование
 dom.editPost('9', {description: 'Hello, world!!!', photolink: '../ImagesAndIcons/tmp852896240201891842.jpg', likes: ['Vasia', 'Kolia'], hashtags: ['#2018', 'wronghash', '#NewYear']});
 
@@ -291,4 +321,4 @@ dom.addLike('9');
 //Убираем лайк всё тому же посту с ID = 9
 dom.addLike('9');
 
-dom.checkLogin();
+dom.checkLogin();*/

@@ -1,10 +1,10 @@
-
+var currentName = '';     //Хранит текущий ник пользователя
+var currentState = 0;     //Отражает текущее состояние страницы
 
 var dom = function() {
     var latestSkip = 0;       //Данное поле хранит количество записей, которое нужно было пропустить в последний раз 
     var latestTop = 0;        //Данное поле хранит количество записей, которое нужно было вывести на экран в последний раз
     var latestFilterConfig;   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
-    var currentName = '';     //Хранит текущий ник пользователя
 
     //Возращает непривязанный к DOM фильтр
     function makeFilter() {
@@ -171,7 +171,9 @@ var dom = function() {
             var but = header.getElementsByTagName('button')[0];
             but.addEventListener('click', eve.login);
         }
-        showPosts(0, 10);//Поменял параметры фильтра
+        if (currentState === 0) {
+            showPosts(0, 10);//Поменял параметры фильтра   
+        }
     }
 
     function showPhotopost(photopost) {
@@ -202,7 +204,10 @@ var dom = function() {
             <span class="likesamount">${photopost.likes.length}</span></button>`;
 
             let likes = icons.getElementsByTagName('button')[3];
-            likes.addEventListener('click', eve.like);  
+            likes.addEventListener('click', eve.like);
+            
+            let look = icons.getElementsByTagName('button')[2];
+            look.addEventListener('click', eve.lookAtPhoto);
         }
         else
         {
@@ -213,6 +218,8 @@ var dom = function() {
 
             let likes = icons.getElementsByTagName('button')[1];
             likes.addEventListener('click', eve.like);
+            let look = icons.getElementsByTagName('button')[0];
+            look.addEventListener('click', eve.lookAtPhoto);
         }
         
         var date = document.createElement('div');
@@ -341,7 +348,7 @@ var dom = function() {
         showAuthors: showAuthors,
         addLike: addLike,
         addMorePosts: addMorePosts,
-        makeFilter: makeFilter
+        makeFilter: makeFilter,
     }
 }();
 

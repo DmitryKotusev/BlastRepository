@@ -9,7 +9,26 @@ var eve = function() {
         dom.addMorePosts();
     }
 
+    function backButtonEvent(params) {
+        let main = document.getElementsByClassName('mainplacing')[0];
+        main.innerHTML = '';
+        let filt = dom.makeFilter();
+        document.getElementsByTagName('body')[0].replaceChild(filt, event.target);
+        dom.showPosts(0, 10);
+        if (currentName !== '') {
+            dom.checkLogin(currentName);   
+        }
+        else
+        {
+            dom.checkLogin();
+        }
+        dom.showAuthors();
+        dom.showHashtags();
+        currentState = 0;
+    }
+
     function login(params) {
+        currentState = 1;//Состояние логина
         document.getElementsByClassName('nicknamealign')[0].innerHTML = '';
         document.getElementsByClassName('headeralign')[0].innerHTML = '';
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
@@ -18,24 +37,16 @@ var eve = function() {
         let body = document.getElementsByTagName('body')[0];
         let filt = body.getElementsByTagName('aside')[0];
 
-        let backButton = document.createElement('button');
-        backButton.type = 'button';
-        backButton.className = 'buttonback';
-        backButton.id = 'Back';
-        backButton.innerHTML = 'Back';
-        backButton.addEventListener('click',
-        function (event) {
-            let main = document.getElementsByClassName('mainplacing')[0];
-            main.innerHTML = '';
-            let filt = dom.makeFilter();
-            document.getElementsByTagName('body')[0].replaceChild(filt, event.target);
-            dom.showPosts(0, 10);
-            dom.checkLogin();
-            dom.showAuthors();
-            dom.showHashtags();
-        })
+        if (filt !== undefined) {
+            let backButton = document.createElement('button');
+            backButton.type = 'button';
+            backButton.className = 'buttonback';
+            backButton.id = 'Back';
+            backButton.innerHTML = 'Back';
+            backButton.addEventListener('click', backButtonEvent);
 
-        body.replaceChild(backButton, filt);
+            body.replaceChild(backButton, filt);   
+        }
         //////
         let main = document.getElementsByClassName('mainplacing')[0];
         main.innerHTML = 
@@ -65,6 +76,7 @@ var eve = function() {
                     dom.checkLogin(users[index].login);
                     dom.showAuthors();
                     dom.showHashtags();
+                    currentState = 0;
                     return;
                 }
             }
@@ -83,16 +95,85 @@ var eve = function() {
     }
 
     function lookAtPhoto(params) {
+        currentState = 2; //Состояние просмотра фотографии
+        let post = module.getPhotoPost(params.target.closest('.post').id);
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
+        //let loadMoresect = document.getElementsByClassName('mainplacing')[1];
         document.getElementsByClassName('mainplacing')[1].innerHTML = '';
+        let main = document.getElementsByTagName('main')[0];
+        //main.removeChild(loadMoresect);
+
+        let body = document.getElementsByTagName('body')[0];
+        let filt = body.getElementsByTagName('aside')[0];
+
+        let backButton = document.createElement('button');
+        backButton.type = 'button';
+        backButton.className = 'buttonback';
+        backButton.id = 'Back';
+        backButton.innerHTML = 'Back';
+        backButton.addEventListener('click', backButtonEvent);
+
+        body.replaceChild(backButton, filt);
         
+        mainPlacing = document.getElementsByClassName('mainplacing')[0];
+        
+        
+        if (currentName === module.getPhotoPost(params.target.closest('.post').id).author) {
+            mainPlacing.innerHTML = 
+            `<div class="lookatphoto">
+                <div class="bigphoto">
+                    <img class="imgstyle" src="${post.photolink}" alt="Mat">
+                </div>
+                <p class="lookatphototext">Description</p>
+                <textarea class="texttoread" readonly name="description" id="" cols="60" rows="6">${post.description}</textarea>
+                <p class="lookatphototext">Hashtags</p>
+                <textarea class="hashtagstoread" readonly name="hashtags" id="" cols="60" rows="6">${post.hashtags.join(' ')}</textarea>
+                <p class="lookatphototext">Author: ${post.author}</p>
+                <div class="lookatphotoicons">
+                    <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
+                    <div class="nickandiconsspec">
+                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="../ImagesAndIcons/delete-512.png" alt="Bin"></button>
+                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="../ImagesAndIcons/221649.png" alt="Edit"></button>
+                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin">
+                        <span class="likesamount">${post.likes.length}</span></button>
+                    </div>
+                </div>
+            </div>`;
+            //Прикрепить собития
+
+            ////////////////////
+            return;
+        }
+
+        mainPlacing.innerHTML = 
+        `<div class="lookatphoto">
+            <div class="bigphoto">
+                <img class="imgstyle" src="${post.photolink}" alt="Mat">
+            </div>
+            <p class="lookatphototext">Description</p>
+            <textarea class="texttoread" readonly name="description" id="" cols="60" rows="6">${post.description}</textarea>
+            <p class="lookatphototext">Hashtags</p>
+            <textarea class="hashtagstoread" readonly name="hashtags" id="" cols="60" rows="6">${post.hashtags.join(' ')}</textarea>
+            <p class="lookatphototext">Author: ${post.author}</p>
+            <div class="lookatphotoicons">
+                <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
+                <div class="nickandiconsspec">
+                    <button type="button" class="buttonsetspec"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin">
+                    <span class="likesamount">${post.likes.length}</span></button>
+                </div>
+            </div>
+        </div>`;
+        //Прикрепить собития
+
+        ////////////////////
     }
 
     return {
         like: like,
         addMore: addMore,
         login: login,
-        exit: exit
+        exit: exit,
+        lookAtPhoto: lookAtPhoto
     }
 }();
 

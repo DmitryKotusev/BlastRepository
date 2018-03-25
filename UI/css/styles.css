@@ -24,6 +24,26 @@
     color: red;
 }
 
+.texttoread {
+    font-size: 1.5vw; 
+    border-radius: 10px;
+}
+
+.hashtagstoread {
+    font-size: 1.5vw; 
+    border-radius: 10px;
+    color: skyblue;
+}
+
+.lookatphotoicons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.lookatphototext {
+    font-size: 3vw;
+}
+
 header {
     background: linear-gradient(to right, #b0cae5, #5067d9);
     height: 6vw;
@@ -60,7 +80,7 @@ header {
     background: #6a82dc;
     border-radius: 10px;
     border-color: black;
-    font-size: 20px;
+    font-size: 1.8vw;
     margin-top: 6vw;
     margin-left: 1.5vw;
     float: left;
@@ -98,12 +118,27 @@ header {
 .buttonusualadd:hover {
     background-color: white;
 }
+.buttonsetspec {
+    background: white;
+    border: 0;
+    margin: 0;
+    width: 10%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: left;
+    color: #b0cae5;
+}
+.buttonsetspec span {
+    font-size: 1.5vw;
+}
+
 .buttonset {
     background: white;
     border: 0;
     margin: 0;
     width: 15%;
-    height: 15%;
+    height: 2vw;
     float: none;
     display: flex;
     justify-content: flex-start;
@@ -282,6 +317,13 @@ footer {
     width: 100%;
     height: 100%;
 }
+
+.nickandiconsspec {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 .nickandicons {
     width: 100%;
     max-height: calc(100%*2/16);
@@ -354,6 +396,9 @@ footer {
         font-family: 'Times New Roman', Times, serif;
         float: left;
     }
+    .buttonback {
+        font-size: 2.2vw;
+    }
     .buttonusual {
         background: #6a82dc;
         border-radius: 10px;
@@ -421,6 +466,11 @@ footer {
         font-family: 'Times New Roman', Times, serif;
         float: left;
     }
+
+    .buttonback {
+        font-size: 2.6vw;
+    }
+
     .buttonusual {
         background: #6a82dc;
         border-radius: 10px;

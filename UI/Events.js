@@ -18,12 +18,12 @@ var eve = function() {
         let body = document.getElementsByTagName('body')[0];
         let filt = body.getElementsByTagName('aside')[0];
 
-        let button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'buttonback';
-        button.id = 'Back';
-        button.innerHTML = 'Back';
-        button.addEventListener('click',
+        let backButton = document.createElement('button');
+        backButton.type = 'button';
+        backButton.className = 'buttonback';
+        backButton.id = 'Back';
+        backButton.innerHTML = 'Back';
+        backButton.addEventListener('click',
         function (event) {
             let main = document.getElementsByClassName('mainplacing')[0];
             main.innerHTML = '';
@@ -33,18 +33,40 @@ var eve = function() {
             dom.checkLogin();
         })
 
-        body.replaceChild(button, filt);
+        body.replaceChild(backButton, filt);
         //////
         let main = document.getElementsByClassName('mainplacing')[0];
         main.innerHTML = 
         `<div id="form_login_container">
             <p class="login-text">Enter your login and password</p>
+            <p><\p>
             <form method='POST'>
             <input type="text" placeholder="Login" class="text_input" />
             <input type="text" placeholder="Password" class="text_input" />
             <button type="button" class="buttonlogin">Login</button>
             </form>
         </div>`;
+
+        let loginButton = main.getElementsByTagName('button')[0];
+
+        loginButton.addEventListener('click', 
+        function name(params) {
+            let loginInfo = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('input')[0];
+            let passwordInfo = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('input')[1];
+            for (let index = 0; index < users.length; index++) {
+                if (users[index].login === loginInfo.value && users[index].password === passwordInfo.value) {
+                    let main = document.getElementsByClassName('mainplacing')[0];
+                    main.innerHTML = '';
+                    let filt = dom.makeFilter();
+                    document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                    dom.showPosts(0, 10);
+                    dom.checkLogin(users[index].login);
+                    return;
+                }
+            }
+
+            //Переход на страницу ошибки
+        })
     }
 
     return {

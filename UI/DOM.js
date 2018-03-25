@@ -100,6 +100,8 @@ var dom = function() {
         }
     }
 
+    
+
     var hashtags = [];
     function findUniqueHashtags() {
         for (let i = 0; i < photoPosts.length; i++) {

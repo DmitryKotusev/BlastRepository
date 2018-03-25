@@ -5,6 +5,12 @@ var eve = function() {
         dom.addLike(id);
     }
 
+    function likeLookAt(event) {
+        var button = event.target;
+        var id = button.closest('.lookatphoto').id;
+        dom.addLike(id);
+    }
+
     function addMore(event) {
         dom.addMorePosts();
     }
@@ -120,7 +126,7 @@ var eve = function() {
         
         if (currentName === module.getPhotoPost(params.target.closest('.post').id).author) {
             mainPlacing.innerHTML = 
-            `<div class="lookatphoto">
+            `<div class="lookatphoto" id="${post.id}">
                 <div class="bigphoto">
                     <img class="imgstyle" src="${post.photolink}" alt="Mat">
                 </div>
@@ -139,14 +145,15 @@ var eve = function() {
                     </div>
                 </div>
             </div>`;
-            //Прикрепить собития
-
+            //Прикрепить события
+            let amountOfLikes = mainPlacing.getElementsByTagName('button')[2];
+            amountOfLikes.addEventListener('click', likeLookAt);
             ////////////////////
             return;
         }
 
         mainPlacing.innerHTML = 
-        `<div class="lookatphoto">
+        `<div class="lookatphoto" id="${post.id}">
             <div class="bigphoto">
                 <img class="imgstyle" src="${post.photolink}" alt="Mat">
             </div>
@@ -163,8 +170,9 @@ var eve = function() {
                 </div>
             </div>
         </div>`;
-        //Прикрепить собития
-
+        //Прикрепить события
+        let amountOfLikes = mainPlacing.getElementsByTagName('button')[0];
+        amountOfLikes.addEventListener('click', likeLookAt);
         ////////////////////
     }
 

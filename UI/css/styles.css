@@ -528,6 +528,18 @@ footer {
         text-align: left;
     }
 }
+
+@media screen and (max-width: 400px)
+{
+    .text_input {
+        color: black;
+        margin: 5px 35px 0 34px;
+        padding: 0px 0px 0px 10px;
+        width: 200px;
+        height: 30px;
+    }
+}
+
 @media screen and (max-height: 400px)
 {
     .filtercontent {

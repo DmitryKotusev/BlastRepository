@@ -158,6 +158,9 @@ var dom = function() {
             Add photo</button>
             <button type="button" class="buttonusual">Exit</button>`;
             currentName = username;
+
+            let exitButton = document.getElementsByClassName('headeralign')[0].getElementsByTagName('button')[1];
+            exitButton.addEventListener('click', eve.exit);
         }
         else
         {

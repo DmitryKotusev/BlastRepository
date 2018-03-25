@@ -19,6 +19,10 @@
 .login-text {
     text-align: center;
 }
+.error-text {
+    text-align: center;
+    color: red;
+}
 
 header {
     background: linear-gradient(to right, #b0cae5, #5067d9);

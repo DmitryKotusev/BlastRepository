@@ -31,6 +31,8 @@ var eve = function() {
             document.getElementsByTagName('body')[0].replaceChild(filt, event.target);
             dom.showPosts(0, 10);
             dom.checkLogin();
+            dom.showAuthors();
+            dom.showHashtags();
         })
 
         body.replaceChild(backButton, filt);
@@ -39,7 +41,7 @@ var eve = function() {
         main.innerHTML = 
         `<div id="form_login_container">
             <p class="login-text">Enter your login and password</p>
-            <p><\p>
+            <p class="error-text"><\p>
             <form method='POST'>
             <input type="text" placeholder="Login" class="text_input" />
             <input type="text" placeholder="Password" class="text_input" />
@@ -61,18 +63,32 @@ var eve = function() {
                     document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
                     dom.showPosts(0, 10);
                     dom.checkLogin(users[index].login);
+                    dom.showAuthors();
+                    dom.showHashtags();
                     return;
                 }
             }
 
-            //Переход на страницу ошибки
+            //Вывод ошибки
+            let errorText = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('p')[1];
+            errorText.innerHTML = 'Error, invalid login or password';
         })
     }
+
+    function exit(params) {
+        if (confirm("Are you sure you want to exit?")) {
+            dom.checkLogin();
+            return;
+        }
+    }
+
+    
 
     return {
         like: like,
         addMore: addMore,
-        login: login
+        login: login,
+        exit: exit
     }
 }();
 

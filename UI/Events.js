@@ -82,7 +82,11 @@ var eve = function() {
         }
     }
 
-    
+    function lookAtPhoto(params) {
+        document.getElementsByClassName('mainplacing')[0].innerHTML = '';
+        document.getElementsByClassName('mainplacing')[1].innerHTML = '';
+        
+    }
 
     return {
         like: like,

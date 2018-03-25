@@ -258,8 +258,19 @@ footer {
     border-style: solid;
     width: 100%;
     overflow: hidden;
-    height: 15vmax;
+    height: 17vw;
     padding: 0;
+}
+.bigphoto {
+    text-align: center;
+    border-radius: 8px;
+    border-width: 3px;
+    border-style: solid;
+    width: 50vw;
+    overflow: hidden;
+    height: 37.5vw;
+    padding: 0;
+    margin: auto;
 }
 .imgstyle {
     object-fit: cover;
@@ -357,6 +368,9 @@ footer {
         height: 56%;
         margin: 4px;
     }
+    .photo{
+        height: 24vw;
+    }
     
     .filterelements {
         position: relative;
@@ -420,6 +434,9 @@ footer {
         width: 55%;
         height: 67%;
         margin: 3px;
+    }
+    .photo{
+        height: 28vw;
     }
     
     .filterelements {

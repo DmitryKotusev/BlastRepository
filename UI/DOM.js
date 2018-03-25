@@ -6,6 +6,51 @@ var dom = function() {
     var latestFilterConfig;   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
     var currentName = '';     //Хранит текущий ник пользователя
 
+    //Возращает непривязанный к DOM фильтр
+    function makeFilter() {
+        let filt = document.createElement('aside');
+        filt.innerHTML = 
+        `<div class="filterelements">
+            <div class="filtermainbutton">
+                <button type="button" class="buttonusual">Filter</button>
+            </div>
+            <div class="asideform">
+                <div class="filtercontent">
+                    <p class="filtertext">
+                        <input name="authorcheck" class="inputcheckbox" type="checkbox" checked>Author</p>
+                    <input type="text" name="author">
+                    <p>
+                        <select id="authorselectors">
+                            
+                        </select>
+                    </p>
+
+                </div>
+                <div class="filtercontent">
+                    <p class="filtertext">
+                        <input name="hashtagcheck" class="inputcheckbox" type="checkbox" checked>Hashtag</p>
+                    <input type="text" name="hashtag">
+                    <p>
+                        <select id="filterselectors">
+                            
+                        </select>
+                    </p>
+
+                </div>
+                <div class="filtercontent">
+                    <p class="filtertext">
+                        <input name="datecheck" class="inputcheckbox" type="checkbox" checked>Date</p>
+                    <input type="text" name="day" maxlength="2" class="inputdate" placeholder="dd">
+                    <span>/</span>
+                    <input type="text" name="month" maxlength="2" class="inputdate" placeholder="mm">
+                    <span>/</span>
+                    <input type="text" name="year" maxlength="4" class="inputyear" placeholder="yyyy">
+                </div>
+            </div>
+        </div>`;
+        return filt;
+    }
+
     function addLike(id)
     {
         if (currentName === '') {
@@ -119,6 +164,9 @@ var dom = function() {
             document.getElementsByClassName('nicknamealign')[0].innerHTML = '';
             document.getElementsByClassName('headeralign')[0].innerHTML = `<button type="button" class="buttonusual">Login</button>`;
             currentName = '';
+            var header = document.getElementsByClassName('headeralign')[0];
+            var but = header.getElementsByTagName('button')[0];
+            but.addEventListener('click', eve.login);
         }
         showPosts(0, 10);//Поменял параметры фильтра
     }
@@ -289,7 +337,8 @@ var dom = function() {
         showPosts: showPosts,
         showAuthors: showAuthors,
         addLike: addLike,
-        addMorePosts: addMorePosts
+        addMorePosts: addMorePosts,
+        makeFilter: makeFilter
     }
 }();
 

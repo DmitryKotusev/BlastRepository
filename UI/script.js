@@ -30,6 +30,20 @@ var photoPosts = [
     new Photopost('19', 'description19', new Date('2018-02-26T23:00:00'), 'Magamed', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
     new Photopost('20', 'description20', new Date('2018-03-14T16:20:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018'])
 ]
+
+function user (login, password){
+    this.login = login;
+    this.password = password;
+}
+var users = [
+    new user('Dima', '12345'),
+    new user('Ivan', '54321'),
+    new user('Magamed', '11111'),
+    new user('Anastasia', '11111'),
+    new user('Vova', '11111'),
+    new user('Petia', '11111')
+]
+
 let module = (function () {
     function clone(params) {
         var clone = {}; // новый пустой объект

@@ -131,9 +131,9 @@ var eve = function() {
                     <img class="imgstyle" src="${post.photolink}" alt="Mat">
                 </div>
                 <p class="lookatphototext">Description</p>
-                <textarea class="texttoread" readonly name="description" id="" cols="60" rows="6">${post.description}</textarea>
+                <textarea class="texttoread" readonly name="description" id="" cols="35" rows="5">${post.description}</textarea>
                 <p class="lookatphototext">Hashtags</p>
-                <textarea class="hashtagstoread" readonly name="hashtags" id="" cols="60" rows="6">${post.hashtags.join(' ')}</textarea>
+                <textarea class="hashtagstoread" readonly name="hashtags" id="" cols="35" rows="5">${post.hashtags.join(' ')}</textarea>
                 <p class="lookatphototext">Author: ${post.author}</p>
                 <div class="lookatphotoicons">
                     <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
@@ -158,9 +158,9 @@ var eve = function() {
                 <img class="imgstyle" src="${post.photolink}" alt="Mat">
             </div>
             <p class="lookatphototext">Description</p>
-            <textarea class="texttoread" readonly name="description" id="" cols="60" rows="6">${post.description}</textarea>
+            <textarea class="texttoread" readonly name="description" id="" cols="35" rows="5">${post.description}</textarea>
             <p class="lookatphototext">Hashtags</p>
-            <textarea class="hashtagstoread" readonly name="hashtags" id="" cols="60" rows="6">${post.hashtags.join(' ')}</textarea>
+            <textarea class="hashtagstoread" readonly name="hashtags" id="" cols="35" rows="5">${post.hashtags.join(' ')}</textarea>
             <p class="lookatphototext">Author: ${post.author}</p>
             <div class="lookatphotoicons">
                 <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
@@ -176,6 +176,20 @@ var eve = function() {
         ////////////////////
     }
 
+    function filter(params) {
+        let filt = document.getElementsByTagName('aside')[0];
+        
+        let authorBox = document.getElementsByName('authorcheck')[0];
+        let hashCheck = document.getElementsByName('hashtagcheck')[0];
+        let dateCheck = document.getElementsByName('datecheck')[0];
+        let author = document.getElementsByName('author')[0];
+        let hashtag = document.getElementsByName('hashtag')[0];
+        let day = document.getElementsByName('day')[0];
+        let month = document.getElementsByName('month')[0];
+        let year = document.getElementsByName('year')[0];
+
+    }
+
     return {
         like: like,
         addMore: addMore,
@@ -184,7 +198,6 @@ var eve = function() {
         lookAtPhoto: lookAtPhoto
     }
 }();
-
 document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0].addEventListener('click', eve.addMore);
 
 document.getElementsByClassName('headeralign')[0].getElementsByTagName('button')[0].addEventListener('click', eve.login);

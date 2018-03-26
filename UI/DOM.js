@@ -14,7 +14,7 @@ var dom = function() {
             <div class="filtermainbutton">
                 <button type="button" class="buttonusual">Filter</button>
             </div>
-            <div class="asideform">
+            <form class="asideform">
                 <div class="filtercontent">
                     <p class="filtertext">
                         <input name="authorcheck" class="inputcheckbox" type="checkbox" checked>Author</p>
@@ -46,7 +46,7 @@ var dom = function() {
                     <span>/</span>
                     <input type="text" name="year" maxlength="4" class="inputyear" placeholder="yyyy">
                 </div>
-            </div>
+            </form>
         </div>`;
         return filt;
     }

@@ -41,7 +41,8 @@ var users = [
     new user('Magamed', '11111'),
     new user('Anastasia', '11111'),
     new user('Vova', '11111'),
-    new user('Petia', '11111')
+    new user('Petia', '11111'),
+    new user('Vasia', '11111')
 ]
 
 let module = (function () {

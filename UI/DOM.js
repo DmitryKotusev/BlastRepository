@@ -130,6 +130,7 @@ var dom = function() {
         for (let i = 0; i < hashtags.length && i < 10; i++) {
             var option = document.createElement('option');
             option.innerHTML = hashtags[i];
+            option.addEventListener('click', eve.selectHashEve);
             elem.appendChild(option);
         }
     }
@@ -141,6 +142,7 @@ var dom = function() {
         for (let i = 0; i < authorNames.length && i < 10; i++) {
             var option = document.createElement('option');
             option.innerHTML = authorNames[i];
+            option.addEventListener('click', eve.selectAuthorEve);
             elem.appendChild(option);
         }
     }
@@ -211,6 +213,9 @@ var dom = function() {
             
             let look = icons.getElementsByTagName('button')[2];
             look.addEventListener('click', eve.lookAtPhoto);
+
+            let del = icons.getElementsByTagName('button')[0];
+            del.addEventListener('click', eve.deletePost);
         }
         else
         {
@@ -320,7 +325,7 @@ var dom = function() {
 
         var loadMorButton = document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0];
         loadMorButton.addEventListener('click', eve.addMore);
-        if (module.getPhotoPosts(latestSkip + 20, latestTop, latestFilterConfig).length === 0) {
+        if (module.getPhotoPosts(latestSkip + 10, latestTop, latestFilterConfig).length === 0) {
             document.getElementsByClassName('mainplacing')[1].innerHTML = '';
         }
     }

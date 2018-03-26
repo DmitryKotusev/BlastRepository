@@ -78,8 +78,8 @@ var eve = function() {
                     main.innerHTML = '';
                     let filt = dom.makeFilter();
                     document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-                    dom.showPosts(0, 10);
                     dom.checkLogin(users[index].login);
+                    dom.showPosts(0, 10);
                     dom.showAuthors();
                     dom.showHashtags();
                     currentState = 0;
@@ -226,13 +226,39 @@ var eve = function() {
         dom.showPosts(0, 10, filterConfig);
     }
 
+    function selectHashEve(params) {
+        let option = params.target;
+        let filterContent = option.closest('.filtercontent');
+        let input = filterContent.getElementsByTagName('input')[1];
+        input.value += option.text;
+    }
+
+    function selectAuthorEve(params) {
+        let option = params.target;
+        let filterContent = option.closest('.filtercontent');
+        let input = filterContent.getElementsByTagName('input')[1];
+        input.value = option.text;
+    }
+
+    function deletePost(params) {
+        if (confirm("Are you sure you want to delete this post?"))
+        {
+            var button = event.target;
+            var id = button.closest('.post').id;
+            dom.deletePhotopost(id);
+        }
+    }
+
     return {
         like: like,
         addMore: addMore,
         login: login,
         exit: exit,
         lookAtPhoto: lookAtPhoto,
-        filter: filter
+        filter: filter,
+        selectHashEve: selectHashEve,
+        selectAuthorEve: selectAuthorEve,
+        deletePost: deletePost
     }
 }();
 document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0].addEventListener('click', eve.addMore);

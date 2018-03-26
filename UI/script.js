@@ -1,5 +1,5 @@
 'use strict';
-function Photopost(id, description, createdAt, author, photolink, likes, hashtags) {
+function Photopost(id, description, createdAt, author, photolink, likes, hashtags, isDeleted) {
     this.id = id;
     this.description = description;
     this.createdAt = createdAt;
@@ -7,6 +7,13 @@ function Photopost(id, description, createdAt, author, photolink, likes, hashtag
     this.photolink = photolink;
     this.likes = likes || [];
     this.hashtags = hashtags || [];
+    if (typeof(isDeleted) === 'boolean') {
+        this.isDeleted = isDeleted;   
+    }
+    else
+    {
+        this.isDeleted = false;
+    }
 }
 var photoPosts = [
     new Photopost('1', 'description1', new Date('2018-02-26T23:00:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia', 'Kolia', 'Anatolij'], ['#cool', '#2018']),
@@ -95,6 +102,10 @@ let module = (function () {
         if (filterConfig !== undefined) {
             //Функция фильтрации
             function filtfunc(param) {
+                if (param.isDeleted === true) {
+                    return false;
+                }
+
                 if (filterConfig.author !== undefined) {
                     if (typeof (filterConfig.author) === 'string') {
                         if (filterConfig.author !== param.author) {
@@ -132,14 +143,19 @@ let module = (function () {
         }
         else 
         {
-            var buffmass = photoPosts;//Фильтрация не нужна, так как объект не поступил
+            var buffmass = photoPosts.filter(el => {
+                if (el.isDeleted === true) {
+                    return false;
+                }
+                return true;
+            });//Фильтрация нужна только для удалённых элементов
         }
         
         return buffmass.slice(skip, skip + top);//отбрасывание первых skip элементов массива и взятие последующих top элементов
     }
     function getPhotoPost(id) {
         for (var index = 0; index < photoPosts.length; index++) {
-            if (photoPosts[index].id === id) {
+            if (photoPosts[index].id === id && !photoPosts[index].isDeleted) {
                 return photoPosts[index];
             }
         };
@@ -245,7 +261,8 @@ let module = (function () {
         if (typeof (id) === 'string') {
             for (var index = 0; index < photoPosts.length; index++) {
                 if (photoPosts[index].id === id) {
-                    photoPosts.splice(index, 1);
+                    //photoPosts.splice(index, 1);
+                    photoPosts[index].isDeleted = true;
                     return true;
                 }
             }

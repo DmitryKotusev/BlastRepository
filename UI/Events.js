@@ -178,7 +178,8 @@ var eve = function() {
 
     function isValidDate(y, m, d) {
         let dt = new Date(y, m, d);
-        return ((y == dt.getYear()) && ((m) == dt.getMonth()) && (d == dt.getDate()));
+        let isValid = (y == dt.getFullYear()) && ((m) == dt.getMonth()) && (d == dt.getDate());
+        return isValid;
     }
 
     function filter(params) {

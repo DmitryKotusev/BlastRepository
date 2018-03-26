@@ -320,6 +320,9 @@ var dom = function() {
 
         var loadMorButton = document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0];
         loadMorButton.addEventListener('click', eve.addMore);
+        if (module.getPhotoPosts(latestSkip + 20, latestTop, latestFilterConfig).length === 0) {
+            document.getElementsByClassName('mainplacing')[1].innerHTML = '';
+        }
     }
 
     function addMorePosts() {

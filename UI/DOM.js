@@ -48,6 +48,7 @@ var dom = function() {
                 </div>
             </form>
         </div>`;
+        filt.getElementsByClassName('buttonusual')[0].addEventListener('click', eve.filter);
         return filt;
     }
 
@@ -356,16 +357,15 @@ var dom = function() {
 
 //Отображаение первых 10 постов
 dom.showPosts(0, 10);
-
-/*
-//Редактирование
-dom.editPost('9', {description: 'Hello, world!!!', photolink: '../ImagesAndIcons/tmp852896240201891842.jpg', likes: ['Vasia', 'Kolia'], hashtags: ['#2018', 'wronghash', '#NewYear']});
-
 //Вывод тегов
 dom.showHashtags();
 
 //Вывод авторов
 dom.showAuthors();
+
+/*
+//Редактирование
+dom.editPost('9', {description: 'Hello, world!!!', photolink: '../ImagesAndIcons/tmp852896240201891842.jpg', likes: ['Vasia', 'Kolia'], hashtags: ['#2018', 'wronghash', '#NewYear']});
 
 //Удаление фотопоста с id = 9
 dom.deletePhotopost('9');

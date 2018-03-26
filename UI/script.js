@@ -257,7 +257,8 @@ let module = (function () {
         addPhotoPost: addPhotoPost,
         validatePhotoPost: validatePhotoPost,
         getPhotoPost: getPhotoPost,
-        getPhotoPosts: getPhotoPosts
+        getPhotoPosts: getPhotoPosts,
+        validhash: validhash
     }
     /////////////////////Проверки//////////////////////////////////////////////////////////////////////
 }());

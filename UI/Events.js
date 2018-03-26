@@ -176,18 +176,53 @@ var eve = function() {
         ////////////////////
     }
 
+    function isValidDate(y, m, d) {
+        let dt = new Date(y, m, d);
+        return ((y == dt.getYear()) && ((m) == dt.getMonth()) && (d == dt.getDate()));
+    }
+
     function filter(params) {
         let filt = document.getElementsByTagName('aside')[0];
         
-        let authorBox = document.getElementsByName('authorcheck')[0];
-        let hashCheck = document.getElementsByName('hashtagcheck')[0];
-        let dateCheck = document.getElementsByName('datecheck')[0];
-        let author = document.getElementsByName('author')[0];
-        let hashtag = document.getElementsByName('hashtag')[0];
-        let day = document.getElementsByName('day')[0];
-        let month = document.getElementsByName('month')[0];
-        let year = document.getElementsByName('year')[0];
+        let authorCheck = document.getElementsByName('authorcheck')[0];//Чекбокс
+        let hashCheck = document.getElementsByName('hashtagcheck')[0];//Чекбокс
+        let dateCheck = document.getElementsByName('datecheck')[0];//Чекбокс
+        let author = document.getElementsByName('author')[0];//input поле
+        let hashtag = document.getElementsByName('hashtag')[0];//input поле
+        let day = document.getElementsByName('day')[0];//input поле
+        let month = document.getElementsByName('month')[0];//input поле
+        let year = document.getElementsByName('year')[0];//input поле
+        var filterConfig = {};
 
+        if (authorCheck.checked) {
+            if (author.value !== '') {
+                filterConfig.author = author.value;
+            }
+        }
+
+        if (hashCheck.checked) {
+            if (hashtag.value !== '') {
+                let tags = hashtag.value.split(' ');
+                filterConfig.hashtags = [];
+                tags.forEach(element => {
+                    if (module.validhash(element)) {
+                        filterConfig.hashtags.push(element);
+                    }
+                });
+            }
+        }
+
+        if (dateCheck.checked) {
+            if (day.value !== '' && month.value !== '' && year.value !== '') {
+                let daynum = +day.value;
+                let daymonth = +month.value - 1;
+                let dayyear = +year.value;
+                if (isValidDate(dayyear, daymonth, daynum)) {
+                    filterConfig.createdAt = new Date(dayyear, daymonth, daynum);
+                }
+            }
+        }
+        dom.showPosts(0, 10, filterConfig);
     }
 
     return {
@@ -195,9 +230,12 @@ var eve = function() {
         addMore: addMore,
         login: login,
         exit: exit,
-        lookAtPhoto: lookAtPhoto
+        lookAtPhoto: lookAtPhoto,
+        filter: filter
     }
 }();
 document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0].addEventListener('click', eve.addMore);
 
 document.getElementsByClassName('headeralign')[0].getElementsByTagName('button')[0].addEventListener('click', eve.login);
+
+document.getElementsByTagName('aside')[0].getElementsByClassName('buttonusual')[0].addEventListener('click', eve.filter);

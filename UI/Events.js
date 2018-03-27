@@ -249,6 +249,13 @@ var eve = function() {
         }
     }
 
+    function updateImageDisplay(params) {
+        let photoWrapper = params.target.closest('.lookatphoto');
+        let image = photoWrapper.getElementsByClassName('imgstyle')[0];
+        let buff = window.URL.createObjectURL(params.target.files[0]);
+        image.src = window.URL.createObjectURL(params.target.files[0]);
+    }
+
     function editPost(params) {
         currentState = 3; //Состояние редактирования фотопоста
         let post = module.getPhotoPost(params.target.closest('.post').id);
@@ -277,6 +284,10 @@ var eve = function() {
                 <div class="bigphoto">
                     <img class="imgstyle" src="${post.photolink}" alt="Mat">
                 </div>
+                <div class="imagemarginclass">
+                    <label class="imagefilemodinput" for="files">Select Image</label>
+                    <input id="files" class="imagefileinput" type="file" name="photo" multiple accept="image/*,image/jpeg">
+                </div>
                 <p class="lookatphototext">Description</p>
                 <textarea class="texttoread" name="description" id="" cols="35" rows="5">${post.description}</textarea>
                 <p class="lookatphototext">Hashtags</p>
@@ -287,6 +298,9 @@ var eve = function() {
                 </div>
             </div>`;
         placeForButton.replaceChild(dom.makeSaveButton(), placeForButton.getElementsByTagName('button')[0]);
+
+        let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
+        input.addEventListener('change', updateImageDisplay);
     }
 
     return {

@@ -223,7 +223,7 @@ let module = (function () {
             buff.photolink = photoPost.photolink;
         }
         if ((Array.isArray(photoPost.likes))) {
-            for (var index = 0; index < photoPost.likes.length; index++) {
+            /*for (var index = 0; index < photoPost.likes.length; index++) {
                 var flag = false;
                 for (var index2 = 0; index2 < buff.likes.length; index2++) {
                     if (photoPost.likes[index] === buff.likes[index2]) {
@@ -235,10 +235,11 @@ let module = (function () {
                 if (!flag) {
                     buff.likes.push(photoPost.likes[index]);
                 }
-            }
+            }*/
+            buff.likes = photoPost.likes;
         }
         if ((Array.isArray(photoPost.hashtags))) {
-            for (var index = 0; index < photoPost.hashtags.length; index++) {
+            /*for (var index = 0; index < photoPost.hashtags.length; index++) {
                 if (validhash(photoPost.hashtags[index])) {
                     var flag = false;
                     for (var index2 = 0; index2 < buff.hashtags.length; index2++) {
@@ -252,7 +253,8 @@ let module = (function () {
                         buff.hashtags.push(photoPost.hashtags[index]);
                     }
                 }
-            }
+            }*/
+            buff.hashtags = photoPost.hashtags;
         }
         photoPosts[i] = clone(buff);
         return true;

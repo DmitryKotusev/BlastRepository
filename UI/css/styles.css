@@ -3,6 +3,29 @@
     padding-bottom: 0;
 }
 
+.imagefileinput {
+    display: none;
+    font-size: 2vw;
+}
+
+.imagefilemodinput {
+    font-size: 2vw;
+    border-style: outset;
+    background: #6a82dc;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.imagefilemodinput:hover {
+    background-color: white;
+    border-style: outset;
+}
+
+.imagemarginclass {
+    display: flex;
+    justify-content: center;
+}
+
 #form_login_container {
 	width: 300px;
 	height: 240px;

@@ -226,8 +226,8 @@ var dom = function() {
         if (currentName === photopost.author) {
             icons.innerHTML = 
             `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/delete-512.png" alt="Bin"></button>
-            <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/221649.png" alt="Edit"></button>
-            <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></button>
+            <button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="../ImagesAndIcons/221649.png" alt="Edit"></a></button>
+            <button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></a></button>
             <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin"> 
             <span class="likesamount">${photopost.likes.length}</span></button>`;
 
@@ -246,7 +246,7 @@ var dom = function() {
         else
         {
             icons.innerHTML = 
-            `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></button>
+            `<button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></a></button>
             <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin"> 
             <span class="likesamount">${photopost.likes.length}</span></button>`;
 

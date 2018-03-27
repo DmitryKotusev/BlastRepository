@@ -230,14 +230,14 @@ var eve = function() {
         let option = params.target;
         let filterContent = option.closest('.filtercontent');
         let input = filterContent.getElementsByTagName('input')[1];
-        input.value += option.text;
+        input.value += ' ' + option.value;
     }
 
     function selectAuthorEve(params) {
         let option = params.target;
         let filterContent = option.closest('.filtercontent');
         let input = filterContent.getElementsByTagName('input')[1];
-        input.value = option.text;
+        input.value = option.value;
     }
 
     function deletePost(params) {

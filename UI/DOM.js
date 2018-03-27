@@ -130,7 +130,6 @@ var dom = function() {
         for (let i = 0; i < hashtags.length && i < 10; i++) {
             var option = document.createElement('option');
             option.innerHTML = hashtags[i];
-            option.addEventListener('click', eve.selectHashEve);
             elem.appendChild(option);
         }
     }
@@ -142,7 +141,6 @@ var dom = function() {
         for (let i = 0; i < authorNames.length && i < 10; i++) {
             var option = document.createElement('option');
             option.innerHTML = authorNames[i];
-            option.addEventListener('click', eve.selectAuthorEve);
             elem.appendChild(option);
         }
     }

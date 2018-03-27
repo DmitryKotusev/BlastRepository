@@ -58,7 +58,7 @@ var eve = function() {
         main.innerHTML = 
         `<div id="form_login_container">
             <p class="login-text">Enter your login and password</p>
-            <p class="error-text"><\p>
+            <p class="error-text"></p>
             <form method='POST'>
             <input type="text" placeholder="Login" class="text_input" />
             <input type="text" placeholder="Password" class="text_input" />
@@ -296,11 +296,45 @@ var eve = function() {
                 <div class="lookatphotoicons">
                     <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
                 </div>
+                <p class="error-text"></p>
             </div>`;
-        placeForButton.replaceChild(dom.makeSaveButton(), placeForButton.getElementsByTagName('button')[0]);
+        let saveButton = dom.makeSaveButton();
+        placeForButton.replaceChild(saveButton, placeForButton.getElementsByTagName('button')[0]);
 
         let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
         input.addEventListener('change', updateImageDisplay);
+
+        let photoPost = {};
+
+        saveButton.addEventListener('click',function (params) {
+            let img = mainPlacing.getElementsByTagName('img')[0];
+
+            let description = mainPlacing.getElementsByTagName('textarea')[0];
+
+            let hash = mainPlacing.getElementsByTagName('textarea')[1];
+
+            photoPost.photolink = img.src;
+            photoPost.description = description.value;
+            photoPost.hashtags = hash.value.split(' ');
+
+            if (confirm('Are you sure you want to save changes?')) {
+                if (module.editPhotoPost(post.id, photoPost)) {
+                
+                    mainPlacing.innerHTML = '';
+                    let filt = dom.makeFilter();
+                    document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                    dom.showPosts(0, 10);
+                    dom.showAuthors();
+                    dom.showHashtags();
+                    currentState = 0;
+                }
+                else
+                {
+                    let error = mainPlacing.getElementsByClassName('error-text')[0];
+                    error.innerHTML = 'Sorry, there are some errors in what you have edit';
+                }
+            }
+        })
     }
 
     return {

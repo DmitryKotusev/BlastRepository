@@ -217,6 +217,9 @@ let module = (function () {
         }
         var buff = clone(photoPosts[i]);
         if (photoPost.description !== undefined && typeof (photoPost.description) === 'string') {
+            if (photoPost.description.length > 200) {
+                return false;
+            }
             buff.description = photoPost.description;
         }
         if (photoPost.photolink !== undefined && typeof (photoPost.photolink) === 'string') {
@@ -254,7 +257,10 @@ let module = (function () {
                     }
                 }
             }*/
-            buff.hashtags = photoPost.hashtags;
+            buff.hashtags = [];
+            for (let index = 0; index < photoPost.hashtags.length; index++) {
+                buff.hashtags.push(photoPost.hashtags[index]);
+            }
         }
         photoPosts[i] = clone(buff);
         return true;

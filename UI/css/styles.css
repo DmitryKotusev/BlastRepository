@@ -47,6 +47,10 @@
     color: red;
 }
 
+.lookatphoto .error-text {
+    font-size: 2vw;
+}
+
 .texttoread {
     font-size: 2.5vw; 
     border-radius: 10px;

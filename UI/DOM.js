@@ -202,6 +202,11 @@ var dom = function() {
         if (currentState === 0) {
             showPosts(0, 10);//Поменял параметры фильтра   
         }
+        if (currentState === 3) {
+            showPosts(0, 10);
+            let filt = dom.makeFilter();
+            document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+        }
     }
 
     function showPhotopost(photopost) {

@@ -6,6 +6,28 @@ var dom = function() {
     var latestTop = 0;        //Данное поле хранит количество записей, которое нужно было вывести на экран в последний раз
     var latestFilterConfig;   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
 
+    //Возвращает непривязанную к DOM кнопку загрузки
+    function makeLoadMoreButton(params) {
+        //<button type="button" class="buttonusualadd">Load more</button>
+        let button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'buttonusualadd';
+        button.innerHTML = 'Load more';
+        button.addEventListener('click', eve.addMore);
+        return button;
+    }
+
+    //Возвращает непривязанную к DOM кнопку подтверждения изменений
+    function makeSaveButton(params) {
+        //<button type="button" class="buttonusualadd">Load more</button>
+        let button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'buttonusualadd';
+        button.innerHTML = 'Save changes';
+        //button.addEventListener('click', eve.addMore);
+        return button;
+    }
+
     //Возращает непривязанный к DOM фильтр
     function makeFilter() {
         let filt = document.createElement('aside');
@@ -14,27 +36,30 @@ var dom = function() {
             <div class="filtermainbutton">
                 <button type="button" class="buttonusual">Filter</button>
             </div>
+
             <form class="asideform">
                 <div class="filtercontent">
                     <p class="filtertext">
                         <input name="authorcheck" class="inputcheckbox" type="checkbox" checked>Author</p>
-                    <input type="text" name="author">
-                    <p>
-                        <select id="authorselectors">
-                            
-                        </select>
-                    </p>
+                    <input type="text" name="author" list="authorselectors">
+                    <datalist id="authorselectors">
+                        <option>VasiaPupkin</option>
+                        <option>Kolia</option>
+                    </datalist>
 
                 </div>
+
                 <div class="filtercontent">
                     <p class="filtertext">
-                        <input name="hashtagcheck" class="inputcheckbox" type="checkbox" checked>Hashtag</p>
-                    <input type="text" name="hashtag">
-                    <p>
-                        <select id="filterselectors">
-                            
-                        </select>
-                    </p>
+                        <input name="hashtagcheck" class="inputcheckbox" type="checkbox" checked>Hashtags</p>
+                    <input type="text" name="hashtag" list="filterselectors">
+                    <datalist id="filterselectors">
+                        <option>#2K18</option>
+                        <option>#Luka</option>
+                        <option>#VR</option>
+                        <option>#Olypmics</option>
+                    </datalist>
+                
 
                 </div>
                 <div class="filtercontent">
@@ -212,6 +237,9 @@ var dom = function() {
             let look = icons.getElementsByTagName('button')[2];
             look.addEventListener('click', eve.lookAtPhoto);
 
+            let edit = icons.getElementsByTagName('button')[1];
+            edit.addEventListener('click', eve.editPost);
+
             let del = icons.getElementsByTagName('button')[0];
             del.addEventListener('click', eve.deletePost);
         }
@@ -358,6 +386,8 @@ var dom = function() {
         addLike: addLike,
         addMorePosts: addMorePosts,
         makeFilter: makeFilter,
+        makeLoadMoreButton: makeLoadMoreButton,
+        makeSaveButton: makeSaveButton
     }
 }();
 

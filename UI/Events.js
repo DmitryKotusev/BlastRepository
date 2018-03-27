@@ -226,7 +226,7 @@ var eve = function() {
         dom.showPosts(0, 10, filterConfig);
     }
 
-    function selectHashEve(params) {
+    /*function selectHashEve(params) {
         let option = params.target;
         let filterContent = option.closest('.filtercontent');
         let input = filterContent.getElementsByTagName('input')[1];
@@ -238,7 +238,7 @@ var eve = function() {
         let filterContent = option.closest('.filtercontent');
         let input = filterContent.getElementsByTagName('input')[1];
         input.value = option.value;
-    }
+    }*/
 
     function deletePost(params) {
         if (confirm("Are you sure you want to delete this post?"))
@@ -249,6 +249,46 @@ var eve = function() {
         }
     }
 
+    function editPost(params) {
+        currentState = 3; //Состояние редактирования фотопоста
+        let post = module.getPhotoPost(params.target.closest('.post').id);
+        document.getElementsByClassName('mainplacing')[0].innerHTML = '';
+        //let loadMoresect = document.getElementsByClassName('mainplacing')[1];
+        let placeForButton = document.getElementsByClassName('mainplacing')[1];
+        let main = document.getElementsByTagName('main')[0];
+        //main.removeChild(loadMoresect);
+
+        let body = document.getElementsByTagName('body')[0];
+        let filt = body.getElementsByTagName('aside')[0];
+
+        let backButton = document.createElement('button');
+        backButton.type = 'button';
+        backButton.className = 'buttonback';
+        backButton.id = 'Back';
+        backButton.innerHTML = 'Back';
+        backButton.addEventListener('click', backButtonEvent);
+
+        body.replaceChild(backButton, filt);
+
+        mainPlacing = document.getElementsByClassName('mainplacing')[0];
+
+        mainPlacing.innerHTML = 
+            `<div class="lookatphoto" id="${post.id}">
+                <div class="bigphoto">
+                    <img class="imgstyle" src="${post.photolink}" alt="Mat">
+                </div>
+                <p class="lookatphototext">Description</p>
+                <textarea class="texttoread" name="description" id="" cols="35" rows="5">${post.description}</textarea>
+                <p class="lookatphototext">Hashtags</p>
+                <textarea class="hashtagstoread" name="hashtags" id="" cols="35" rows="5">${post.hashtags.join(' ')}</textarea>
+                <p class="lookatphototext">Author: ${post.author}</p>
+                <div class="lookatphotoicons">
+                    <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
+                </div>
+            </div>`;
+        placeForButton.replaceChild(dom.makeSaveButton(), placeForButton.getElementsByTagName('button')[0]);
+    }
+
     return {
         like: like,
         addMore: addMore,
@@ -256,9 +296,8 @@ var eve = function() {
         exit: exit,
         lookAtPhoto: lookAtPhoto,
         filter: filter,
-        selectHashEve: selectHashEve,
-        selectAuthorEve: selectAuthorEve,
-        deletePost: deletePost
+        deletePost: deletePost,
+        editPost: editPost
     }
 }();
 document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0].addEventListener('click', eve.addMore);

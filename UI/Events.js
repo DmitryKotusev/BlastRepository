@@ -148,6 +148,10 @@ var eve = function() {
             //Прикрепить события
             let amountOfLikes = mainPlacing.getElementsByTagName('button')[2];
             amountOfLikes.addEventListener('click', likeLookAt);
+            let editButton = mainPlacing.getElementsByTagName('button')[1];
+            editButton.addEventListener('click', editPostLookAtPhoto);
+            let deleteButton = mainPlacing.getElementsByTagName('button')[0];
+            deleteButton.addEventListener('click', deletePostLookAtPhoto);
             ////////////////////
             return;
         }
@@ -249,11 +253,107 @@ var eve = function() {
         }
     }
 
+    function deletePostLookAtPhoto(params) {
+        if (confirm("Are you sure you want to delete this post?"))
+        {
+            var button = event.target;
+            var id = button.closest('.lookatphoto').id;
+            let filt = dom.makeFilter();
+            document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+            dom.showPosts(0, 10);
+            dom.showAuthors();
+            dom.showHashtags();
+            currentState = 0;
+            dom.deletePhotopost(id);
+        }
+    }
+
     function updateImageDisplay(params) {
         let photoWrapper = params.target.closest('.lookatphoto');
         let image = photoWrapper.getElementsByClassName('imgstyle')[0];
         let buff = window.URL.createObjectURL(params.target.files[0]);
         image.src = window.URL.createObjectURL(params.target.files[0]);
+    }
+
+    function editPostLookAtPhoto(params) {
+        currentState = 3; //Состояние редактирования фотопоста
+        let post = module.getPhotoPost(params.target.closest('.lookatphoto').id);
+        document.getElementsByClassName('mainplacing')[0].innerHTML = '';
+        //let loadMoresect = document.getElementsByClassName('mainplacing')[1];
+        let placeForButton = document.getElementsByClassName('mainplacing')[1];
+        let main = document.getElementsByTagName('main')[0];
+        //main.removeChild(loadMoresect);
+
+        let body = document.getElementsByTagName('body')[0];
+        let filt = dom.makeFilter();
+
+        /*let backButton = document.createElement('button');
+        backButton.type = 'button';
+        backButton.className = 'buttonback';
+        backButton.id = 'Back';
+        backButton.innerHTML = 'Back';
+        backButton.addEventListener('click', backButtonEvent);
+
+        body.replaceChild(backButton, filt);*/
+
+        mainPlacing = document.getElementsByClassName('mainplacing')[0];
+
+        mainPlacing.innerHTML = 
+            `<div class="lookatphoto" id="${post.id}">
+                <div class="bigphoto">
+                    <img class="imgstyle" src="${post.photolink}" alt="Mat">
+                </div>
+                <div class="imagemarginclass">
+                    <label class="imagefilemodinput" for="files">Select Image</label>
+                    <input id="files" class="imagefileinput" type="file" name="photo" multiple accept="image/*,image/jpeg">
+                </div>
+                <p class="lookatphototext">Description</p>
+                <textarea class="texttoread" name="description" id="" cols="35" rows="5">${post.description}</textarea>
+                <p class="lookatphototext">Hashtags</p>
+                <textarea class="hashtagstoread" name="hashtags" id="" cols="35" rows="5">${post.hashtags.join(' ')}</textarea>
+                <p class="lookatphototext">Author: ${post.author}</p>
+                <div class="lookatphotoicons">
+                    <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
+                </div>
+                <p class="error-text"></p>
+            </div>`;
+        let saveButton = dom.makeSaveButton();
+        placeForButton.appendChild(saveButton);
+
+        let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
+        input.addEventListener('change', updateImageDisplay);
+
+        saveButton.addEventListener('click',function (params) {
+            let photoPost = {};
+
+            let img = mainPlacing.getElementsByTagName('img')[0];
+
+            let description = mainPlacing.getElementsByTagName('textarea')[0];
+
+            let hash = mainPlacing.getElementsByTagName('textarea')[1];
+
+            photoPost.photolink = img.src;
+            photoPost.description = description.value;
+            photoPost.hashtags = hash.value.split(' ');
+
+            if (confirm('Are you sure you want to save changes?')) {
+                if (module.editPhotoPost(post.id, photoPost)) {
+                
+                    mainPlacing.innerHTML = '';
+                    let filt = dom.makeFilter();
+                    document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                    dom.showPosts(0, 10);
+                    dom.showAuthors();
+                    dom.showHashtags();
+                    currentState = 0;
+                }
+                else
+                {
+                    let error = mainPlacing.getElementsByClassName('error-text')[0];
+                    error.innerHTML = 'Sorry, there are some errors in what you have edit';
+                }
+            }
+        })
     }
 
     function editPost(params) {
@@ -304,9 +404,9 @@ var eve = function() {
         let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
         input.addEventListener('change', updateImageDisplay);
 
-        let photoPost = {};
-
         saveButton.addEventListener('click',function (params) {
+            let photoPost = {};
+
             let img = mainPlacing.getElementsByTagName('img')[0];
 
             let description = mainPlacing.getElementsByTagName('textarea')[0];
@@ -430,8 +530,3 @@ var eve = function() {
         uploadPost: uploadPost
     }
 }();
-document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0].addEventListener('click', eve.addMore);
-
-document.getElementsByClassName('headeralign')[0].getElementsByTagName('button')[0].addEventListener('click', eve.login);
-
-document.getElementsByTagName('aside')[0].getElementsByClassName('buttonusual')[0].addEventListener('click', eve.filter);

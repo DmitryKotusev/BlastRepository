@@ -182,7 +182,7 @@ var dom = function() {
 
     function checkLogin(username) {
         if (username === '') {
-            return;
+            username = undefined;
         }
         if (username === currentName) {
             return;
@@ -392,6 +392,29 @@ var dom = function() {
         }
     }
 
+    function startPageDownload(params) {
+        //Отображаение первых 10 постов
+        dom.showPosts(0, 10);
+
+        dom.checkLogin(currentName);
+
+        let header = document.getElementsByTagName('main')[0];
+
+        let body = document.getElementsByTagName('body')[0];
+
+        body.insertBefore(dom.makeFilter(), header);
+
+        document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0].addEventListener('click', eve.addMore);
+
+        document.getElementsByTagName('aside')[0].getElementsByClassName('buttonusual')[0].addEventListener('click', eve.filter);
+
+        //Вывод тегов
+        dom.showHashtags();
+
+        //Вывод авторов
+        dom.showAuthors();
+    }
+
     return {
         showPhotopost: showPhotopost,
         checkLogin: checkLogin,
@@ -406,18 +429,12 @@ var dom = function() {
         makeFilter: makeFilter,
         makeLoadMoreButton: makeLoadMoreButton,
         makeSaveButton: makeSaveButton,
-        makeUploadButton: makeUploadButton
+        makeUploadButton: makeUploadButton,
+        startPageDownload: startPageDownload
     }
 }();
 
-//Отображаение первых 10 постов
-dom.showPosts(0, 10);
-//Вывод тегов
-dom.showHashtags();
-
-//Вывод авторов
-dom.showAuthors();
-
+dom.startPageDownload();
 /*
 //Редактирование
 dom.editPost('9', {description: 'Hello, world!!!', photolink: '../ImagesAndIcons/tmp852896240201891842.jpg', likes: ['Vasia', 'Kolia'], hashtags: ['#2018', 'wronghash', '#NewYear']});

@@ -28,6 +28,16 @@ var dom = function() {
         return button;
     }
 
+    function makeUploadButton(params) {
+        //<button type="button" class="buttonusualadd">Load more</button>
+        let button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'buttonusualadd';
+        button.innerHTML = 'Save and upload';
+        //button.addEventListener('click', eve.addMore);
+        return button;
+    }
+
     //Возращает непривязанный к DOM фильтр
     function makeFilter() {
         let filt = document.createElement('aside');
@@ -189,6 +199,9 @@ var dom = function() {
 
             let exitButton = document.getElementsByClassName('headeralign')[0].getElementsByTagName('button')[1];
             exitButton.addEventListener('click', eve.exit);
+
+            let addPhotoButton = document.getElementsByClassName('headeralign')[0].getElementsByTagName('button')[0];
+            addPhotoButton.addEventListener('click', eve.uploadPost);
         }
         else
         {
@@ -392,7 +405,8 @@ var dom = function() {
         addMorePosts: addMorePosts,
         makeFilter: makeFilter,
         makeLoadMoreButton: makeLoadMoreButton,
-        makeSaveButton: makeSaveButton
+        makeSaveButton: makeSaveButton,
+        makeUploadButton: makeUploadButton
     }
 }();
 

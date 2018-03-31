@@ -53,6 +53,33 @@ var users = [
 ]
 
 let module = (function () {
+
+    function getMaxID() {
+        if (photoPosts.length === 0) {
+            return null;
+        }
+        let max = photoPosts[0].id;
+        for (let index = 1; index < photoPosts.length; index++) {
+            if (parseInt(photoPosts[index].id, 10) > parseInt(max, 10)) {
+                max = photoPosts[index].id
+            }
+        }
+        return max;
+    }
+
+    function getNewID() {
+        let newID;
+        let maxID = getMaxID();
+        if (maxID === null) {
+            newID = '1';
+        }
+        else
+        {
+            newID = `${parseInt(maxID, 10) + 1}`;
+        }
+        return newID;
+    }
+
     function clone(params) {
         var clone = {}; // новый пустой объект
 
@@ -161,6 +188,10 @@ let module = (function () {
         };
     }
     function validatePhotoPost(photoPost) {
+        /*let bufff = typeof (photoPost.id);
+        bufff = typeof (photoPost.description);
+        bufff = typeof (photoPost.photolink);
+        bufff = typeof (photoPost.author);*/
         if (typeof (photoPost.id) !== 'string' || typeof (photoPost.description) !== 'string' || typeof (photoPost.author) !== 'string' || typeof (photoPost.photolink) !== 'string') {
             return false;
         }
@@ -284,7 +315,8 @@ let module = (function () {
         validatePhotoPost: validatePhotoPost,
         getPhotoPost: getPhotoPost,
         getPhotoPosts: getPhotoPosts,
-        validhash: validhash
+        validhash: validhash,
+        getNewID: getNewID
     }
     /////////////////////Проверки//////////////////////////////////////////////////////////////////////
 }());

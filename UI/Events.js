@@ -268,11 +268,29 @@ var eve = function() {
         }
     }
 
+    /*function setImgSrc(src) {
+        let submitPost = document.forms.submitPost;
+        submitPost.value = src;
+    }
+
+    function loadFoto(file) {
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = function () {
+            setImgSrc(reader.result);
+        };
+    }*/
+
     function updateImageDisplay(params) {
         let photoWrapper = params.target.closest('.lookatphoto');
         let image = photoWrapper.getElementsByClassName('imgstyle')[0];
-        let buff = window.URL.createObjectURL(params.target.files[0]);
-        image.src = window.URL.createObjectURL(params.target.files[0]);
+        //let buff = window.URL.createObjectURL(params.target.files[0]);
+        //image.src = window.URL.createObjectURL(params.target.files[0]);
+        let reader = new FileReader();
+        reader.readAsDataURL(params.target.files[0]);
+        reader.onloadend = function () {
+            image.src = reader.result;
+        }; 
     }
 
     function editPostLookAtPhoto(params) {

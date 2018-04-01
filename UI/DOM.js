@@ -402,6 +402,10 @@ var dom = function() {
             if (key == 'createdAt') return new Date(value);
             return value;
           });
+        if (photoPosts === null) {
+            photoPosts = [];
+        }
+        
         currentName = JSON.parse(localStorage.getItem('currentName'));
 
         //Отображаение первых 10 постов

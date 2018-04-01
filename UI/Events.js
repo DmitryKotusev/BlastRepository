@@ -21,7 +21,7 @@ var eve = function() {
         let filt = dom.makeFilter();
         document.getElementsByTagName('body')[0].replaceChild(filt, event.target);
         dom.showPosts(0, 10);
-        if (currentName !== '') {
+        if (currentName !== null && currentName !== '') {
             dom.checkLogin(currentName);   
         }
         else

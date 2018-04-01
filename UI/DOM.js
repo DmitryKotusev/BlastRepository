@@ -1,4 +1,4 @@
-var currentName = '';     //Хранит текущий ник пользователя
+var currentName;     //Хранит текущий ник пользователя
 var currentState = 0;     //Отражает текущее состояние страницы
 
 var dom = function() {
@@ -89,7 +89,7 @@ var dom = function() {
 
     function addLike(id)
     {
-        if (currentName === '') {
+        if (currentName === null) {
             return;
         }
         if (typeof(id) !== 'string') {
@@ -134,6 +134,7 @@ var dom = function() {
             var amountOfLikes = post.getElementsByClassName('likesamount')[0];
             amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;   
         }
+        localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
     }
 
     
@@ -181,11 +182,8 @@ var dom = function() {
     }
 
     function checkLogin(username) {
-        if (username === '') {
+        if (username === '' || username === null) {
             username = undefined;
-        }
-        if (username === currentName) {
-            return;
         }
         var islogined = (username !== undefined);
         if(islogined)
@@ -202,15 +200,19 @@ var dom = function() {
 
             let addPhotoButton = document.getElementsByClassName('headeralign')[0].getElementsByTagName('button')[0];
             addPhotoButton.addEventListener('click', eve.uploadPost);
+
+            localStorage.setItem('currentName', JSON.stringify(currentName));
         }
         else
         {
             document.getElementsByClassName('nicknamealign')[0].innerHTML = '';
             document.getElementsByClassName('headeralign')[0].innerHTML = `<button type="button" class="buttonusual">Login</button>`;
-            currentName = '';
+            currentName = null;
             var header = document.getElementsByClassName('headeralign')[0];
             var but = header.getElementsByTagName('button')[0];
             but.addEventListener('click', eve.login);
+
+            localStorage.setItem('currentName', JSON.stringify(currentName));
         }
         if (currentState === 0) {
             showPosts(0, 10);//Поменял параметры фильтра   
@@ -311,6 +313,7 @@ var dom = function() {
     function addPhotopost(photopost) {
         if(module.addPhotoPost(photopost))
         {
+            localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
             showPosts(0, 10);//Поменял параметры фильтра
         }
     }
@@ -325,6 +328,7 @@ var dom = function() {
         }
         if(module.removePhotoPost(id))
         {
+            localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
             showPosts(0, 10);//Поменял параметры фильтра
         }
     }
@@ -393,6 +397,13 @@ var dom = function() {
     }
 
     function startPageDownload(params) {
+
+        photoPosts = JSON.parse(localStorage.getItem('photoPosts'), function(key, value) {
+            if (key == 'createdAt') return new Date(value);
+            return value;
+          });
+        currentName = JSON.parse(localStorage.getItem('currentName'));
+
         //Отображаение первых 10 постов
         dom.showPosts(0, 10);
 

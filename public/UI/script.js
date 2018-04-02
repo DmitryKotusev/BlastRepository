@@ -195,7 +195,7 @@ let module = (function () {
         if (typeof (photoPost.id) !== 'string' || typeof (photoPost.description) !== 'string' || typeof (photoPost.author) !== 'string' || typeof (photoPost.photolink) !== 'string') {
             return false;
         }
-        if (photoPost.description.length >= 200) {
+        if (photoPost.description.length >= 200 || photoPost.description.length == 0) {
             return false;
         }
         if (photoPost.createdAt === 'Invalid Date') {

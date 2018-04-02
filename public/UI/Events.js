@@ -138,9 +138,9 @@ var eve = function() {
                 <div class="lookatphotoicons">
                     <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
                     <div class="nickandiconsspec">
-                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="../ImagesAndIcons/delete-512.png" alt="Bin"></button>
-                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="../ImagesAndIcons/221649.png" alt="Edit"></button>
-                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin">
+                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/delete-512.png" alt="Bin"></button>
+                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/221649.png" alt="Edit"></button>
+                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin">
                         <span class="likesamount">${post.likes.length}</span></button>
                     </div>
                 </div>
@@ -169,7 +169,7 @@ var eve = function() {
             <div class="lookatphotoicons">
                 <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
                 <div class="nickandiconsspec">
-                    <button type="button" class="buttonsetspec"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin">
+                    <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin">
                     <span class="likesamount">${post.likes.length}</span></button>
                 </div>
             </div>
@@ -502,7 +502,14 @@ var eve = function() {
         input.addEventListener('change', updateImageDisplay);
 
         let uploadButton = dom.makeUploadButton();
-        placeForButton.replaceChild(uploadButton, placeForButton.getElementsByTagName('button')[0]);
+        
+        if (placeForButton.getElementsByTagName('button')[0] !== undefined) {
+            placeForButton.replaceChild(uploadButton, placeForButton.getElementsByTagName('button')[0]);
+        }
+        else
+        {
+            placeForButton.appendChild(uploadButton);
+        }
 
         uploadButton.addEventListener('click', function (params) {
             let ID = module.getNewID();
@@ -511,8 +518,14 @@ var eve = function() {
             let description = mainPlacing.getElementsByTagName('textarea')[0];
 
             let hash = mainPlacing.getElementsByTagName('textarea')[1];
+            let hashTags = hash.value.split(' ');
+            for (let index = 0; index < hashTags.length; index++) {
+                if (hashTags[index] === '') {
+                    hashTags.splice(index, 1);
+                }
+            }
 
-            let photoPost = new Photopost(ID, description.value, new Date(), currentName, img.src, [], hash.value.split(' '));
+            let photoPost = new Photopost(ID, description.value, new Date(), currentName, img.src, [], hashTags);
 
             /*photoPost.photolink = img.src;
             photoPost.description = description.value;
@@ -525,6 +538,7 @@ var eve = function() {
                     dom.showPosts(0, 10);
                     dom.showAuthors();
                     dom.showHashtags();
+                    localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
                     currentState = 0;
                 }
                 else

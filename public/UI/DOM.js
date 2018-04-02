@@ -245,10 +245,10 @@ var dom = function() {
         icons.className = 'nickandicons';
         if (currentName === photopost.author) {
             icons.innerHTML = 
-            `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/delete-512.png" alt="Bin"></button>
-            <button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="../ImagesAndIcons/221649.png" alt="Edit"></a></button>
-            <button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></a></button>
-            <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin"> 
+            `<button type="button" class="buttonset"><img class="iconstyles" src="./ImagesAndIcons/delete-512.png" alt="Bin"></button>
+            <button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="./ImagesAndIcons/221649.png" alt="Edit"></a></button>
+            <button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="./ImagesAndIcons/comments.png" alt="Bin"></a></button>
+            <button type="button" class="buttonset"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin"> 
             <span class="likesamount">${photopost.likes.length}</span></button>`;
 
             let likes = icons.getElementsByTagName('button')[3];
@@ -266,8 +266,8 @@ var dom = function() {
         else
         {
             icons.innerHTML = 
-            `<button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></a></button>
-            <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin"> 
+            `<button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="./ImagesAndIcons/comments.png" alt="Bin"></a></button>
+            <button type="button" class="buttonset"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin"> 
             <span class="likesamount">${photopost.likes.length}</span></button>`;
 
             let likes = icons.getElementsByTagName('button')[1];
@@ -458,13 +458,13 @@ var dom = function() {
 dom.startPageDownload();
 /*
 //Редактирование
-dom.editPost('9', {description: 'Hello, world!!!', photolink: '../ImagesAndIcons/tmp852896240201891842.jpg', likes: ['Vasia', 'Kolia'], hashtags: ['#2018', 'wronghash', '#NewYear']});
+dom.editPost('9', {description: 'Hello, world!!!', photolink: './ImagesAndIcons/tmp852896240201891842.jpg', likes: ['Vasia', 'Kolia'], hashtags: ['#2018', 'wronghash', '#NewYear']});
 
 //Удаление фотопоста с id = 9
 dom.deletePhotopost('9');
 
 //Добавление нового фотопоста с id = 9
-dom.addPhotopost(new Photopost('9', 'description20', new Date('2018-03-16T02:20:00'), 'Kolia', '../ImagesAndIcons/1477469601_nature_gora.jpg', ['Vasia', 'Petia'], ['#summer', '#2018']));
+dom.addPhotopost(new Photopost('9', 'description20', new Date('2018-03-16T02:20:00'), 'Kolia', './ImagesAndIcons/1477469601_nature_gora.jpg', ['Vasia', 'Petia'], ['#summer', '#2018']));
 
 //Логин
 dom.checkLogin('Vasia');

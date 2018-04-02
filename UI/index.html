@@ -16,43 +16,41 @@
             <!--<p>User123456</p>-->
         </div>
         <div class="headeralign">
-            <button type="button" class="buttonusual">Login</button>
-            <!--<button type="button" class="buttonusual">Add photo</button>
+            <!--<button type="button" class="buttonusual">Login</button>
+            <button type="button" class="buttonusual">Add photo</button>
             <button type="button" class="buttonusual">Exit</button>-->
         </div>
     </header>
-    <aside>
+    <p id="top"></p>
+    <!--<aside>
         <div class="filterelements">
             <div class="filtermainbutton">
                 <button type="button" class="buttonusual">Filter</button>
             </div>
 
-            <div class="asideform">
+            <form class="asideform">
                 <div class="filtercontent">
                     <p class="filtertext">
                         <input name="authorcheck" class="inputcheckbox" type="checkbox" checked>Author</p>
-                    <input type="text" name="author">
-                    <p>
-                        <select id="authorselectors">
-                            <option>VasiaPupkin</option>
-                            <option>Kolia</option>
-                        </select>
-                    </p>
+                    <input type="text" name="author" list="authorselectors">
+                    <datalist id="authorselectors">
+                        <option>VasiaPupkin</option>
+                        <option>Kolia</option>
+                    </datalist>
 
                 </div>
 
                 <div class="filtercontent">
                     <p class="filtertext">
-                        <input name="hashtagcheck" class="inputcheckbox" type="checkbox" checked>Hashtag</p>
-                    <input type="text" name="hashtag">
-                    <p>
-                        <select id="filterselectors">
-                            <option>#2K18</option>
-                            <option>#Luka</option>
-                            <option>#VR</option>
-                            <option>#Olypmics</option>
-                        </select>
-                    </p>
+                        <input name="hashtagcheck" class="inputcheckbox" type="checkbox" checked>Hashtags</p>
+                    <input type="text" name="hashtag" list="filterselectors">
+                    <datalist id="filterselectors">
+                        <option>#2K18</option>
+                        <option>#Luka</option>
+                        <option>#VR</option>
+                        <option>#Olypmics</option>
+                    </datalist>
+                    
 
                 </div>
                 <div class="filtercontent">
@@ -64,9 +62,9 @@
                     <span>/</span>
                     <input type="text" name="year" maxlength="4" class="inputyear" placeholder="yyyy">
                 </div>
-            </div>
+            </form>
         </div>
-    </aside>
+    </aside>-->
     <main>
         <div class="mainplacing">
             <!--<div class="post">
@@ -274,6 +272,8 @@
         </div>
     </footer>
 </body>
+<script src="FillLocaleStorage.js"></script>
+<script src="Events.js"></script>
 <script src="script.js"></script>
 <script src="DOM.js"></script>
 

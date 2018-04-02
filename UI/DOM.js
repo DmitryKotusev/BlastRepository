@@ -1,14 +1,95 @@
-
+var currentName;     //Хранит текущий ник пользователя
+var currentState = 0;     //Отражает текущее состояние страницы
 
 var dom = function() {
     var latestSkip = 0;       //Данное поле хранит количество записей, которое нужно было пропустить в последний раз 
     var latestTop = 0;        //Данное поле хранит количество записей, которое нужно было вывести на экран в последний раз
     var latestFilterConfig;   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
-    var currentName = '';     //Хранит текущий ник пользователя
+
+    //Возвращает непривязанную к DOM кнопку загрузки
+    function makeLoadMoreButton(params) {
+        //<button type="button" class="buttonusualadd">Load more</button>
+        let button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'buttonusualadd';
+        button.innerHTML = 'Load more';
+        button.addEventListener('click', eve.addMore);
+        return button;
+    }
+
+    //Возвращает непривязанную к DOM кнопку подтверждения изменений
+    function makeSaveButton(params) {
+        //<button type="button" class="buttonusualadd">Load more</button>
+        let button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'buttonusualadd';
+        button.innerHTML = 'Save changes';
+        //button.addEventListener('click', eve.addMore);
+        return button;
+    }
+
+    function makeUploadButton(params) {
+        //<button type="button" class="buttonusualadd">Load more</button>
+        let button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'buttonusualadd';
+        button.innerHTML = 'Save and upload';
+        //button.addEventListener('click', eve.addMore);
+        return button;
+    }
+
+    //Возращает непривязанный к DOM фильтр
+    function makeFilter() {
+        let filt = document.createElement('aside');
+        filt.innerHTML = 
+        `<div class="filterelements">
+            <div class="filtermainbutton">
+                <button type="button" class="buttonusual">Filter</button>
+            </div>
+
+            <form class="asideform">
+                <div class="filtercontent">
+                    <p class="filtertext">
+                        <input name="authorcheck" class="inputcheckbox" type="checkbox" checked>Author</p>
+                    <input type="text" name="author" list="authorselectors">
+                    <datalist id="authorselectors">
+                        <option>VasiaPupkin</option>
+                        <option>Kolia</option>
+                    </datalist>
+
+                </div>
+
+                <div class="filtercontent">
+                    <p class="filtertext">
+                        <input name="hashtagcheck" class="inputcheckbox" type="checkbox" checked>Hashtags</p>
+                    <input type="text" name="hashtag" list="filterselectors">
+                    <datalist id="filterselectors">
+                        <option>#2K18</option>
+                        <option>#Luka</option>
+                        <option>#VR</option>
+                        <option>#Olypmics</option>
+                    </datalist>
+                
+
+                </div>
+                <div class="filtercontent">
+                    <p class="filtertext">
+                        <input name="datecheck" class="inputcheckbox" type="checkbox" checked>Date</p>
+                    <input type="text" name="day" maxlength="2" class="inputdate" placeholder="dd">
+                    <span>/</span>
+                    <input type="text" name="month" maxlength="2" class="inputdate" placeholder="mm">
+                    <span>/</span>
+                    <input type="text" name="year" maxlength="4" class="inputyear" placeholder="yyyy">
+                </div>
+            </form>
+        </div>`;
+        filt.getElementsByClassName('buttonusual')[0].addEventListener('click', eve.filter);
+        return filt;
+    }
 
     function addLike(id)
     {
-        if (currentName === '') {
+        if (currentName === null) {
             return;
         }
         if (typeof(id) !== 'string') {
@@ -53,7 +134,10 @@ var dom = function() {
             var amountOfLikes = post.getElementsByClassName('likesamount')[0];
             amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;   
         }
+        localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
     }
+
+    
 
     var hashtags = [];
     function findUniqueHashtags() {
@@ -98,11 +182,8 @@ var dom = function() {
     }
 
     function checkLogin(username) {
-        if (username === '') {
-            return;
-        }
-        if (username === currentName) {
-            return;
+        if (username === '' || username === null) {
+            username = undefined;
         }
         var islogined = (username !== undefined);
         if(islogined)
@@ -113,14 +194,34 @@ var dom = function() {
             Add photo</button>
             <button type="button" class="buttonusual">Exit</button>`;
             currentName = username;
+
+            let exitButton = document.getElementsByClassName('headeralign')[0].getElementsByTagName('button')[1];
+            exitButton.addEventListener('click', eve.exit);
+
+            let addPhotoButton = document.getElementsByClassName('headeralign')[0].getElementsByTagName('button')[0];
+            addPhotoButton.addEventListener('click', eve.uploadPost);
+
+            localStorage.setItem('currentName', JSON.stringify(currentName));
         }
         else
         {
             document.getElementsByClassName('nicknamealign')[0].innerHTML = '';
             document.getElementsByClassName('headeralign')[0].innerHTML = `<button type="button" class="buttonusual">Login</button>`;
-            currentName = '';
+            currentName = null;
+            var header = document.getElementsByClassName('headeralign')[0];
+            var but = header.getElementsByTagName('button')[0];
+            but.addEventListener('click', eve.login);
+
+            localStorage.setItem('currentName', JSON.stringify(currentName));
         }
-        showPosts(latestSkip, latestTop, latestFilterConfig);
+        if (currentState === 0) {
+            showPosts(0, 10);//Поменял параметры фильтра   
+        }
+        if (currentState === 3) {
+            showPosts(0, 10);
+            let filt = dom.makeFilter();
+            document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+        }
     }
 
     function showPhotopost(photopost) {
@@ -145,17 +246,34 @@ var dom = function() {
         if (currentName === photopost.author) {
             icons.innerHTML = 
             `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/delete-512.png" alt="Bin"></button>
-            <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/221649.png" alt="Edit"></button>
-            <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></button>
+            <button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="../ImagesAndIcons/221649.png" alt="Edit"></a></button>
+            <button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></a></button>
             <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin"> 
-            <span class="likesamount">${photopost.likes.length}</span></button>`;  
+            <span class="likesamount">${photopost.likes.length}</span></button>`;
+
+            let likes = icons.getElementsByTagName('button')[3];
+            likes.addEventListener('click', eve.like);
+            
+            let look = icons.getElementsByTagName('button')[2];
+            look.addEventListener('click', eve.lookAtPhoto);
+
+            let edit = icons.getElementsByTagName('button')[1];
+            edit.addEventListener('click', eve.editPost);
+
+            let del = icons.getElementsByTagName('button')[0];
+            del.addEventListener('click', eve.deletePost);
         }
         else
         {
             icons.innerHTML = 
-            `<button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></button>
+            `<button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="../ImagesAndIcons/comments.png" alt="Bin"></a></button>
             <button type="button" class="buttonset"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin"> 
             <span class="likesamount">${photopost.likes.length}</span></button>`;
+
+            let likes = icons.getElementsByTagName('button')[1];
+            likes.addEventListener('click', eve.like);
+            let look = icons.getElementsByTagName('button')[0];
+            look.addEventListener('click', eve.lookAtPhoto);
         }
         
         var date = document.createElement('div');
@@ -195,7 +313,8 @@ var dom = function() {
     function addPhotopost(photopost) {
         if(module.addPhotoPost(photopost))
         {
-            showPosts(latestSkip, latestTop, latestFilterConfig);
+            localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
+            showPosts(0, 10);//Поменял параметры фильтра
         }
     }
 
@@ -209,7 +328,8 @@ var dom = function() {
         }
         if(module.removePhotoPost(id))
         {
-            showPosts(latestSkip, latestTop, latestFilterConfig);
+            localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
+            showPosts(0, 10);//Поменял параметры фильтра
         }
     }
 
@@ -223,13 +343,16 @@ var dom = function() {
         }
         if(module.editPhotoPost(id, photoPost))
         {
-            showPosts(latestSkip, latestTop, latestFilterConfig);
+            showPosts(0, 10);//Поменял параметры фильтра
         }
         return true;
     }
 
     function showPosts(skip, top, filterConfig) {
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
+        document.getElementsByClassName('mainplacing')[1].innerHTML = `<button type="button" 
+        class="buttonusualadd">Load more</button>`;
+
         var photoPosts = module.getPhotoPosts(skip, top, filterConfig);
     
         if (photoPosts === undefined) {
@@ -243,6 +366,68 @@ var dom = function() {
         latestSkip = skip;
         latestTop = top;
         latestFilterConfig = filterConfig;
+        if (module.getPhotoPosts(skip, top, filterConfig).length === 0) {
+            document.getElementsByClassName('mainplacing')[1].innerHTML = '';
+            return;
+        }
+
+        var loadMorButton = document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0];
+        loadMorButton.addEventListener('click', eve.addMore);
+        if (module.getPhotoPosts(latestSkip + 10, latestTop, latestFilterConfig).length === 0) {
+            document.getElementsByClassName('mainplacing')[1].innerHTML = '';
+        }
+    }
+
+    function addMorePosts() {
+        latestSkip = latestSkip + 10;
+
+        var photoPosts = module.getPhotoPosts(latestSkip, latestTop, latestFilterConfig);
+    
+        if (photoPosts === undefined) {
+            return;
+        }
+
+        photoPosts.forEach(function (photopost) {
+            showPhotopost(photopost);
+        });
+
+        if (module.getPhotoPosts(latestSkip + 10, latestTop, latestFilterConfig).length === 0) {
+            document.getElementsByClassName('mainplacing')[1].innerHTML = '';
+        }
+    }
+
+    function startPageDownload(params) {
+
+        photoPosts = JSON.parse(localStorage.getItem('photoPosts'), function(key, value) {
+            if (key == 'createdAt') return new Date(value);
+            return value;
+          });
+        if (photoPosts === null) {
+            photoPosts = [];
+        }
+        
+        currentName = JSON.parse(localStorage.getItem('currentName'));
+
+        //Отображаение первых 10 постов
+        dom.showPosts(0, 10);
+
+        dom.checkLogin(currentName);
+
+        let header = document.getElementsByTagName('main')[0];
+
+        let body = document.getElementsByTagName('body')[0];
+
+        body.insertBefore(dom.makeFilter(), header);
+
+        document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0].addEventListener('click', eve.addMore);
+
+        document.getElementsByTagName('aside')[0].getElementsByClassName('buttonusual')[0].addEventListener('click', eve.filter);
+
+        //Вывод тегов
+        dom.showHashtags();
+
+        //Вывод авторов
+        dom.showAuthors();
     }
 
     return {
@@ -254,21 +439,20 @@ var dom = function() {
         showHashtags: showHashtags,
         showPosts: showPosts,
         showAuthors: showAuthors,
-        addLike: addLike
+        addLike: addLike,
+        addMorePosts: addMorePosts,
+        makeFilter: makeFilter,
+        makeLoadMoreButton: makeLoadMoreButton,
+        makeSaveButton: makeSaveButton,
+        makeUploadButton: makeUploadButton,
+        startPageDownload: startPageDownload
     }
 }();
 
-//Отображаение первых 10 постов
-dom.showPosts(0, 10);
-
+dom.startPageDownload();
+/*
 //Редактирование
 dom.editPost('9', {description: 'Hello, world!!!', photolink: '../ImagesAndIcons/tmp852896240201891842.jpg', likes: ['Vasia', 'Kolia'], hashtags: ['#2018', 'wronghash', '#NewYear']});
-
-//Вывод тегов
-dom.showHashtags();
-
-//Вывод авторов
-dom.showAuthors();
 
 //Удаление фотопоста с id = 9
 dom.deletePhotopost('9');
@@ -285,4 +469,4 @@ dom.addLike('9');
 //Убираем лайк всё тому же посту с ID = 9
 dom.addLike('9');
 
-dom.checkLogin();
+dom.checkLogin();*/

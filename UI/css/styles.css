@@ -3,6 +3,74 @@
     padding-bottom: 0;
 }
 
+.imagefileinput {
+    display: none;
+    font-size: 2vw;
+}
+
+.imagefilemodinput {
+    font-size: 2vw;
+    border-style: outset;
+    background: #6a82dc;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.imagefilemodinput:hover {
+    background-color: white;
+    border-style: outset;
+}
+
+.imagemarginclass {
+    display: flex;
+    justify-content: center;
+}
+
+#form_login_container {
+	width: 300px;
+	height: 240px;
+	margin: 0px auto;
+	padding-top: 80px;
+}
+.text_input {
+	color: black;
+	margin: 5px 35px 0 34px;
+	padding: 0px 0px 0px 10px;
+	width: 229px;
+    height: 32px;
+}
+.login-text {
+    text-align: center;
+}
+.error-text {
+    text-align: center;
+    color: red;
+}
+
+.lookatphoto .error-text {
+    font-size: 2vw;
+}
+
+.texttoread {
+    font-size: 2.5vw; 
+    border-radius: 10px;
+}
+
+.hashtagstoread {
+    font-size: 2.5vw; 
+    border-radius: 10px;
+    color: #0402a8;
+}
+
+.lookatphotoicons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.lookatphototext {
+    font-size: 3vw;
+}
+
 header {
     background: linear-gradient(to right, #b0cae5, #5067d9);
     height: 6vw;
@@ -20,6 +88,35 @@ header {
     align-items: center;
     justify-content: space-between;
 }
+
+.buttonlogin {
+    cursor: pointer;
+    background: #6a82dc;
+    border-radius: 10px;
+    border-color: black;
+    font-size: 20px;
+    margin-top: 15px;
+    margin-left: 34px;
+}
+.buttonlogin:hover {
+    background-color: white;
+}
+
+.buttonback {
+    cursor: pointer;
+    background: #6a82dc;
+    border-radius: 10px;
+    border-color: black;
+    font-size: 1.8vw;
+    margin-top: 6vw;
+    margin-left: 1.5vw;
+    float: left;
+    position: fixed;
+}
+.buttonback:hover {
+    background-color: white;
+}
+
 .buttonusual {
     cursor: pointer;
     background: #6a82dc;
@@ -48,12 +145,27 @@ header {
 .buttonusualadd:hover {
     background-color: white;
 }
+.buttonsetspec {
+    background: white;
+    border: 0;
+    margin: 0;
+    width: 10%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: left;
+    color: #b0cae5;
+}
+.buttonsetspec span {
+    font-size: 1.5vw;
+}
+
 .buttonset {
     background: white;
     border: 0;
     margin: 0;
     width: 15%;
-    height: 15%;
+    height: 2vw;
     float: none;
     display: flex;
     justify-content: flex-start;
@@ -132,7 +244,7 @@ main {
     align-self: auto;
     background: white;
     width: 60%;
-    min-height: 100vh;
+    min-height: calc(96vh - 20px - 6vw);
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
@@ -159,6 +271,9 @@ footer {
     align-self: flex-start;
     z-index: 2;
 }
+.likesamount {
+    height: 100%;
+}
 .blasterstyle {
     width: 4vw;
     height: 2vw;
@@ -177,7 +292,7 @@ footer {
     display: flex;
     margin-top: 1vw;
 /*    margin-bottom: 6vw;*/
-    min-height: 50%;
+/*    min-height: 50%;*/
     justify-content: flex-start;
     align-items: flex-start;
 }
@@ -205,8 +320,19 @@ footer {
     border-style: solid;
     width: 100%;
     overflow: hidden;
-    height: 15vmax;
+    height: 17vw;
     padding: 0;
+}
+.bigphoto {
+    text-align: center;
+    border-radius: 8px;
+    border-width: 3px;
+    border-style: solid;
+    width: 50vw;
+    overflow: hidden;
+    height: 37.5vw;
+    padding: 0;
+    margin: auto;
 }
 .imgstyle {
     object-fit: cover;
@@ -218,6 +344,13 @@ footer {
     width: 100%;
     height: 100%;
 }
+
+.nickandiconsspec {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 .nickandicons {
     width: 100%;
     max-height: calc(100%*2/16);
@@ -290,6 +423,9 @@ footer {
         font-family: 'Times New Roman', Times, serif;
         float: left;
     }
+    .buttonback {
+        font-size: 2.2vw;
+    }
     .buttonusual {
         background: #6a82dc;
         border-radius: 10px;
@@ -303,6 +439,9 @@ footer {
         width: 46%;
         height: 56%;
         margin: 4px;
+    }
+    .photo{
+        height: 24vw;
     }
     
     .filterelements {
@@ -354,6 +493,11 @@ footer {
         font-family: 'Times New Roman', Times, serif;
         float: left;
     }
+
+    .buttonback {
+        font-size: 2.6vw;
+    }
+
     .buttonusual {
         background: #6a82dc;
         border-radius: 10px;
@@ -367,6 +511,9 @@ footer {
         width: 55%;
         height: 67%;
         margin: 3px;
+    }
+    .photo{
+        height: 28vw;
     }
     
     .filterelements {
@@ -408,6 +555,18 @@ footer {
         text-align: left;
     }
 }
+
+@media screen and (max-width: 400px)
+{
+    .text_input {
+        color: black;
+        margin: 5px 35px 0 34px;
+        padding: 0px 0px 0px 10px;
+        width: 200px;
+        height: 30px;
+    }
+}
+
 @media screen and (max-height: 400px)
 {
     .filtercontent {

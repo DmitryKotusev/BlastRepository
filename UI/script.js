@@ -1,5 +1,5 @@
 'use strict';
-function Photopost(id, description, createdAt, author, photolink, likes, hashtags) {
+function Photopost(id, description, createdAt, author, photolink, likes, hashtags, isDeleted) {
     this.id = id;
     this.description = description;
     this.createdAt = createdAt;
@@ -7,9 +7,16 @@ function Photopost(id, description, createdAt, author, photolink, likes, hashtag
     this.photolink = photolink;
     this.likes = likes || [];
     this.hashtags = hashtags || [];
+    if (typeof(isDeleted) === 'boolean') {
+        this.isDeleted = isDeleted;   
+    }
+    else
+    {
+        this.isDeleted = false;
+    }
 }
 var photoPosts = [
-    new Photopost('1', 'description1', new Date('2018-02-26T23:00:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia', 'Kolia', 'Anatolij'], ['#cool', '#2018']),
+    /*new Photopost('1', 'description1', new Date('2018-02-26T23:00:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia', 'Kolia', 'Anatolij'], ['#cool', '#2018']),
     new Photopost('2', 'description2', new Date('2018-02-26T23:00:00'), 'Vova', '../ImagesAndIcons/1477469507_autumn-panorama.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
     new Photopost('3', 'description3', new Date('2018-02-26T23:00:00'), 'Petia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
     new Photopost('4', 'description4', new Date('2018-02-26T23:00:00'), 'Dima', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2019']),
@@ -28,9 +35,51 @@ var photoPosts = [
     new Photopost('17', 'description17', new Date('2018-02-26T23:00:00'), 'Anastasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
     new Photopost('18', 'description18', new Date('2018-02-28T12:32:01'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
     new Photopost('19', 'description19', new Date('2018-02-26T23:00:00'), 'Magamed', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
-    new Photopost('20', 'description20', new Date('2018-03-14T16:20:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018'])
+    new Photopost('20', 'description20', new Date('2018-03-14T16:20:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018'])*/
 ]
+
+function user (login, password){
+    this.login = login;
+    this.password = password;
+}
+var users = [
+    new user('Dima', '12345'),
+    new user('Ivan', '54321'),
+    new user('Magamed', '11111'),
+    new user('Anastasia', '11111'),
+    new user('Vova', '11111'),
+    new user('Petia', '11111'),
+    new user('Vasia', '11111')
+]
+
 let module = (function () {
+
+    function getMaxID() {
+        if (photoPosts.length === 0) {
+            return null;
+        }
+        let max = photoPosts[0].id;
+        for (let index = 1; index < photoPosts.length; index++) {
+            if (parseInt(photoPosts[index].id, 10) > parseInt(max, 10)) {
+                max = photoPosts[index].id
+            }
+        }
+        return max;
+    }
+
+    function getNewID() {
+        let newID;
+        let maxID = getMaxID();
+        if (maxID === null) {
+            newID = '1';
+        }
+        else
+        {
+            newID = `${parseInt(maxID, 10) + 1}`;
+        }
+        return newID;
+    }
+
     function clone(params) {
         var clone = {}; // новый пустой объект
 
@@ -80,6 +129,10 @@ let module = (function () {
         if (filterConfig !== undefined) {
             //Функция фильтрации
             function filtfunc(param) {
+                if (param.isDeleted === true) {
+                    return false;
+                }
+
                 if (filterConfig.author !== undefined) {
                     if (typeof (filterConfig.author) === 'string') {
                         if (filterConfig.author !== param.author) {
@@ -117,19 +170,28 @@ let module = (function () {
         }
         else 
         {
-            var buffmass = photoPosts;//Фильтрация не нужна, так как объект не поступил
+            var buffmass = photoPosts.filter(el => {
+                if (el.isDeleted === true) {
+                    return false;
+                }
+                return true;
+            });//Фильтрация нужна только для удалённых элементов
         }
         
         return buffmass.slice(skip, skip + top);//отбрасывание первых skip элементов массива и взятие последующих top элементов
     }
     function getPhotoPost(id) {
         for (var index = 0; index < photoPosts.length; index++) {
-            if (photoPosts[index].id === id) {
+            if (photoPosts[index].id === id && !photoPosts[index].isDeleted) {
                 return photoPosts[index];
             }
         };
     }
     function validatePhotoPost(photoPost) {
+        /*let bufff = typeof (photoPost.id);
+        bufff = typeof (photoPost.description);
+        bufff = typeof (photoPost.photolink);
+        bufff = typeof (photoPost.author);*/
         if (typeof (photoPost.id) !== 'string' || typeof (photoPost.description) !== 'string' || typeof (photoPost.author) !== 'string' || typeof (photoPost.photolink) !== 'string') {
             return false;
         }
@@ -186,13 +248,16 @@ let module = (function () {
         }
         var buff = clone(photoPosts[i]);
         if (photoPost.description !== undefined && typeof (photoPost.description) === 'string') {
+            if (photoPost.description.length > 200) {
+                return false;
+            }
             buff.description = photoPost.description;
         }
         if (photoPost.photolink !== undefined && typeof (photoPost.photolink) === 'string') {
             buff.photolink = photoPost.photolink;
         }
         if ((Array.isArray(photoPost.likes))) {
-            for (var index = 0; index < photoPost.likes.length; index++) {
+            /*for (var index = 0; index < photoPost.likes.length; index++) {
                 var flag = false;
                 for (var index2 = 0; index2 < buff.likes.length; index2++) {
                     if (photoPost.likes[index] === buff.likes[index2]) {
@@ -204,10 +269,11 @@ let module = (function () {
                 if (!flag) {
                     buff.likes.push(photoPost.likes[index]);
                 }
-            }
+            }*/
+            buff.likes = photoPost.likes;
         }
         if ((Array.isArray(photoPost.hashtags))) {
-            for (var index = 0; index < photoPost.hashtags.length; index++) {
+            /*for (var index = 0; index < photoPost.hashtags.length; index++) {
                 if (validhash(photoPost.hashtags[index])) {
                     var flag = false;
                     for (var index2 = 0; index2 < buff.hashtags.length; index2++) {
@@ -221,16 +287,24 @@ let module = (function () {
                         buff.hashtags.push(photoPost.hashtags[index]);
                     }
                 }
+            }*/
+            buff.hashtags = [];
+            for (let index = 0; index < photoPost.hashtags.length; index++) {
+                if (validhash(photoPost.hashtags[index])) {
+                    buff.hashtags.push(photoPost.hashtags[index]);   
+                }
             }
         }
         photoPosts[i] = clone(buff);
+        localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
         return true;
     }
     function removePhotoPost(id) {
         if (typeof (id) === 'string') {
             for (var index = 0; index < photoPosts.length; index++) {
                 if (photoPosts[index].id === id) {
-                    photoPosts.splice(index, 1);
+                    //photoPosts.splice(index, 1);
+                    photoPosts[index].isDeleted = true;
                     return true;
                 }
             }
@@ -243,7 +317,9 @@ let module = (function () {
         addPhotoPost: addPhotoPost,
         validatePhotoPost: validatePhotoPost,
         getPhotoPost: getPhotoPost,
-        getPhotoPosts: getPhotoPosts
+        getPhotoPosts: getPhotoPosts,
+        validhash: validhash,
+        getNewID: getNewID
     }
     /////////////////////Проверки//////////////////////////////////////////////////////////////////////
 }());

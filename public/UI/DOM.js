@@ -313,7 +313,6 @@ var dom = function() {
     function addPhotopost(photopost) {
         if(module.addPhotoPost(photopost))
         {
-            localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
             showPosts(0, 10);//Поменял параметры фильтра
         }
     }

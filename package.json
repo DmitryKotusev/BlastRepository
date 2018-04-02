@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/DmitryKotusev/BlastRepository/issues"
   },
-  "homepage": "https://github.com/DmitryKotusev/BlastRepository#readme"
+  "homepage": "https://github.com/DmitryKotusev/BlastRepository#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
 }

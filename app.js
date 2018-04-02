@@ -3,7 +3,7 @@ var fs = require("fs");
  
 http.createServer(function(request, response){
      
-    console.log(`Запрошенный адрес: ${request.url}`);
+    console.log(`Requested adress: ${request.url}`);
     if(request.url.startsWith("/public/UI/")){
          
         // получаем путь после слеша

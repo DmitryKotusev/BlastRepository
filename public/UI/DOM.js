@@ -419,9 +419,15 @@ var dom = function() {
 
         body.insertBefore(dom.makeFilter(), header);
 
-        document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0].addEventListener('click', eve.addMore);
+        let loadMoreButton = document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0];
+        if (loadMoreButton !== undefined && loadMoreButton !== null) {
+            loadMoreButton.addEventListener('click', eve.addMore);
+        }
 
-        document.getElementsByTagName('aside')[0].getElementsByClassName('buttonusual')[0].addEventListener('click', eve.filter);
+        let filterButton = document.getElementsByTagName('aside')[0].getElementsByClassName('buttonusual')[0];
+        if (filterButton !== undefined && filterButton !== null) {
+            filterButton.addEventListener('click', eve.filter);
+        }
 
         //Вывод тегов
         dom.showHashtags();

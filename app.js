@@ -5,15 +5,16 @@ http.createServer(function(request, response){
      
     console.log(`Requested adress: ${request.url}`);
     if(request.url.startsWith("/")){
+        var filePath;
         if (request.url === '/') {
-            request.url += "public/UI/index.html";  
+            filePath = "./public/UI/index.html";  
         }
-        /*else {
-            filePath = '/public/UI/' + request.url;
-        }*/
+        else {
+            filePath = './public/UI/' + request.url;
+        }
         //request.url += "public/UI/index.html";
         // получаем путь после слеша
-        var filePath = request.url.substr(1);
+        //var filePath = request.url.substr(1);
         fs.readFile(filePath, function(error, data){
                  
             if(error){

@@ -417,7 +417,14 @@ var eve = function() {
                 <p class="error-text"></p>
             </div>`;
         let saveButton = dom.makeSaveButton();
-        placeForButton.replaceChild(saveButton, placeForButton.getElementsByTagName('button')[0]);
+
+        if (placeForButton.getElementsByTagName('button')[0] !== undefined) {
+            placeForButton.replaceChild(saveButton, placeForButton.getElementsByTagName('button')[0]);
+        }
+        else
+        {
+            placeForButton.appendChild(saveButton);
+        }
 
         let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
         input.addEventListener('change', updateImageDisplay);

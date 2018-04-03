@@ -484,7 +484,9 @@ var eve = function() {
         backButton.innerHTML = 'Back';
         backButton.addEventListener('click', backButtonEvent);
 
-        body.replaceChild(backButton, filt);
+        if (filt !== undefined) {
+            body.replaceChild(backButton, filt);   
+        }
 
         mainPlacing = document.getElementsByClassName('mainplacing')[0];
 
@@ -512,16 +514,16 @@ var eve = function() {
         input.addEventListener('change', updateImageDisplay);
 
         let uploadButton = dom.makeButton('Save and upload');
-        let anchor = document.createElement('a');
-        anchor.setAttribute('href', "#top");
-        anchor.appendChild(uploadButton);
+        //let anchor = document.createElement('a');
+        //anchor.setAttribute('href', "#top");
+        //anchor.appendChild(uploadButton);
         
         if (placeForButton.getElementsByTagName('button')[0] !== undefined) {
-            placeForButton.replaceChild(anchor, placeForButton.getElementsByTagName('button')[0]);
+            placeForButton.replaceChild(uploadButton, placeForButton.getElementsByTagName('button')[0]);
         }
         else
         {
-            placeForButton.appendChild(anchor);
+            placeForButton.appendChild(uploadButton);
         }
 
         uploadButton.addEventListener('click', function (params) {

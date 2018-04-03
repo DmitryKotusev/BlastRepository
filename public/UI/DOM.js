@@ -220,7 +220,9 @@ var dom = function() {
         if (currentState === 3) {
             showPosts(0, 10);
             let filt = dom.makeFilter();
-            document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+            if (document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0] !== null) {
+                document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);   
+            }
         }
     }
 

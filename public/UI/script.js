@@ -1,5 +1,5 @@
 'use strict';
-function Photopost(id, description, createdAt, author, photolink, likes, hashtags, isDeleted) {
+function Photopost(id, description, createdAt, author, photolink, likes, hashtags, isDeleted = false) {
     this.id = id;
     this.description = description;
     this.createdAt = createdAt;
@@ -7,35 +7,29 @@ function Photopost(id, description, createdAt, author, photolink, likes, hashtag
     this.photolink = photolink;
     this.likes = likes || [];
     this.hashtags = hashtags || [];
-    if (typeof(isDeleted) === 'boolean') {
-        this.isDeleted = isDeleted;   
-    }
-    else
-    {
-        this.isDeleted = false;
-    }
+    this.isDeleted = isDeleted;
 }
 var photoPosts = [
-    /*new Photopost('1', 'description1', new Date('2018-02-26T23:00:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia', 'Kolia', 'Anatolij'], ['#cool', '#2018']),
-    new Photopost('2', 'description2', new Date('2018-02-26T23:00:00'), 'Vova', '../ImagesAndIcons/1477469507_autumn-panorama.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
-    new Photopost('3', 'description3', new Date('2018-02-26T23:00:00'), 'Petia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
-    new Photopost('4', 'description4', new Date('2018-02-26T23:00:00'), 'Dima', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2019']),
-    new Photopost('5', 'description5', new Date('2018-01-18T12:33:50'), 'Vasia', '../ImagesAndIcons/priroda-new-zeland-4.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
-    new Photopost('6', 'description6', new Date('2018-02-26T23:00:00'), 'Vasia', '../ImagesAndIcons/tmp852896240201891842.jpg', ['Vasia', 'Petia'], ['#cool', '#2017']),
-    new Photopost('7', 'description7', new Date('2018-02-26T23:00:00'), 'Dima', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
-    new Photopost('8', 'description8', new Date('2018-03-14T15:00:09'), 'Dima', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia', 'Dima'], ['#cool', '#2016']),
-    new Photopost('9', 'description9', new Date('2018-03-14T22:10:00'), 'Vasia', '../ImagesAndIcons/1477469601_nature_gora.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
-    new Photopost('10', 'description10', new Date('2018-02-26T23:00:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
-    new Photopost('11', 'description11', new Date('2018-02-26T23:00:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
-    new Photopost('12', 'description12', new Date('2018-02-23T23:00:00'), 'Dima', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia', 'Katia', 'Dima', 'Anatolij'], ['#cool', '#2018']),
-    new Photopost('13', 'description13', new Date('2017-10-11T23:07:11'), 'Kolia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
-    new Photopost('14', 'description14', new Date('2018-02-26T23:00:00'), 'Vova', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
-    new Photopost('15', 'description15', new Date('2018-02-26T23:00:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool']),
-    new Photopost('16', 'description16', new Date('2018-02-26T23:00:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
-    new Photopost('17', 'description17', new Date('2018-02-26T23:00:00'), 'Anastasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
-    new Photopost('18', 'description18', new Date('2018-02-28T12:32:01'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
-    new Photopost('19', 'description19', new Date('2018-02-26T23:00:00'), 'Magamed', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
-    new Photopost('20', 'description20', new Date('2018-03-14T16:20:00'), 'Vasia', '../ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018'])*/
+    /*new Photopost('1', 'description1', new Date('2018-02-26T23:00:00'), 'Vasia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia', 'Kolia', 'Anatolij'], ['#cool', '#2018']),
+    new Photopost('2', 'description2', new Date('2018-02-26T23:00:00'), 'Vova', './ImagesAndIcons/1477469507_autumn-panorama.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('3', 'description3', new Date('2018-02-26T23:00:00'), 'Petia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('4', 'description4', new Date('2018-02-26T23:00:00'), 'Dima', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2019']),
+    new Photopost('5', 'description5', new Date('2018-01-18T12:33:50'), 'Vasia', './ImagesAndIcons/priroda-new-zeland-4.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('6', 'description6', new Date('2018-02-26T23:00:00'), 'Vasia', './ImagesAndIcons/tmp852896240201891842.jpg', ['Vasia', 'Petia'], ['#cool', '#2017']),
+    new Photopost('7', 'description7', new Date('2018-02-26T23:00:00'), 'Dima', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('8', 'description8', new Date('2018-03-14T15:00:09'), 'Dima', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia', 'Dima'], ['#cool', '#2016']),
+    new Photopost('9', 'description9', new Date('2018-03-14T22:10:00'), 'Vasia', './ImagesAndIcons/1477469601_nature_gora.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('10', 'description10', new Date('2018-02-26T23:00:00'), 'Vasia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('11', 'description11', new Date('2018-02-26T23:00:00'), 'Vasia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('12', 'description12', new Date('2018-02-23T23:00:00'), 'Dima', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia', 'Katia', 'Dima', 'Anatolij'], ['#cool', '#2018']),
+    new Photopost('13', 'description13', new Date('2017-10-11T23:07:11'), 'Kolia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('14', 'description14', new Date('2018-02-26T23:00:00'), 'Vova', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('15', 'description15', new Date('2018-02-26T23:00:00'), 'Vasia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool']),
+    new Photopost('16', 'description16', new Date('2018-02-26T23:00:00'), 'Vasia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('17', 'description17', new Date('2018-02-26T23:00:00'), 'Anastasia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('18', 'description18', new Date('2018-02-28T12:32:01'), 'Vasia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('19', 'description19', new Date('2018-02-26T23:00:00'), 'Magamed', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
+    new Photopost('20', 'description20', new Date('2018-03-14T16:20:00'), 'Vasia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018'])*/
 ]
 
 function user (login, password){
@@ -129,7 +123,7 @@ let module = (function () {
         if (filterConfig !== undefined) {
             //Функция фильтрации
             function filtfunc(param) {
-                if (param.isDeleted === true) {
+                if (param.isDeleted) {
                     return false;
                 }
 
@@ -171,7 +165,7 @@ let module = (function () {
         else 
         {
             var buffmass = photoPosts.filter(el => {
-                if (el.isDeleted === true) {
+                if (el.isDeleted) {
                     return false;
                 }
                 return true;

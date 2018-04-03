@@ -4,8 +4,14 @@ var fs = require("fs");
 http.createServer(function(request, response){
      
     console.log(`Requested adress: ${request.url}`);
-    if(request.url.startsWith("/public/UI/")){
-         
+    if(request.url.startsWith("/")){
+        if (request.url === '/') {
+            request.url += "public/UI/index.html";  
+        }
+        /*else {
+            filePath = '/public/UI/' + request.url;
+        }*/
+        //request.url += "public/UI/index.html";
         // получаем путь после слеша
         var filePath = request.url.substr(1);
         fs.readFile(filePath, function(error, data){

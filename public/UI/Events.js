@@ -545,8 +545,9 @@ var eve = function() {
                     dom.showPosts(0, 10);
                     dom.showAuthors();
                     dom.showHashtags();
-                    localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
+                    //localStorage.removeItem('photoPosts');
                     currentState = 0;
+                    localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
                 }
                 else
                 {

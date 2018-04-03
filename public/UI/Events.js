@@ -30,11 +30,11 @@ var eve = function() {
         }
         dom.showAuthors();
         dom.showHashtags();
-        currentState = 0;
+        currentState = statesMassive.mainState;
     }
 
     function login(params) {
-        currentState = 1;//Состояние логина
+        currentState = statesMassive.loginState;//Состояние логина
         document.getElementsByClassName('nicknamealign')[0].innerHTML = '';
         document.getElementsByClassName('headeralign')[0].innerHTML = '';
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
@@ -82,7 +82,7 @@ var eve = function() {
                     dom.showPosts(0, 10);
                     dom.showAuthors();
                     dom.showHashtags();
-                    currentState = 0;
+                    currentState = statesMassive.mainState;
                     return;
                 }
             }
@@ -101,7 +101,7 @@ var eve = function() {
     }
 
     function lookAtPhoto(params) {
-        currentState = 2; //Состояние просмотра фотографии
+        currentState = statesMassive.lookAtPhotoState; //Состояние просмотра фотографии
         let post = module.getPhotoPost(params.target.closest('.post').id);
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         //let loadMoresect = document.getElementsByClassName('mainplacing')[1];
@@ -263,7 +263,7 @@ var eve = function() {
             dom.showPosts(0, 10);
             dom.showAuthors();
             dom.showHashtags();
-            currentState = 0;
+            currentState = statesMassive.mainState;
             dom.deletePhotopost(id);
         }
     }
@@ -294,7 +294,7 @@ var eve = function() {
     }
 
     function editPostLookAtPhoto(params) {
-        currentState = 3; //Состояние редактирования фотопоста
+        currentState = statesMassive.editPostState; //Состояние редактирования фотопоста
         let post = module.getPhotoPost(params.target.closest('.lookatphoto').id);
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         //let loadMoresect = document.getElementsByClassName('mainplacing')[1];
@@ -335,7 +335,7 @@ var eve = function() {
                 </div>
                 <p class="error-text"></p>
             </div>`;
-        let saveButton = dom.makeSaveButton();
+        let saveButton = dom.makeButton('Save and upload');
         placeForButton.appendChild(saveButton);
 
         let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
@@ -363,7 +363,7 @@ var eve = function() {
                     dom.showPosts(0, 10);
                     dom.showAuthors();
                     dom.showHashtags();
-                    currentState = 0;
+                    currentState = statesMassive.mainState;
                 }
                 else
                 {
@@ -375,7 +375,7 @@ var eve = function() {
     }
 
     function editPost(params) {
-        currentState = 3; //Состояние редактирования фотопоста
+        currentState = statesMassive.editPostState; //Состояние редактирования фотопоста
         let post = module.getPhotoPost(params.target.closest('.post').id);
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         //let loadMoresect = document.getElementsByClassName('mainplacing')[1];
@@ -416,7 +416,7 @@ var eve = function() {
                 </div>
                 <p class="error-text"></p>
             </div>`;
-        let saveButton = dom.makeSaveButton();
+        let saveButton = dom.makeButton('Save and upload');
 
         if (placeForButton.getElementsByTagName('button')[0] !== undefined) {
             placeForButton.replaceChild(saveButton, placeForButton.getElementsByTagName('button')[0]);
@@ -451,7 +451,7 @@ var eve = function() {
                     dom.showPosts(0, 10);
                     dom.showAuthors();
                     dom.showHashtags();
-                    currentState = 0;
+                    currentState = statesMassive.mainState;
                 }
                 else
                 {
@@ -463,7 +463,10 @@ var eve = function() {
     }
 
     function uploadPost(params) {
-        currentState = 4; //Состояние добавления фотопоста
+        if (currentState === statesMassive.uploadPostState) {
+            return;
+        }
+        currentState = statesMassive.uploadPostState; //Состояние добавления фотопоста
         
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         //let loadMoresect = document.getElementsByClassName('mainplacing')[1];
@@ -488,7 +491,7 @@ var eve = function() {
         mainPlacing.innerHTML = 
             `<div class="lookatphoto">
                 <div class="bigphoto">
-                    <img class="imgstyle" src="">
+                    <img class="imgstyle">
                 </div>
                 <div class="imagemarginclass">
                     <label class="imagefilemodinput" for="files">Select Image</label>
@@ -508,14 +511,17 @@ var eve = function() {
         let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
         input.addEventListener('change', updateImageDisplay);
 
-        let uploadButton = dom.makeUploadButton();
+        let uploadButton = dom.makeButton('Save and upload');
+        let anchor = document.createElement('a');
+        anchor.setAttribute('href', "#top");
+        anchor.appendChild(uploadButton);
         
         if (placeForButton.getElementsByTagName('button')[0] !== undefined) {
-            placeForButton.replaceChild(uploadButton, placeForButton.getElementsByTagName('button')[0]);
+            placeForButton.replaceChild(anchor, placeForButton.getElementsByTagName('button')[0]);
         }
         else
         {
-            placeForButton.appendChild(uploadButton);
+            placeForButton.appendChild(anchor);
         }
 
         uploadButton.addEventListener('click', function (params) {
@@ -546,7 +552,7 @@ var eve = function() {
                     dom.showAuthors();
                     dom.showHashtags();
                     //localStorage.removeItem('photoPosts');
-                    currentState = 0;
+                    currentState = statesMassive.mainState;
                     localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
                 }
                 else

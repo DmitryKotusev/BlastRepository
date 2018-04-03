@@ -1,39 +1,29 @@
 var currentName;     //Хранит текущий ник пользователя
 var currentState = 0;     //Отражает текущее состояние страницы
 
+
+var statesMassive = {
+    mainState: 0,      //Главная страница
+    loginState: 1,      //Страница в формой для логина
+    lookAtPhotoState: 2,//Страница для просмотра фота
+    editPostState: 3,   //Страница редактирования фотопоста
+    uploadPostState: 4  //Страница добавления нового фото
+};
+
+var latestSkip = 0;       //Данное поле хранит количество записей, которое нужно было пропустить в последний раз 
+var latestTop = 10;        //Данное поле хранит количество записей, которое нужно было вывести на экран в последний раз
+var latestFilterConfig;   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
+
 var dom = function() {
-    var latestSkip = 0;       //Данное поле хранит количество записей, которое нужно было пропустить в последний раз 
-    var latestTop = 0;        //Данное поле хранит количество записей, которое нужно было вывести на экран в последний раз
-    var latestFilterConfig;   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
 
-    //Возвращает непривязанную к DOM кнопку загрузки
-    function makeLoadMoreButton(params) {
+
+    //Возвращает кнопку, параметр функции идёт в качестве надписи
+    function makeButton(params) {
         //<button type="button" class="buttonusualadd">Load more</button>
         let button = document.createElement('button');
         button.type = 'button';
         button.className = 'buttonusualadd';
-        button.innerHTML = 'Load more';
-        button.addEventListener('click', eve.addMore);
-        return button;
-    }
-
-    //Возвращает непривязанную к DOM кнопку подтверждения изменений
-    function makeSaveButton(params) {
-        //<button type="button" class="buttonusualadd">Load more</button>
-        let button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'buttonusualadd';
-        button.innerHTML = 'Save changes';
-        //button.addEventListener('click', eve.addMore);
-        return button;
-    }
-
-    function makeUploadButton(params) {
-        //<button type="button" class="buttonusualadd">Load more</button>
-        let button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'buttonusualadd';
-        button.innerHTML = 'Save and upload';
+        button.innerHTML = params;
         //button.addEventListener('click', eve.addMore);
         return button;
     }
@@ -190,8 +180,10 @@ var dom = function() {
         {
             document.getElementsByClassName('nicknamealign')[0].innerHTML = `<p> ${username} </p>`;
             document.getElementsByClassName('headeralign')[0].innerHTML = 
-            `<button type="button" class="buttonusual">
+            `<a href = "#top">
+            <button type="button" class="buttonusual">
             Add photo</button>
+            </a>
             <button type="button" class="buttonusual">Exit</button>`;
             currentName = username;
 
@@ -214,10 +206,10 @@ var dom = function() {
 
             localStorage.setItem('currentName', JSON.stringify(currentName));
         }
-        if (currentState === 0) {
-            showPosts(0, 10);//Поменял параметры фильтра   
+        if (currentState === statesMassive.mainState) {
+            showPosts(0, latestTop + latestSkip, latestFilterConfig);//Поменял параметры фильтра   
         }
-        if (currentState === 3) {
+        if (currentState === statesMassive.editPostState) {
             showPosts(0, 10);
             let filt = dom.makeFilter();
             if (document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0] !== undefined) {
@@ -330,7 +322,7 @@ var dom = function() {
         if(module.removePhotoPost(id))
         {
             localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
-            showPosts(0, 10);//Поменял параметры фильтра
+            showPosts(0, latestSkip + latestTop, latestFilterConfig);//Поменял параметры фильтра
         }
     }
 
@@ -374,15 +366,15 @@ var dom = function() {
 
         var loadMorButton = document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0];
         loadMorButton.addEventListener('click', eve.addMore);
-        if (module.getPhotoPosts(latestSkip + 10, latestTop, latestFilterConfig).length === 0) {
+        if (module.getPhotoPosts(latestSkip + latestTop, 10, latestFilterConfig).length === 0) {
             document.getElementsByClassName('mainplacing')[1].innerHTML = '';
         }
     }
 
     function addMorePosts() {
-        latestSkip = latestSkip + 10;
+        //latestSkip = latestSkip + 10;
 
-        var photoPosts = module.getPhotoPosts(latestSkip, latestTop, latestFilterConfig);
+        var photoPosts = module.getPhotoPosts(latestTop + latestSkip, 10, latestFilterConfig);
     
         if (photoPosts === undefined) {
             return;
@@ -392,7 +384,9 @@ var dom = function() {
             showPhotopost(photopost);
         });
 
-        if (module.getPhotoPosts(latestSkip + 10, latestTop, latestFilterConfig).length === 0) {
+        latestTop = latestTop + 10;
+
+        if (module.getPhotoPosts(latestTop + latestSkip, 10, latestFilterConfig).length === 0) {
             document.getElementsByClassName('mainplacing')[1].innerHTML = '';
         }
     }
@@ -449,9 +443,7 @@ var dom = function() {
         addLike: addLike,
         addMorePosts: addMorePosts,
         makeFilter: makeFilter,
-        makeLoadMoreButton: makeLoadMoreButton,
-        makeSaveButton: makeSaveButton,
-        makeUploadButton: makeUploadButton,
+        makeButton: makeButton,
         startPageDownload: startPageDownload
     }
 }();

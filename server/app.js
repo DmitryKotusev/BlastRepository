@@ -7,10 +7,10 @@ http.createServer(function(request, response){
     if(request.url.startsWith("/")){
         var filePath;
         if (request.url === '/') {
-            filePath = "./public/UI/index.html";  
+            filePath = "../public/UI/index.html";  
         }
         else {
-            filePath = './public/UI/' + request.url;
+            filePath = '../public/UI/' + request.url;
         }
         //request.url += "public/UI/index.html";
         // получаем путь после слеша

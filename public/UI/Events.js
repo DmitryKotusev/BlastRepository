@@ -30,11 +30,11 @@ var eve = function() {
         }
         dom.showAuthors();
         dom.showHashtags();
-        currentState = 0;
+        currentState = statesMassive.mainState;
     }
 
     function login(params) {
-        currentState = 1;//Состояние логина
+        currentState = statesMassive.loginState;//Состояние логина
         document.getElementsByClassName('nicknamealign')[0].innerHTML = '';
         document.getElementsByClassName('headeralign')[0].innerHTML = '';
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
@@ -82,7 +82,7 @@ var eve = function() {
                     dom.showPosts(0, 10);
                     dom.showAuthors();
                     dom.showHashtags();
-                    currentState = 0;
+                    currentState = statesMassive.mainState;
                     return;
                 }
             }
@@ -101,7 +101,7 @@ var eve = function() {
     }
 
     function lookAtPhoto(params) {
-        currentState = 2; //Состояние просмотра фотографии
+        currentState = statesMassive.lookAtPhotoState; //Состояние просмотра фотографии
         let post = module.getPhotoPost(params.target.closest('.post').id);
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         //let loadMoresect = document.getElementsByClassName('mainplacing')[1];
@@ -138,9 +138,9 @@ var eve = function() {
                 <div class="lookatphotoicons">
                     <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
                     <div class="nickandiconsspec">
-                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="../ImagesAndIcons/delete-512.png" alt="Bin"></button>
-                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="../ImagesAndIcons/221649.png" alt="Edit"></button>
-                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin">
+                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/delete-512.png" alt="Bin"></button>
+                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/221649.png" alt="Edit"></button>
+                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin">
                         <span class="likesamount">${post.likes.length}</span></button>
                     </div>
                 </div>
@@ -169,7 +169,7 @@ var eve = function() {
             <div class="lookatphotoicons">
                 <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
                 <div class="nickandiconsspec">
-                    <button type="button" class="buttonsetspec"><img class="iconstyles" src="../ImagesAndIcons/filled-like.png" alt="Bin">
+                    <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin">
                     <span class="likesamount">${post.likes.length}</span></button>
                 </div>
             </div>
@@ -263,7 +263,7 @@ var eve = function() {
             dom.showPosts(0, 10);
             dom.showAuthors();
             dom.showHashtags();
-            currentState = 0;
+            currentState = statesMassive.mainState;
             dom.deletePhotopost(id);
         }
     }
@@ -294,7 +294,7 @@ var eve = function() {
     }
 
     function editPostLookAtPhoto(params) {
-        currentState = 3; //Состояние редактирования фотопоста
+        currentState = statesMassive.editPostState; //Состояние редактирования фотопоста
         let post = module.getPhotoPost(params.target.closest('.lookatphoto').id);
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         //let loadMoresect = document.getElementsByClassName('mainplacing')[1];
@@ -335,7 +335,7 @@ var eve = function() {
                 </div>
                 <p class="error-text"></p>
             </div>`;
-        let saveButton = dom.makeSaveButton();
+        let saveButton = dom.makeButton('Save and upload');
         placeForButton.appendChild(saveButton);
 
         let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
@@ -363,7 +363,7 @@ var eve = function() {
                     dom.showPosts(0, 10);
                     dom.showAuthors();
                     dom.showHashtags();
-                    currentState = 0;
+                    currentState = statesMassive.mainState;
                 }
                 else
                 {
@@ -375,7 +375,7 @@ var eve = function() {
     }
 
     function editPost(params) {
-        currentState = 3; //Состояние редактирования фотопоста
+        currentState = statesMassive.editPostState; //Состояние редактирования фотопоста
         let post = module.getPhotoPost(params.target.closest('.post').id);
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         //let loadMoresect = document.getElementsByClassName('mainplacing')[1];
@@ -416,8 +416,15 @@ var eve = function() {
                 </div>
                 <p class="error-text"></p>
             </div>`;
-        let saveButton = dom.makeSaveButton();
-        placeForButton.replaceChild(saveButton, placeForButton.getElementsByTagName('button')[0]);
+        let saveButton = dom.makeButton('Save and upload');
+
+        if (placeForButton.getElementsByTagName('button')[0] !== undefined) {
+            placeForButton.replaceChild(saveButton, placeForButton.getElementsByTagName('button')[0]);
+        }
+        else
+        {
+            placeForButton.appendChild(saveButton);
+        }
 
         let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
         input.addEventListener('change', updateImageDisplay);
@@ -444,7 +451,7 @@ var eve = function() {
                     dom.showPosts(0, 10);
                     dom.showAuthors();
                     dom.showHashtags();
-                    currentState = 0;
+                    currentState = statesMassive.mainState;
                 }
                 else
                 {
@@ -456,7 +463,10 @@ var eve = function() {
     }
 
     function uploadPost(params) {
-        currentState = 4; //Состояние добавления фотопоста
+        if (currentState === statesMassive.uploadPostState) {
+            return;
+        }
+        currentState = statesMassive.uploadPostState; //Состояние добавления фотопоста
         
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         //let loadMoresect = document.getElementsByClassName('mainplacing')[1];
@@ -474,14 +484,16 @@ var eve = function() {
         backButton.innerHTML = 'Back';
         backButton.addEventListener('click', backButtonEvent);
 
-        body.replaceChild(backButton, filt);
+        if (filt !== undefined) {
+            body.replaceChild(backButton, filt);   
+        }
 
         mainPlacing = document.getElementsByClassName('mainplacing')[0];
 
         mainPlacing.innerHTML = 
             `<div class="lookatphoto">
                 <div class="bigphoto">
-                    <img class="imgstyle" src="">
+                    <img class="imgstyle">
                 </div>
                 <div class="imagemarginclass">
                     <label class="imagefilemodinput" for="files">Select Image</label>
@@ -501,8 +513,18 @@ var eve = function() {
         let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
         input.addEventListener('change', updateImageDisplay);
 
-        let uploadButton = dom.makeUploadButton();
-        placeForButton.replaceChild(uploadButton, placeForButton.getElementsByTagName('button')[0]);
+        let uploadButton = dom.makeButton('Save and upload');
+        //let anchor = document.createElement('a');
+        //anchor.setAttribute('href', "#top");
+        //anchor.appendChild(uploadButton);
+        
+        if (placeForButton.getElementsByTagName('button')[0] !== undefined) {
+            placeForButton.replaceChild(uploadButton, placeForButton.getElementsByTagName('button')[0]);
+        }
+        else
+        {
+            placeForButton.appendChild(uploadButton);
+        }
 
         uploadButton.addEventListener('click', function (params) {
             let ID = module.getNewID();
@@ -511,8 +533,14 @@ var eve = function() {
             let description = mainPlacing.getElementsByTagName('textarea')[0];
 
             let hash = mainPlacing.getElementsByTagName('textarea')[1];
+            let hashTags = hash.value.split(' ');
+            for (let index = 0; index < hashTags.length; index++) {
+                if (hashTags[index] === '') {
+                    hashTags.splice(index, 1);
+                }
+            }
 
-            let photoPost = new Photopost(ID, description.value, new Date(), currentName, img.src, [], hash.value.split(' '));
+            let photoPost = new Photopost(ID, description.value, new Date(), currentName, img.src, [], hashTags);
 
             /*photoPost.photolink = img.src;
             photoPost.description = description.value;
@@ -525,7 +553,9 @@ var eve = function() {
                     dom.showPosts(0, 10);
                     dom.showAuthors();
                     dom.showHashtags();
-                    currentState = 0;
+                    //localStorage.removeItem('photoPosts');
+                    currentState = statesMassive.mainState;
+                    localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
                 }
                 else
                 {

@@ -1,0 +1,28 @@
+{
+  "name": "express_static_content",
+  "version": "1.0.0",
+  "description": "Express static content",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DmitryKotusev/BlastRepository.git"
+  },
+  "keywords": [
+    "task7",
+    "express_static_content",
+    "Dmitry",
+    "Kotusev"
+  ],
+  "author": "Kotusev Dmitry Dmitrievich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DmitryKotusev/BlastRepository/issues"
+  },
+  "homepage": "https://github.com/DmitryKotusev/BlastRepository#readme",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
+}

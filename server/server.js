@@ -306,16 +306,12 @@ app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.static('../public/UI'));
 
-app.listen(3000, function () {
-    console.log('Server is running...');
-});
-
 app.get('/getPhotoPost/:id', function (req, res)
 {
 
 })
 
-app.post('/getPhotoPosts?skip&top', function (req, res)
+app.post('/getPhotoPosts', function (req, res)
 {
     
 })
@@ -334,3 +330,7 @@ app.delete('/removePhotoPost/:id', function (req, res)
 {
     
 })
+
+app.listen(3000, function () {
+    console.log('Server is running...');
+});

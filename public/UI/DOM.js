@@ -394,7 +394,8 @@ var dom = function() {
     function startPageDownload(params) {
 
         photoPosts = JSON.parse(localStorage.getItem('photoPosts'), function(key, value) {
-            if (key == 'createdAt') return new Date(value);
+            if (key == 'createdAt') 
+                return new Date(value);
             return value;
           });
         if (photoPosts === null) {

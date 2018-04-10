@@ -1,4 +1,5 @@
 'use strict';
+
 function Photopost(id, description, createdAt, author, photolink, likes, hashtags, isDeleted = false) {
     this.id = id;
     this.description = description;
@@ -10,7 +11,7 @@ function Photopost(id, description, createdAt, author, photolink, likes, hashtag
     this.isDeleted = isDeleted;
 }
 var photoPosts = [
-    new Photopost('1', 'description1', new Date('2018-02-26T23:00:00'), 'Vasia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia', 'Kolia', 'Anatolij'], ['#cool', '#2018']),
+    /*new Photopost('1', 'description1', new Date('2018-02-26T23:00:00'), 'Vasia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia', 'Kolia', 'Anatolij'], ['#cool', '#2018']),
     new Photopost('2', 'description2', new Date('2018-02-26T23:00:00'), 'Vova', './ImagesAndIcons/1477469507_autumn-panorama.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
     new Photopost('3', 'description3', new Date('2018-02-26T23:00:00'), 'Petia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
     new Photopost('4', 'description4', new Date('2018-02-26T23:00:00'), 'Dima', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2019']),
@@ -29,7 +30,7 @@ var photoPosts = [
     new Photopost('17', 'description17', new Date('2018-02-26T23:00:00'), 'Anastasia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
     new Photopost('18', 'description18', new Date('2018-02-28T12:32:01'), 'Vasia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
     new Photopost('19', 'description19', new Date('2018-02-26T23:00:00'), 'Magamed', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018']),
-    new Photopost('20', 'description20', new Date('2018-03-14T16:20:00'), 'Vasia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018'])
+    new Photopost('20', 'description20', new Date('2018-03-14T16:20:00'), 'Vasia', './ImagesAndIcons/Mat.jpg', ['Vasia', 'Petia'], ['#cool', '#2018'])*/
 ]
 
 function user (login, password){

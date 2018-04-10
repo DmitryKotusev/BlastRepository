@@ -102,7 +102,7 @@ let module = (function () {
             return false;
         }
         for (let index = 1; index < item.length; index++) {
-            if (item.charAt(index) === ' ') {
+            if (item.charAt(index) === ' ' || item.charAt(index) === '#' || item.charAt(index) === ',' || item.charAt(index) === '.') {
                 return false;
             }
         }

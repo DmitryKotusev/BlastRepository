@@ -16,10 +16,6 @@ function Photopost(id, description, createdAt, author, photolink, likes, hashtag
 }
 
 function validatePhotoPost(photoPost) {
-    /*let bufff = typeof (photoPost.id);
-    bufff = typeof (photoPost.description);
-    bufff = typeof (photoPost.photolink);
-    bufff = typeof (photoPost.author);*/
     if (typeof (photoPost.id) !== 'string' || typeof (photoPost.description) !== 'string' || typeof (photoPost.author) !== 'string' || typeof (photoPost.photolink) !== 'string') {
         return false;
     }
@@ -73,6 +69,79 @@ function addPhotoPost(photoPost) {
         return true;
     }
     return false;
+}
+
+function getPhotoPost(id) {
+    for (var index = 0; index < photoPosts.length; index++) {
+        if (photoPosts[index].id === id && !photoPosts[index].isDeleted) {
+            return photoPosts[index];
+        }
+    }
+}
+
+function clone(params) {
+    var clone = {}; // new empty object
+
+    for (var key in params) {
+        clone[key] = params[key];
+    }
+
+    return clone;
+}
+
+function editPhotoPost(id, photoPost) {
+
+    photoPost = JSON.parse(photoPost);
+
+    let stringOfPosts = fs.readFileSync('/data/posts.json');
+    let photoPosts =  JSON.parse(stringOfPosts, function (key, value) {
+        if (key == 'createdAt')
+        {
+            return new Date(value);
+        }
+        return value;
+    })
+
+    if (typeof (id) !== 'string') {
+        return false;
+    }
+    if (photoPost === undefined) {
+        return false;
+    }
+    
+    var buff = getPhotoPost(id);
+
+    if (buff === undefined) {
+        return false;
+    }
+
+    buff = clone(buff);
+
+    if (photoPost.description !== undefined && typeof (photoPost.description) === 'string') {
+        if (photoPost.description.length > 200) {
+            return false;
+        }
+        buff.description = photoPost.description;
+    }
+    if (photoPost.photolink !== undefined && typeof (photoPost.photolink) === 'string') {
+        buff.photolink = photoPost.photolink;
+    }
+    if ((Array.isArray(photoPost.likes))) {
+        buff.likes = photoPost.likes;
+    }
+    if ((Array.isArray(photoPost.hashtags))) {
+        buff.hashtags = [];
+        for (let index = 0; index < photoPost.hashtags.length; index++) {
+            if (validhash(photoPost.hashtags[index])) {
+                buff.hashtags.push(photoPost.hashtags[index]);   
+            }
+        }
+    }
+    photoPosts[i] = clone(buff);
+    
+    fs.writeFileSync('/data/posts.json', JSON.stringify(photoPosts));
+
+    return true;
 }
 
 app.use(bodyParser.json());

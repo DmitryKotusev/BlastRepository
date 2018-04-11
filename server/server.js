@@ -34,8 +34,7 @@ function getNewID() {
     if (maxID === null) {
         newID = '1';
     }
-    else
-    {
+    else {
         newID = `${parseInt(maxID, 10) + 1}`;
     }
     return newID;
@@ -84,23 +83,21 @@ function validatePhotoPost(photoPost) {
     if (!photoPosts.every(item => item.id !== photoPost.id)) {
         return false;
     }
-    
+
     return true;
 }
 
 function addPhotoPost(photoPost) {
     photoPost = JSON.parse(photoPost, function (key, value) {
-        if (key == 'createdAt')
-        {
+        if (key == 'createdAt') {
             return new Date(value);
         }
         return value;
     })
     if (validatePhotoPost(photoPost)) {
         let stringOfPosts = fs.readFileSync('./data/photoPosts.json');
-        let photoPosts =  JSON.parse(stringOfPosts, function (key, value) {
-            if (key == 'createdAt')
-            {
+        let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
+            if (key == 'createdAt') {
                 return new Date(value);
             }
             return value;
@@ -113,6 +110,14 @@ function addPhotoPost(photoPost) {
 }
 
 function getPhotoPost(id) {
+    let stringOfPosts = fs.readFileSync('./data/posts.json');
+    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
+        if (key === 'createdAt') {
+            return new Date(value);
+        }
+        return value;
+    })
+
     for (var index = 0; index < photoPosts.length; index++) {
         if (photoPosts[index].id === id && !photoPosts[index].isDeleted) {
             return photoPosts[index];
@@ -133,10 +138,9 @@ function clone(params) {
 function editPhotoPost(id, photoPost) {
     photoPost = JSON.parse(photoPost);
 
-    let stringOfPosts = fs.readFileSync('/data/posts.json');
-    let photoPosts =  JSON.parse(stringOfPosts, function (key, value) {
-        if (key == 'createdAt')
-        {
+    let stringOfPosts = fs.readFileSync('./data/posts.json');
+    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
+        if (key === 'createdAt') {
             return new Date(value);
         }
         return value;
@@ -148,7 +152,7 @@ function editPhotoPost(id, photoPost) {
     if (photoPost === undefined) {
         return false;
     }
-    
+
     var buff = getPhotoPost(id);
 
     if (buff === undefined) {
@@ -173,22 +177,21 @@ function editPhotoPost(id, photoPost) {
         buff.hashtags = [];
         for (let index = 0; index < photoPost.hashtags.length; index++) {
             if (isValidHash(photoPost.hashtags[index])) {
-                buff.hashtags.push(photoPost.hashtags[index]);   
+                buff.hashtags.push(photoPost.hashtags[index]);
             }
         }
     }
     photoPosts[i] = clone(buff);
-    
-    fs.writeFileSync('/data/posts.json', JSON.stringify(photoPosts));
+
+    fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
 
     return true;
 }
 
-function removePhotoPost(id) {
-    let stringOfPosts = fs.readFileSync('/data/posts.json');
-    let photoPosts =  JSON.parse(stringOfPosts, function (key, value) {
-        if (key == 'createdAt')
-        {
+function reanimatePhotoPost(id) {
+    let stringOfPosts = fs.readFileSync('./data/posts.json');
+    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
+        if (key == 'createdAt') {
             return new Date(value);
         }
         return value;
@@ -196,13 +199,41 @@ function removePhotoPost(id) {
 
     if (typeof (id) === 'string') {
         for (var index = 0; index < photoPosts.length; index++) {
-            if (photoPosts[index].id === id) {
-                //photoPosts.splice(index, 1);
-                photoPosts[index].isDeleted = true;
+            if (photoPosts[index].isDeleted) {
+                if (photoPosts[index].id === id) {
+                    //photoPosts.splice(index, 1);
+                    photoPosts[index].isDeleted = false;
+    
+                    fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
+    
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
 
-                fs.writeFileSync('/data/posts.json', JSON.stringify(photoPosts));
+function removePhotoPost(id) {
+    let stringOfPosts = fs.readFileSync('./data/posts.json');
+    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
+        if (key == 'createdAt') {
+            return new Date(value);
+        }
+        return value;
+    })
 
-                return true;
+    if (typeof (id) === 'string') {
+        for (var index = 0; index < photoPosts.length; index++) {
+            if (!photoPosts[index].isDeleted) {
+                if (photoPosts[index].id === id) {
+                    //photoPosts.splice(index, 1);
+                    photoPosts[index].isDeleted = true;
+    
+                    fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
+    
+                    return true;
+                }
             }
         }
     }
@@ -235,17 +266,16 @@ function getPhotoPosts(skip, top, filterConfig) {
         top = 10;
     }
 
-    let stringOfPosts = fs.readFileSync('/data/posts.json');
-    let photoPosts =  JSON.parse(stringOfPosts, function (key, value) {
-        if (key == 'createdAt')
-        {
+    let stringOfPosts = fs.readFileSync('./data/posts.json');
+    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
+        if (key == 'createdAt') {
             return new Date(value);
         }
         return value;
     })
 
     photoPosts.sort(datesort);
-    
+
     if (filterConfig !== undefined) {
         //Функция фильтрации
         function filtfunc(param) {
@@ -288,8 +318,7 @@ function getPhotoPosts(skip, top, filterConfig) {
         }
         var buffmass = photoPosts.filter(filtfunc);//фильтрация
     }
-    else 
-    {
+    else {
         var buffmass = photoPosts.filter(el => {
             if (el.isDeleted) {
                 return false;
@@ -297,7 +326,7 @@ function getPhotoPosts(skip, top, filterConfig) {
             return true;
         });//Need to filter only deleted elements
     }
-    
+
     return JSON.stringify(buffmass.slice(skip, skip + top));//отбрасывание первых skip элементов массива и взятие последующих top элементов
 }
 
@@ -306,29 +335,34 @@ app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.static('../public/UI'));
 
-app.get('/getPhotoPost/:id', function (req, res)
-{
+app.get('/getPhotoPost/:id', function (req, res) {
+    let post = getPhotoPost(req.params.id);
+    if (post !== undefined) {
+        post = JSON.stringify(post);
+        res.send(post);
+    }
+    res.send(404, `Photopost with id = ${req.params.id} not found`);
+})
+
+app.post('/getPhotoPosts', function (req, res) {
 
 })
 
-app.post('/getPhotoPosts', function (req, res)
-{
-    
+app.post('/addPhotoPost', function (req, res) {
+
 })
 
-app.post('/addPhotoPost', function (req, res)
-{
-    
+app.put('/editPhotoPost/:id', function (req, res) {
+
 })
 
-app.put('/editPhotoPost/:id', function (req, res)
-{
-    
-})
-
-app.delete('/removePhotoPost/:id', function (req, res)
-{
-    
+app.delete('/removePhotoPost/:id', function (req, res) {
+    if (removePhotoPost(req.params.id)) {
+        res.send(`Post with id = ${req.params.id} was successfully deleted`);
+    }
+    else {
+        res.send(`Post with id = ${req.params.id} was not found`);
+    }
 })
 
 app.listen(3000, function () {

@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
+//fs.writeFileSync('filter.json', JSON.stringify({author: 'Dima'}));
+
 function Photopost(id, description, createdAt, author, photolink, likes, hashtags, isDeleted = false) {
     this.id = id;
     this.description = description;
@@ -55,7 +57,7 @@ function isValidHash(item) {
     return true;
 }
 
-function validatePhotoPost(photoPost) {
+function validatePhotoPost(photoPost, photoPosts) {
     if (typeof (photoPost.id) !== 'string' || typeof (photoPost.description) !== 'string' || typeof (photoPost.author) !== 'string' || typeof (photoPost.photolink) !== 'string') {
         return false;
     }
@@ -88,22 +90,17 @@ function validatePhotoPost(photoPost) {
 }
 
 function addPhotoPost(photoPost) {
-    photoPost = JSON.parse(photoPost, function (key, value) {
+    let stringOfPosts = fs.readFileSync('./data/posts.json');
+    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
         if (key == 'createdAt') {
             return new Date(value);
         }
         return value;
     })
-    if (validatePhotoPost(photoPost)) {
-        let stringOfPosts = fs.readFileSync('./data/photoPosts.json');
-        let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
-            if (key == 'createdAt') {
-                return new Date(value);
-            }
-            return value;
-        })
+
+    if (validatePhotoPost(photoPost, photoPosts)) {
         photoPosts.push(photoPost);
-        fs.writeFileSync('./data/photoPosts.json', JSON.stringify(photoPosts));
+        fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
         return true;
     }
     return false;
@@ -125,6 +122,22 @@ function getPhotoPost(id) {
     }
 }
 
+function getPhotoPostIndex(id) {
+    let stringOfPosts = fs.readFileSync('./data/posts.json');
+    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
+        if (key === 'createdAt') {
+            return new Date(value);
+        }
+        return value;
+    })
+
+    for (var index = 0; index < photoPosts.length; index++) {
+        if (photoPosts[index].id === id && !photoPosts[index].isDeleted) {
+            return index;
+        }
+    }
+}
+
 function clone(params) {
     var clone = {}; // new empty object
 
@@ -136,7 +149,7 @@ function clone(params) {
 }
 
 function editPhotoPost(id, photoPost) {
-    photoPost = JSON.parse(photoPost);
+    //photoPost = JSON.parse(photoPost);
 
     let stringOfPosts = fs.readFileSync('./data/posts.json');
     let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
@@ -181,7 +194,7 @@ function editPhotoPost(id, photoPost) {
             }
         }
     }
-    photoPosts[i] = clone(buff);
+    photoPosts[getPhotoPostIndex(id)] = clone(buff);
 
     fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
 
@@ -252,9 +265,15 @@ function datesort(a, b) {
 }
 
 function getPhotoPosts(skip, top, filterConfig) {
-    skip = JSON.parse(skip);
-    top = JSON.parse(top);
-    filterConfig = JSON.parse(filterConfig);
+    if (typeof(skip) === 'string') {
+        skip = JSON.parse(skip);
+    }
+    if (typeof(top) === 'string') {
+        top = JSON.parse(top);
+    }
+    if (typeof(filterConfig) === 'string') {
+        filterConfig = JSON.parse(filterConfig);
+    }
 
     skip = skip || 0;
     if (typeof (skip) !== 'number') {
@@ -332,7 +351,7 @@ function getPhotoPosts(skip, top, filterConfig) {
 
 app.use(bodyParser.json());
 //app.use(bodyParser.json({limit: '50mb'}));
-//app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('../public/UI'));
 
 app.get('/getPhotoPost/:id', function (req, res) {
@@ -345,12 +364,23 @@ app.get('/getPhotoPost/:id', function (req, res) {
 })
 
 app.post('/getPhotoPosts', function (req, res) {
+    let skip = req.query.skip;
+    let top = req.query.top;
+    let filterConfig = req.body;
+    //filterConfig = JSON.stringify(filterConfig);
 
+    console.log(filterConfig);
+
+    let answer = getPhotoPosts(skip, top, filterConfig);
+    if (answer !== undefined) {
+        res.send(200, answer);
+    }
+    res.send(404, 'Error');
 })
 
 app.post('/addPhotoPost', function (req, res) {
     if(addPhotoPost(req.body)) {
-        res.send(200, `Photopost with was successfully added`);
+        res.send(200, `Photopost was successfully added`);
     }
     res.send(404, `Operation failed`);
 })

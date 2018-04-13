@@ -339,7 +339,7 @@ app.get('/getPhotoPost/:id', function (req, res) {
     let post = getPhotoPost(req.params.id);
     if (post !== undefined) {
         post = JSON.stringify(post);
-        res.send(post);
+        res.send(200, post);
     }
     res.send(404, `Photopost with id = ${req.params.id} not found`);
 })
@@ -349,7 +349,17 @@ app.post('/getPhotoPosts', function (req, res) {
 })
 
 app.post('/addPhotoPost', function (req, res) {
+    if(addPhotoPost(req.body)) {
+        res.send(200, `Photopost with was successfully added`);
+    }
+    res.send(404, `Operation failed`);
+})
 
+app.put('/reanimatePhotoPost/:id', function (req, res) {
+    if(reanimatePhotoPost(req.params.id)) {
+        res.send(200, `Photopost with id = ${req.params.id} was successfully recovered`);
+    }
+    res.send(404, 'Operation failed');
 })
 
 app.put('/editPhotoPost/:id', function (req, res) {
@@ -358,10 +368,10 @@ app.put('/editPhotoPost/:id', function (req, res) {
 
 app.delete('/removePhotoPost/:id', function (req, res) {
     if (removePhotoPost(req.params.id)) {
-        res.send(`Post with id = ${req.params.id} was successfully deleted`);
+        res.send(200, `Post with id = ${req.params.id} was successfully deleted`);
     }
     else {
-        res.send(`Post with id = ${req.params.id} was not found`);
+        res.send(404, `Post with id = ${req.params.id} was not found`);
     }
 })
 

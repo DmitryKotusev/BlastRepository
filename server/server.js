@@ -363,16 +363,17 @@ app.put('/reanimatePhotoPost/:id', function (req, res) {
 })
 
 app.put('/editPhotoPost/:id', function (req, res) {
-
+    if (editPhotoPost(req.params.id, req.body)) {
+        res.send(200, `Photopost with id = ${req.params.id} was successfully edited`);
+    }
+    res.send(404, 'Operation failed');
 })
 
 app.delete('/removePhotoPost/:id', function (req, res) {
     if (removePhotoPost(req.params.id)) {
         res.send(200, `Post with id = ${req.params.id} was successfully deleted`);
     }
-    else {
-        res.send(404, `Post with id = ${req.params.id} was not found`);
-    }
+    res.send(404, `Post with id = ${req.params.id} was not found`);
 })
 
 app.listen(3000, function () {

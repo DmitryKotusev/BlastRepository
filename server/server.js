@@ -372,6 +372,7 @@ app.post('/getPhotoPosts', function (req, res) {
     console.log(filterConfig);
 
     let answer = getPhotoPosts(skip, top, filterConfig);
+    //console.log(answer);
     if (answer !== undefined) {
         res.send(200, answer);
     }

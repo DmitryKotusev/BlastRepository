@@ -17,7 +17,25 @@ function Photopost(id, description, createdAt, author, photolink, likes, hashtag
     this.isDeleted = isDeleted;
 }
 
+function readPostsFile() {
+    let stringOfPosts = fs.readFileSync('./data/posts.json');
+    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
+        if (key == 'createdAt') {
+            return new Date(value);
+        }
+        return value;
+    })
+
+    return photoPosts;
+}
+
+function writePostsFile(photoPosts) {
+    fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
+}
+
 function getMaxID() {
+    let photoPosts = readPostsFile();
+
     if (photoPosts.length === 0) {
         return null;
     }
@@ -90,30 +108,20 @@ function validatePhotoPost(photoPost, photoPosts) {
 }
 
 function addPhotoPost(photoPost) {
-    let stringOfPosts = fs.readFileSync('./data/posts.json');
-    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
-        if (key == 'createdAt') {
-            return new Date(value);
-        }
-        return value;
-    })
+    let photoPosts = readPostsFile();
+
+    photoPost.id = getNewID();
 
     if (validatePhotoPost(photoPost, photoPosts)) {
         photoPosts.push(photoPost);
-        fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
+        writePostsFile(photoPosts);
         return true;
     }
     return false;
 }
 
 function getPhotoPost(id) {
-    let stringOfPosts = fs.readFileSync('./data/posts.json');
-    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
-        if (key === 'createdAt') {
-            return new Date(value);
-        }
-        return value;
-    })
+    let photoPosts = readPostsFile();
 
     for (var index = 0; index < photoPosts.length; index++) {
         if (photoPosts[index].id === id && !photoPosts[index].isDeleted) {
@@ -123,13 +131,7 @@ function getPhotoPost(id) {
 }
 
 function getPhotoPostIndex(id) {
-    let stringOfPosts = fs.readFileSync('./data/posts.json');
-    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
-        if (key === 'createdAt') {
-            return new Date(value);
-        }
-        return value;
-    })
+    let photoPosts = readPostsFile();
 
     for (var index = 0; index < photoPosts.length; index++) {
         if (photoPosts[index].id === id && !photoPosts[index].isDeleted) {
@@ -151,13 +153,7 @@ function clone(params) {
 function editPhotoPost(id, photoPost) {
     //photoPost = JSON.parse(photoPost);
 
-    let stringOfPosts = fs.readFileSync('./data/posts.json');
-    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
-        if (key === 'createdAt') {
-            return new Date(value);
-        }
-        return value;
-    })
+    let photoPosts = readPostsFile();
 
     if (typeof (id) !== 'string') {
         return false;
@@ -196,19 +192,13 @@ function editPhotoPost(id, photoPost) {
     }
     photoPosts[getPhotoPostIndex(id)] = clone(buff);
 
-    fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
+    writePostsFile(photoPosts);
 
     return true;
 }
 
 function reanimatePhotoPost(id) {
-    let stringOfPosts = fs.readFileSync('./data/posts.json');
-    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
-        if (key == 'createdAt') {
-            return new Date(value);
-        }
-        return value;
-    })
+    let photoPosts = readPostsFile();
 
     if (typeof (id) === 'string') {
         for (var index = 0; index < photoPosts.length; index++) {
@@ -217,7 +207,7 @@ function reanimatePhotoPost(id) {
                     //photoPosts.splice(index, 1);
                     photoPosts[index].isDeleted = false;
     
-                    fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
+                    writePostsFile(photoPosts);
     
                     return true;
                 }
@@ -228,13 +218,7 @@ function reanimatePhotoPost(id) {
 }
 
 function removePhotoPost(id) {
-    let stringOfPosts = fs.readFileSync('./data/posts.json');
-    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
-        if (key == 'createdAt') {
-            return new Date(value);
-        }
-        return value;
-    })
+    let photoPosts = readPostsFile();
 
     if (typeof (id) === 'string') {
         for (var index = 0; index < photoPosts.length; index++) {
@@ -243,7 +227,7 @@ function removePhotoPost(id) {
                     //photoPosts.splice(index, 1);
                     photoPosts[index].isDeleted = true;
     
-                    fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
+                    writePostsFile(photoPosts);
     
                     return true;
                 }
@@ -285,13 +269,7 @@ function getPhotoPosts(skip, top, filterConfig) {
         top = 10;
     }
 
-    let stringOfPosts = fs.readFileSync('./data/posts.json');
-    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
-        if (key == 'createdAt') {
-            return new Date(value);
-        }
-        return value;
-    })
+    let photoPosts = readPostsFile();
 
     photoPosts.sort(datesort);
 
@@ -360,7 +338,7 @@ app.get('/getPhotoPost/:id', function (req, res) {
         post = JSON.stringify(post);
         res.send(200, post);
     }
-    res.send(404, `Photopost with id = ${req.params.id} not found`);
+    res.send(400, `Photopost with id = ${req.params.id} not found`);
 })
 
 app.post('/getPhotoPosts', function (req, res) {
@@ -376,14 +354,14 @@ app.post('/getPhotoPosts', function (req, res) {
     if (answer !== undefined) {
         res.send(200, answer);
     }
-    res.send(404, 'Error');
+    res.send(400, 'Error');
 })
 
 app.post('/addPhotoPost', function (req, res) {
     if(addPhotoPost(req.body)) {
         res.send(200, `Photopost was successfully added`);
     }
-    res.send(404, `Operation failed`);
+    res.send(400, `Operation failed`);
 })
 
 app.put('/reanimatePhotoPost/:id', function (req, res) {
@@ -397,7 +375,7 @@ app.put('/editPhotoPost/:id', function (req, res) {
     if (editPhotoPost(req.params.id, req.body)) {
         res.send(200, `Photopost with id = ${req.params.id} was successfully edited`);
     }
-    res.send(404, 'Operation failed');
+    res.send(400, 'Operation failed');
 })
 
 app.delete('/removePhotoPost/:id', function (req, res) {

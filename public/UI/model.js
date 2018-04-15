@@ -141,10 +141,47 @@ let model = function () {
         return result;
     }
 
+    function editPhotoPost(id, photoPost) {
+        var xhr = new XMLHttpRequest();
+
+        if (id === undefined) {
+            return false;
+        }
+
+        if (photoPost === undefined) {
+            return false;
+        }
+
+        xhr.open('PUT', `editPhotoPost/${id}`, false);
+
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        var result = false;
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState !== 4) {
+                return;
+            }
+            if (xhr.status !== 200) {
+                console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
+                result = false;
+            }
+            else {
+                console.log(xhr.responseText);
+                result = true;
+            }
+        }
+
+        xhr.send(JSON.stringify(photoPost));
+
+        return result;
+    }
+
     return {
         getPhotoPosts: getPhotoPosts,
         getPhotoPost: getPhotoPost,
         addPhotoPost: addPhotoPost,
-        removePhotoPost: removePhotoPost
+        removePhotoPost: removePhotoPost,
+        editPhotoPost: editPhotoPost
     }
 }();

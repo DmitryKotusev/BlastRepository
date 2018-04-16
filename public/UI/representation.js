@@ -14,8 +14,151 @@ var latestSkip = 0;       //Данное поле хранит количест�
 var latestTop = 10;        //Данное поле хранит количество записей, которое нужно было вывести на экран в последний раз
 var latestFilterConfig;   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
 
-var dom = function() {
+var dom = function () {
+    function backButtonRestructure(event) {
+        let main = document.getElementsByClassName('mainplacing')[0];
+        main.innerHTML = '';
+        let filt = dom.makeFilter();
+        document.getElementsByTagName('body')[0].replaceChild(filt, event.target);
+        dom.showPosts(0, 10);
+        if (currentName !== null && currentName !== '') {
+            dom.checkLogin(currentName);
+        }
+        else {
+            dom.checkLogin();
+        }
+        dom.showAuthors();
+        dom.showHashtags();
+        currentState = statesMassive.mainState;
+    }
 
+    function loginRestructure(event) {
+        currentState = statesMassive.loginState;//Состояние логина
+        document.getElementsByClassName('nicknamealign')[0].innerHTML = '';
+        document.getElementsByClassName('headeralign')[0].innerHTML = '';
+        document.getElementsByClassName('mainplacing')[0].innerHTML = '';
+        document.getElementsByClassName('mainplacing')[1].innerHTML = '';
+        /////
+        let body = document.getElementsByTagName('body')[0];
+        let filt = body.getElementsByTagName('aside')[0];
+
+        if (filt !== undefined) {
+            let backButton = document.createElement('button');
+            backButton.type = 'button';
+            backButton.className = 'buttonback';
+            backButton.id = 'Back';
+            backButton.innerHTML = 'Back';
+            backButton.addEventListener('click', backButtonEvent);
+
+            body.replaceChild(backButton, filt);
+        }
+        //////
+        let main = document.getElementsByClassName('mainplacing')[0];
+        main.innerHTML =
+            `<div id="form_login_container">
+            <p class="login-text">Enter your login and password</p>
+            <p class="error-text"></p>
+            <form method='POST'>
+            <input type="text" placeholder="Login" class="text_input" />
+            <input type="text" placeholder="Password" class="text_input" />
+            <button type="button" class="buttonlogin">Login</button>
+            </form>
+        </div>`;
+    }
+
+    function pressLoginRestructure(event) {
+        let loginInfo = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('input')[0];
+        let passwordInfo = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('input')[1];
+        for (let index = 0; index < users.length; index++) {
+            if (users[index].login === loginInfo.value && users[index].password === passwordInfo.value) {
+                let main = document.getElementsByClassName('mainplacing')[0];
+                main.innerHTML = '';
+                let filt = dom.makeFilter();
+                document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                dom.checkLogin(users[index].login);
+                dom.showPosts(0, 10);
+                dom.showAuthors();
+                dom.showHashtags();
+                currentState = statesMassive.mainState;
+                return;
+            }
+        }
+
+        //Вывод ошибки
+        let errorText = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('p')[1];
+        errorText.innerHTML = 'Error, invalid login or password';
+    }
+
+    function lookAtPhotoRestructure(event) {
+        currentState = statesMassive.lookAtPhotoState; //Состояние просмотра фотографии
+        let post = module.getPhotoPost(event.target.closest('.post').id);
+        document.getElementsByClassName('mainplacing')[0].innerHTML = '';
+        //let loadMoresect = document.getElementsByClassName('mainplacing')[1];
+        document.getElementsByClassName('mainplacing')[1].innerHTML = '';
+        let main = document.getElementsByTagName('main')[0];
+        //main.removeChild(loadMoresect);
+
+        let body = document.getElementsByTagName('body')[0];
+        let filt = body.getElementsByTagName('aside')[0];
+
+        let backButton = document.createElement('button');
+        backButton.type = 'button';
+        backButton.className = 'buttonback';
+        backButton.id = 'Back';
+        backButton.innerHTML = 'Back';
+        backButton.addEventListener('click', eve.backButtonEvent);
+
+        body.replaceChild(backButton, filt);
+        
+        mainPlacing = document.getElementsByClassName('mainplacing')[0];
+        
+        
+        if (currentName === module.getPhotoPost(event.target.closest('.post').id).author) {
+            mainPlacing.innerHTML = 
+            `<div class="lookatphoto" id="${post.id}">
+                <div class="bigphoto">
+                    <img class="imgstyle" src="${post.photolink}" alt="Mat">
+                </div>
+                <p class="lookatphototext">Description</p>
+                <textarea class="texttoread" readonly name="description" id="" cols="35" rows="5">${post.description}</textarea>
+                <p class="lookatphototext">Hashtags</p>
+                <textarea class="hashtagstoread" readonly name="hashtags" id="" cols="35" rows="5">${post.hashtags.join(' ')}</textarea>
+                <p class="lookatphototext">Author: ${post.author}</p>
+                <div class="lookatphotoicons">
+                    <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
+                    <div class="nickandiconsspec">
+                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/delete-512.png" alt="Bin"></button>
+                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/221649.png" alt="Edit"></button>
+                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin">
+                        <span class="likesamount">${post.likes.length}</span></button>
+                    </div>
+                </div>
+            </div>`;
+            
+            return true;
+        }
+
+        mainPlacing.innerHTML = 
+        `<div class="lookatphoto" id="${post.id}">
+            <div class="bigphoto">
+                <img class="imgstyle" src="${post.photolink}" alt="Mat">
+            </div>
+            <p class="lookatphototext">Description</p>
+            <textarea class="texttoread" readonly name="description" id="" cols="35" rows="5">${post.description}</textarea>
+            <p class="lookatphototext">Hashtags</p>
+            <textarea class="hashtagstoread" readonly name="hashtags" id="" cols="35" rows="5">${post.hashtags.join(' ')}</textarea>
+            <p class="lookatphototext">Author: ${post.author}</p>
+            <div class="lookatphotoicons">
+                <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
+                <div class="nickandiconsspec">
+                    <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin">
+                    <span class="likesamount">${post.likes.length}</span></button>
+                </div>
+            </div>
+        </div>`;
+
+        return false;
+    }
 
     //Возвращает кнопку, параметр функции идёт в качестве надписи
     function makeButton(params) {
@@ -31,8 +174,8 @@ var dom = function() {
     //Возращает непривязанный к DOM фильтр
     function makeFilter() {
         let filt = document.createElement('aside');
-        filt.innerHTML = 
-        `<div class="filterelements">
+        filt.innerHTML =
+            `<div class="filterelements">
             <div class="filtermainbutton">
                 <button type="button" class="buttonusual">Filter</button>
             </div>
@@ -77,12 +220,11 @@ var dom = function() {
         return filt;
     }
 
-    function addLike(id)
-    {
+    function addLike(id) {
         if (currentName === null) {
             return;
         }
-        if (typeof(id) !== 'string') {
+        if (typeof (id) !== 'string') {
             return;
         }
         /*for (let index = 0; index < module.getPhotoPost(id).likes.length; index++) {
@@ -101,14 +243,14 @@ var dom = function() {
             return;
         }
 
-        if(!module.getPhotoPost(id).likes.every(function(like, index) {
+        if (!module.getPhotoPost(id).likes.every(function (like, index) {
             if (like === currentName) {
                 module.getPhotoPost(id).likes.splice(index, 1);
 
                 var post = document.getElementById(id);
                 if (post !== null) {
                     var amountOfLikes = post.getElementsByClassName('likesamount')[0];
-                    amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;   
+                    amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;
                 }
                 return false;
             }
@@ -122,12 +264,12 @@ var dom = function() {
         var post = document.getElementById(id);
         if (post !== null) {
             var amountOfLikes = post.getElementsByClassName('likesamount')[0];
-            amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;   
+            amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;
         }
         localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
     }
 
-    
+
 
     var hashtags = [];
     function findUniqueHashtags() {
@@ -176,11 +318,10 @@ var dom = function() {
             username = undefined;
         }
         var islogined = (username !== undefined);
-        if(islogined)
-        {
+        if (islogined) {
             document.getElementsByClassName('nicknamealign')[0].innerHTML = `<p> ${username} </p>`;
-            document.getElementsByClassName('headeralign')[0].innerHTML = 
-            `<a href = "#top">
+            document.getElementsByClassName('headeralign')[0].innerHTML =
+                `<a href = "#top">
             <button type="button" class="buttonusual">
             Add photo</button>
             </a>
@@ -195,8 +336,7 @@ var dom = function() {
 
             localStorage.setItem('currentName', JSON.stringify(currentName));
         }
-        else
-        {
+        else {
             document.getElementsByClassName('nicknamealign')[0].innerHTML = '';
             document.getElementsByClassName('headeralign')[0].innerHTML = `<button type="button" class="buttonusual">Login</button>`;
             currentName = null;
@@ -213,7 +353,7 @@ var dom = function() {
             showPosts(0, 10);
             let filt = dom.makeFilter();
             if (document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0] !== undefined) {
-                document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);   
+                document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
             }
         }
     }
@@ -222,15 +362,15 @@ var dom = function() {
         var main = document.getElementsByClassName('mainplacing')[0];
 
         var temp = document.createElement('template');
-        
+
         var post = document.createElement('div');
         post.className = 'post';
         post.id = photopost.id;
-        
+
         var photo = document.createElement('div');
         photo.className = 'photo';
         photo.innerHTML = `<img class="imgstyle" src="${photopost.photolink}" alt="Mat">`;
-        
+
         var nick = document.createElement('div');
         nick.className = 'nickandicons';
         nick.innerHTML = photopost.author;
@@ -238,8 +378,8 @@ var dom = function() {
         var icons = document.createElement('div');
         icons.className = 'nickandicons';
         if (currentName === photopost.author) {
-            icons.innerHTML = 
-            `<button type="button" class="buttonset"><img class="iconstyles" src="./ImagesAndIcons/delete-512.png" alt="Bin"></button>
+            icons.innerHTML =
+                `<button type="button" class="buttonset"><img class="iconstyles" src="./ImagesAndIcons/delete-512.png" alt="Bin"></button>
             <button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="./ImagesAndIcons/221649.png" alt="Edit"></a></button>
             <button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="./ImagesAndIcons/comments.png" alt="Bin"></a></button>
             <button type="button" class="buttonset"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin"> 
@@ -247,7 +387,7 @@ var dom = function() {
 
             let likes = icons.getElementsByTagName('button')[3];
             likes.addEventListener('click', eve.like);
-            
+
             let look = icons.getElementsByTagName('button')[2];
             look.addEventListener('click', eve.lookAtPhoto);
 
@@ -257,10 +397,9 @@ var dom = function() {
             let del = icons.getElementsByTagName('button')[0];
             del.addEventListener('click', eve.deletePost);
         }
-        else
-        {
-            icons.innerHTML = 
-            `<button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="./ImagesAndIcons/comments.png" alt="Bin"></a></button>
+        else {
+            icons.innerHTML =
+                `<button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="./ImagesAndIcons/comments.png" alt="Bin"></a></button>
             <button type="button" class="buttonset"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin"> 
             <span class="likesamount">${photopost.likes.length}</span></button>`;
 
@@ -269,7 +408,7 @@ var dom = function() {
             let look = icons.getElementsByTagName('button')[0];
             look.addEventListener('click', eve.lookAtPhoto);
         }
-        
+
         var date = document.createElement('div');
         date.className = 'date';
         date.innerHTML = photopost.createdAt.toLocaleDateString();
@@ -286,27 +425,8 @@ var dom = function() {
         main.appendChild(temp.content);
     }
 
-    /*function getformatDate(post) {
-        var date = post.createdAt;
-
-        var day = date.getDate();
-        if (day < 10) {
-            day = '0' + day;
-        }
-
-        var month = date.getMonth() + 1;
-        if (month < 10) {
-            month = '0' + month;
-        }
-
-        var year = date.getFullYear();
-
-        return day + '.' + month + '.' + year;
-    }*/
-
     function addPhotopost(photopost) {
-        if(module.addPhotoPost(photopost))
-        {
+        if (module.addPhotoPost(photopost)) {
             showPosts(0, 10);//Поменял параметры фильтра
         }
     }
@@ -319,8 +439,7 @@ var dom = function() {
         if (currentName !== goalPost.author) {
             return false;
         }
-        if(module.removePhotoPost(id))
-        {
+        if (module.removePhotoPost(id)) {
             localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
             showPosts(0, latestSkip + latestTop, latestFilterConfig);//Поменял параметры фильтра
         }
@@ -334,8 +453,7 @@ var dom = function() {
         if (currentName !== goalPost.author) {
             return false;
         }
-        if(module.editPhotoPost(id, photoPost))
-        {
+        if (module.editPhotoPost(id, photoPost)) {
             showPosts(0, 10);//Поменял параметры фильтра
         }
         return true;
@@ -347,7 +465,7 @@ var dom = function() {
         class="buttonusualadd">Load more</button>`;
 
         var photoPosts = module.getPhotoPosts(skip, top, filterConfig);
-    
+
         if (photoPosts === undefined) {
             return;
         }
@@ -355,7 +473,7 @@ var dom = function() {
         photoPosts.forEach(function (photopost) {
             showPhotopost(photopost);
         });
-        
+
         latestSkip = skip;
         latestTop = top;
         latestFilterConfig = filterConfig;
@@ -375,7 +493,7 @@ var dom = function() {
         //latestSkip = latestSkip + 10;
 
         var photoPosts = module.getPhotoPosts(latestTop + latestSkip, 10, latestFilterConfig);
-    
+
         if (photoPosts === undefined) {
             return;
         }
@@ -393,15 +511,15 @@ var dom = function() {
 
     function startPageDownload(params) {
 
-        photoPosts = JSON.parse(localStorage.getItem('photoPosts'), function(key, value) {
-            if (key == 'createdAt') 
+        photoPosts = JSON.parse(localStorage.getItem('photoPosts'), function (key, value) {
+            if (key == 'createdAt')
                 return new Date(value);
             return value;
-          });
+        });
         if (photoPosts === null) {
             photoPosts = [];
         }
-        
+
         currentName = JSON.parse(localStorage.getItem('currentName'));
 
         //Отображаение первых 10 постов
@@ -445,7 +563,11 @@ var dom = function() {
         addMorePosts: addMorePosts,
         makeFilter: makeFilter,
         makeButton: makeButton,
-        startPageDownload: startPageDownload
+        startPageDownload: startPageDownload,
+        backButtonRestructure: backButtonRestructure,
+        loginRestructure: loginRestructure,
+        pressLoginRestructure: pressLoginRestructure,
+        lookAtPhotoRestructure: lookAtPhotoRestructure
     }
 }();
 

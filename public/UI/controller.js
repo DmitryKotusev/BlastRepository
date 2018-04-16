@@ -1,4 +1,4 @@
-var eve = function() {
+var eve = function () {
     function like(event) {
         var button = event.target;
         var id = button.closest('.post').id;
@@ -15,82 +15,14 @@ var eve = function() {
         dom.addMorePosts();
     }
 
-    function backButtonEvent(params) {
-        let main = document.getElementsByClassName('mainplacing')[0];
-        main.innerHTML = '';
-        let filt = dom.makeFilter();
-        document.getElementsByTagName('body')[0].replaceChild(filt, event.target);
-        dom.showPosts(0, 10);
-        if (currentName !== null && currentName !== '') {
-            dom.checkLogin(currentName);   
-        }
-        else
-        {
-            dom.checkLogin();
-        }
-        dom.showAuthors();
-        dom.showHashtags();
-        currentState = statesMassive.mainState;
+    function backButtonEvent(event) {
+        dom.backButtonRestructure(event);
     }
 
-    function login(params) {
-        currentState = statesMassive.loginState;//Состояние логина
-        document.getElementsByClassName('nicknamealign')[0].innerHTML = '';
-        document.getElementsByClassName('headeralign')[0].innerHTML = '';
-        document.getElementsByClassName('mainplacing')[0].innerHTML = '';
-        document.getElementsByClassName('mainplacing')[1].innerHTML = '';
-        /////
-        let body = document.getElementsByTagName('body')[0];
-        let filt = body.getElementsByTagName('aside')[0];
-
-        if (filt !== undefined) {
-            let backButton = document.createElement('button');
-            backButton.type = 'button';
-            backButton.className = 'buttonback';
-            backButton.id = 'Back';
-            backButton.innerHTML = 'Back';
-            backButton.addEventListener('click', backButtonEvent);
-
-            body.replaceChild(backButton, filt);   
-        }
-        //////
-        let main = document.getElementsByClassName('mainplacing')[0];
-        main.innerHTML = 
-        `<div id="form_login_container">
-            <p class="login-text">Enter your login and password</p>
-            <p class="error-text"></p>
-            <form method='POST'>
-            <input type="text" placeholder="Login" class="text_input" />
-            <input type="text" placeholder="Password" class="text_input" />
-            <button type="button" class="buttonlogin">Login</button>
-            </form>
-        </div>`;
-
+    function login(event) {
+        dom.loginRestructure(event);
         let loginButton = main.getElementsByTagName('button')[0];
-
-        loginButton.addEventListener('click', 
-        function name(params) {
-            let loginInfo = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('input')[0];
-            let passwordInfo = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('input')[1];
-            for (let index = 0; index < users.length; index++) {
-                if (users[index].login === loginInfo.value && users[index].password === passwordInfo.value) {
-                    let main = document.getElementsByClassName('mainplacing')[0];
-                    main.innerHTML = '';
-                    let filt = dom.makeFilter();
-                    document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-                    dom.checkLogin(users[index].login);
-                    dom.showPosts(0, 10);
-                    dom.showAuthors();
-                    dom.showHashtags();
-                    currentState = statesMassive.mainState;
-                    return;
-                }
-            }
-
-            //Вывод ошибки
-            let errorText = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('p')[1];
-            errorText.innerHTML = 'Error, invalid login or password';
-        })
+        loginButton.addEventListener('click', dom.pressLoginRestructure);
     }
 
     function exit(params) {
@@ -100,52 +32,9 @@ var eve = function() {
         }
     }
 
-    function lookAtPhoto(params) {
-        currentState = statesMassive.lookAtPhotoState; //Состояние просмотра фотографии
-        let post = module.getPhotoPost(params.target.closest('.post').id);
-        document.getElementsByClassName('mainplacing')[0].innerHTML = '';
-        //let loadMoresect = document.getElementsByClassName('mainplacing')[1];
-        document.getElementsByClassName('mainplacing')[1].innerHTML = '';
-        let main = document.getElementsByTagName('main')[0];
-        //main.removeChild(loadMoresect);
-
-        let body = document.getElementsByTagName('body')[0];
-        let filt = body.getElementsByTagName('aside')[0];
-
-        let backButton = document.createElement('button');
-        backButton.type = 'button';
-        backButton.className = 'buttonback';
-        backButton.id = 'Back';
-        backButton.innerHTML = 'Back';
-        backButton.addEventListener('click', backButtonEvent);
-
-        body.replaceChild(backButton, filt);
-        
-        mainPlacing = document.getElementsByClassName('mainplacing')[0];
-        
-        
-        if (currentName === module.getPhotoPost(params.target.closest('.post').id).author) {
-            mainPlacing.innerHTML = 
-            `<div class="lookatphoto" id="${post.id}">
-                <div class="bigphoto">
-                    <img class="imgstyle" src="${post.photolink}" alt="Mat">
-                </div>
-                <p class="lookatphototext">Description</p>
-                <textarea class="texttoread" readonly name="description" id="" cols="35" rows="5">${post.description}</textarea>
-                <p class="lookatphototext">Hashtags</p>
-                <textarea class="hashtagstoread" readonly name="hashtags" id="" cols="35" rows="5">${post.hashtags.join(' ')}</textarea>
-                <p class="lookatphototext">Author: ${post.author}</p>
-                <div class="lookatphotoicons">
-                    <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
-                    <div class="nickandiconsspec">
-                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/delete-512.png" alt="Bin"></button>
-                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/221649.png" alt="Edit"></button>
-                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin">
-                        <span class="likesamount">${post.likes.length}</span></button>
-                    </div>
-                </div>
-            </div>`;
-            //Прикрепить события
+    function lookAtPhoto(event) {
+        if (dom.lookAtPhotoRestructure(event)) {
+            //Connect events if this post is yours
             let amountOfLikes = mainPlacing.getElementsByTagName('button')[2];
             amountOfLikes.addEventListener('click', likeLookAt);
             let editButton = mainPlacing.getElementsByTagName('button')[1];
@@ -153,31 +42,13 @@ var eve = function() {
             let deleteButton = mainPlacing.getElementsByTagName('button')[0];
             deleteButton.addEventListener('click', deletePostLookAtPhoto);
             ////////////////////
-            return;
         }
-
-        mainPlacing.innerHTML = 
-        `<div class="lookatphoto" id="${post.id}">
-            <div class="bigphoto">
-                <img class="imgstyle" src="${post.photolink}" alt="Mat">
-            </div>
-            <p class="lookatphototext">Description</p>
-            <textarea class="texttoread" readonly name="description" id="" cols="35" rows="5">${post.description}</textarea>
-            <p class="lookatphototext">Hashtags</p>
-            <textarea class="hashtagstoread" readonly name="hashtags" id="" cols="35" rows="5">${post.hashtags.join(' ')}</textarea>
-            <p class="lookatphototext">Author: ${post.author}</p>
-            <div class="lookatphotoicons">
-                <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
-                <div class="nickandiconsspec">
-                    <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin">
-                    <span class="likesamount">${post.likes.length}</span></button>
-                </div>
-            </div>
-        </div>`;
-        //Прикрепить события
-        let amountOfLikes = mainPlacing.getElementsByTagName('button')[0];
-        amountOfLikes.addEventListener('click', likeLookAt);
-        ////////////////////
+        else {
+            //Connect events if this post is not yours
+            let amountOfLikes = mainPlacing.getElementsByTagName('button')[0];
+            amountOfLikes.addEventListener('click', likeLookAt);
+            ////////////////////
+        }
     }
 
     function isValidDate(y, m, d) {
@@ -188,7 +59,7 @@ var eve = function() {
 
     function filter(params) {
         let filt = document.getElementsByTagName('aside')[0];
-        
+
         let authorCheck = document.getElementsByName('authorcheck')[0];//Чекбокс
         let hashCheck = document.getElementsByName('hashtagcheck')[0];//Чекбокс
         let dateCheck = document.getElementsByName('datecheck')[0];//Чекбокс
@@ -230,23 +101,8 @@ var eve = function() {
         dom.showPosts(0, 10, filterConfig);
     }
 
-    /*function selectHashEve(params) {
-        let option = params.target;
-        let filterContent = option.closest('.filtercontent');
-        let input = filterContent.getElementsByTagName('input')[1];
-        input.value += ' ' + option.value;
-    }
-
-    function selectAuthorEve(params) {
-        let option = params.target;
-        let filterContent = option.closest('.filtercontent');
-        let input = filterContent.getElementsByTagName('input')[1];
-        input.value = option.value;
-    }*/
-
     function deletePost(params) {
-        if (confirm("Are you sure you want to delete this post?"))
-        {
+        if (confirm("Are you sure you want to delete this post?")) {
             var button = event.target;
             var id = button.closest('.post').id;
             dom.deletePhotopost(id);
@@ -254,8 +110,7 @@ var eve = function() {
     }
 
     function deletePostLookAtPhoto(params) {
-        if (confirm("Are you sure you want to delete this post?"))
-        {
+        if (confirm("Are you sure you want to delete this post?")) {
             var button = event.target;
             var id = button.closest('.lookatphoto').id;
             let filt = dom.makeFilter();
@@ -281,16 +136,16 @@ var eve = function() {
         };
     }*/
 
-    function updateImageDisplay(params) {
-        let photoWrapper = params.target.closest('.lookatphoto');
+    function updateImageDisplay(event) {
+        let photoWrapper = event.target.closest('.lookatphoto');
         let image = photoWrapper.getElementsByClassName('imgstyle')[0];
-        //let buff = window.URL.createObjectURL(params.target.files[0]);
-        //image.src = window.URL.createObjectURL(params.target.files[0]);
+        //let buff = window.URL.createObjectURL(event.target.files[0]);
+        //image.src = window.URL.createObjectURL(event.target.files[0]);
         let reader = new FileReader();
-        reader.readAsDataURL(params.target.files[0]);
+        reader.readAsDataURL(event.target.files[0]);
         reader.onloadend = function () {
             image.src = reader.result;
-        }; 
+        };
     }
 
     function editPostLookAtPhoto(params) {
@@ -316,7 +171,7 @@ var eve = function() {
 
         mainPlacing = document.getElementsByClassName('mainplacing')[0];
 
-        mainPlacing.innerHTML = 
+        mainPlacing.innerHTML =
             `<div class="lookatphoto" id="${post.id}">
                 <div class="bigphoto">
                     <img class="imgstyle" src="${post.photolink}" alt="Mat">
@@ -341,7 +196,7 @@ var eve = function() {
         let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
         input.addEventListener('change', updateImageDisplay);
 
-        saveButton.addEventListener('click',function (params) {
+        saveButton.addEventListener('click', function (params) {
             let photoPost = {};
 
             let img = mainPlacing.getElementsByTagName('img')[0];
@@ -356,7 +211,7 @@ var eve = function() {
 
             if (confirm('Are you sure you want to save changes?')) {
                 if (module.editPhotoPost(post.id, photoPost)) {
-                
+
                     mainPlacing.innerHTML = '';
                     let filt = dom.makeFilter();
                     document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
@@ -365,8 +220,7 @@ var eve = function() {
                     dom.showHashtags();
                     currentState = statesMassive.mainState;
                 }
-                else
-                {
+                else {
                     let error = mainPlacing.getElementsByClassName('error-text')[0];
                     error.innerHTML = 'Sorry, there are some errors in what you have edit';
                 }
@@ -397,7 +251,7 @@ var eve = function() {
 
         mainPlacing = document.getElementsByClassName('mainplacing')[0];
 
-        mainPlacing.innerHTML = 
+        mainPlacing.innerHTML =
             `<div class="lookatphoto" id="${post.id}">
                 <div class="bigphoto">
                     <img class="imgstyle" src="${post.photolink}" alt="Mat">
@@ -421,15 +275,14 @@ var eve = function() {
         if (placeForButton.getElementsByTagName('button')[0] !== undefined) {
             placeForButton.replaceChild(saveButton, placeForButton.getElementsByTagName('button')[0]);
         }
-        else
-        {
+        else {
             placeForButton.appendChild(saveButton);
         }
 
         let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
         input.addEventListener('change', updateImageDisplay);
 
-        saveButton.addEventListener('click',function (params) {
+        saveButton.addEventListener('click', function (params) {
             let photoPost = {};
 
             let img = mainPlacing.getElementsByTagName('img')[0];
@@ -444,7 +297,7 @@ var eve = function() {
 
             if (confirm('Are you sure you want to save changes?')) {
                 if (module.editPhotoPost(post.id, photoPost)) {
-                
+
                     mainPlacing.innerHTML = '';
                     let filt = dom.makeFilter();
                     document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
@@ -453,8 +306,7 @@ var eve = function() {
                     dom.showHashtags();
                     currentState = statesMassive.mainState;
                 }
-                else
-                {
+                else {
                     let error = mainPlacing.getElementsByClassName('error-text')[0];
                     error.innerHTML = 'Sorry, there are some errors in what you have edit';
                 }
@@ -467,7 +319,7 @@ var eve = function() {
             return;
         }
         currentState = statesMassive.uploadPostState; //Состояние добавления фотопоста
-        
+
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         //let loadMoresect = document.getElementsByClassName('mainplacing')[1];
         let placeForButton = document.getElementsByClassName('mainplacing')[1];
@@ -485,12 +337,12 @@ var eve = function() {
         backButton.addEventListener('click', backButtonEvent);
 
         if (filt !== undefined) {
-            body.replaceChild(backButton, filt);   
+            body.replaceChild(backButton, filt);
         }
 
         mainPlacing = document.getElementsByClassName('mainplacing')[0];
 
-        mainPlacing.innerHTML = 
+        mainPlacing.innerHTML =
             `<div class="lookatphoto">
                 <div class="bigphoto">
                     <img class="imgstyle">
@@ -517,12 +369,11 @@ var eve = function() {
         //let anchor = document.createElement('a');
         //anchor.setAttribute('href', "#top");
         //anchor.appendChild(uploadButton);
-        
+
         if (placeForButton.getElementsByTagName('button')[0] !== undefined) {
             placeForButton.replaceChild(uploadButton, placeForButton.getElementsByTagName('button')[0]);
         }
-        else
-        {
+        else {
             placeForButton.appendChild(uploadButton);
         }
 
@@ -557,12 +408,11 @@ var eve = function() {
                     currentState = statesMassive.mainState;
                     localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
                 }
-                else
-                {
+                else {
                     let error = mainPlacing.getElementsByClassName('error-text')[0];
                     error.innerHTML = 'Sorry, there are some errors in what you try to upload';
                 }
-            }           
+            }
         })
     }
 
@@ -575,6 +425,7 @@ var eve = function() {
         filter: filter,
         deletePost: deletePost,
         editPost: editPost,
-        uploadPost: uploadPost
+        uploadPost: uploadPost,
+        backButtonEvent: backButtonEvent
     }
 }();

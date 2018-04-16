@@ -10,7 +10,21 @@ function Photopost(id, description, createdAt, author, photolink, likes, hashtag
     this.hashtags = hashtags || [];
     this.isDeleted = isDeleted;
 }
-
+//ВРЕМЕННО!!!
+function user (login, password){
+    this.login = login;
+    this.password = password;
+}
+var users = [
+    new user('Dima', '12345'),
+    new user('Ivan', '54321'),
+    new user('Magamed', '11111'),
+    new user('Anastasia', '11111'),
+    new user('Vova', '11111'),
+    new user('Petia', '11111'),
+    new user('Vasia', '11111')
+]
+////////////
 let model = function () {
     function getPhotoPosts(skip, top, filterConfig) {
         var xhr = new XMLHttpRequest();

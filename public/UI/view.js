@@ -228,18 +228,20 @@ var view = function () {
             return;
         }
 
-        if (model.getPhotoPost(id) === undefined) {
+        let post = model.getPhotoPost(id);
+
+        if (post === undefined) {
             return;
         }
 
-        if (!model.getPhotoPost(id).likes.every(function (like, index) {
+        if (!post.likes.every(function (like, index) {
             if (like === currentName) {
-                model.getPhotoPost(id).likes.splice(index, 1);
+                post.likes.splice(index, 1);
 
-                var post = document.getElementById(id);
-                if (post !== null) {
-                    var amountOfLikes = post.getElementsByClassName('likesamount')[0];
-                    amountOfLikes.innerHTML = model.getPhotoPost(id).likes.length;
+                let postDom = document.getElementById(id);
+                if (postDom !== null) {
+                    let amountOfLikes = postDom.getElementsByClassName('likesamount')[0];
+                    amountOfLikes.innerHTML = post.likes.length;
                 }
                 return false;
             }
@@ -248,14 +250,18 @@ var view = function () {
             return;
         }
 
-        model.getPhotoPost(id).likes.push(currentName);
+        post.likes.push(currentName);
 
-        var post = document.getElementById(id);
-        if (post !== null) {
-            var amountOfLikes = post.getElementsByClassName('likesamount')[0];
-            amountOfLikes.innerHTML = model.getPhotoPost(id).likes.length;
+        let postDom = document.getElementById(id);
+        if (postDom !== null) {
+            let amountOfLikes = postDom.getElementsByClassName('likesamount')[0];
+            amountOfLikes.innerHTML = post.likes.length;
         }
-        localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
+
+        let photoEdit = {};
+        photoEdit.likes = post.likes; 
+        
+        model.editPhotoPost(id, photoEdit);
     }
 
     function editPostLookAtPhotoRestructure(event) {
@@ -401,9 +407,7 @@ var view = function () {
                 view.showPosts(0, 10);
                 view.showAuthors();
                 view.showHashtags();
-                //localStorage.removeItem('photoPosts');
                 currentState = statesMassive.mainState;
-                localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
             }
             else {
                 let error = mainPlacing.getElementsByClassName('error-text')[0];
@@ -465,22 +469,12 @@ var view = function () {
 
     var hashtags = [];
     function findUniqueHashtags() {
-        for (let i = 0; i < photoPosts.length; i++) {
-            for (let j = 0; j < photoPosts[i].hashtags.length; j++) {
-                if (hashtags.every(item => item !== photoPosts[i].hashtags[j])) {
-                    hashtags.push(photoPosts[i].hashtags[j]);
-                }
-            }
-        }
+        hashtags = model.findUniqueHashtags();
     }
 
     var authorNames = [];
     function findUniqueNames() {
-        for (let i = 0; i < photoPosts.length; i++) {
-            if (authorNames.every(item => item !== photoPosts[i].author)) {
-                authorNames.push(photoPosts[i].author);
-            }
-        }
+        authorNames = model.findUniqueNames();
     }
 
     function showHashtags() {
@@ -632,7 +626,6 @@ var view = function () {
             return false;
         }*/
         if (model.removePhotoPost(id)) {
-            localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
             showPosts(0, latestSkip + latestTop, latestFilterConfig);//Поменял параметры фильтра
         }
     }
@@ -702,16 +695,6 @@ var view = function () {
     }
 
     function startPageDownload(params) {
-
-        photoPosts = JSON.parse(localStorage.getItem('photoPosts'), function (key, value) {
-            if (key == 'createdAt')
-                return new Date(value);
-            return value;
-        });
-        if (photoPosts === null) {
-            photoPosts = [];
-        }
-
         currentName = JSON.parse(localStorage.getItem('currentName'));
 
         //Отображаение первых 10 постов

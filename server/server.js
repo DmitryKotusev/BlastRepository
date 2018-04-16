@@ -33,6 +33,34 @@ function writePostsFile(photoPosts) {
     fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
 }
 
+function findUniqueHashtags() {
+    let photoPosts = readPostsFile();
+
+    let hashtags = [];
+    for (let i = 0; i < photoPosts.length; i++) {
+        for (let j = 0; j < photoPosts[i].hashtags.length; j++) {
+            if (hashtags.every(item => item !== photoPosts[i].hashtags[j])) {
+                hashtags.push(photoPosts[i].hashtags[j]);
+            }
+        }
+    }
+
+    return hashtags;
+}
+
+function findUniqueNames() {
+    let photoPosts = readPostsFile();
+
+    let authorNames = [];
+    for (let i = 0; i < photoPosts.length; i++) {
+        if (authorNames.every(item => item !== photoPosts[i].author)) {
+            authorNames.push(photoPosts[i].author);
+        }
+    }
+
+    return authorNames;
+}
+
 function getMaxID() {
     let photoPosts = readPostsFile();
 
@@ -338,6 +366,14 @@ app.use(bodyParser.json({reviver: parseDate}));
 //app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('../public/UI'));
+
+app.get('/findUniqueHashtags', function (req, res) {
+    res.send(200, JSON.stringify(findUniqueHashtags()));
+})
+
+app.get('/findUniqueNames', function (req, res) {
+    res.send(200, JSON.stringify(findUniqueNames()));
+})
 
 app.get('/getPhotoPost/:id', function (req, res) {
     let post = getPhotoPost(req.params.id);

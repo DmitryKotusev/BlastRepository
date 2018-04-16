@@ -37,7 +37,11 @@ let model = function () {
                 console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
             }
             else {
-                photoPosts = JSON.parse(xhr.responseText);
+                photoPosts = JSON.parse(xhr.responseText, function (key, value) {
+                    if (key == 'createdAt')
+                        return new Date(value);
+                    return value;
+                });
             }
         }
 
@@ -70,7 +74,11 @@ let model = function () {
                 console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
             }
             else {
-                photoPost = JSON.parse(xhr.responseText);
+                photoPost = JSON.parse(xhr.responseText, function (key, value) {
+                    if (key == 'createdAt')
+                        return new Date(value);
+                    return value;
+                });
             }
         }
 
@@ -177,11 +185,61 @@ let model = function () {
         return result;
     }
 
+    function findUniqueHashtags() {
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('GET', `findUniqueHashtags`, false);
+
+        var hashtags;
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState !== 4) {
+                return;
+            }
+            if (xhr.status !== 200) {
+                console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
+            }
+            else {
+                hashtags = JSON.parse(xhr.responseText);
+            }
+        }
+
+        xhr.send();
+
+        return hashtags;
+    }
+
+    function findUniqueNames() {
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('GET', `findUniqueNames`, false);
+
+        var names;
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState !== 4) {
+                return;
+            }
+            if (xhr.status !== 200) {
+                console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
+            }
+            else {
+                names = JSON.parse(xhr.responseText);
+            }
+        }
+
+        xhr.send();
+
+        return names;
+    }
+
     return {
         getPhotoPosts: getPhotoPosts,
         getPhotoPost: getPhotoPost,
         addPhotoPost: addPhotoPost,
         removePhotoPost: removePhotoPost,
-        editPhotoPost: editPhotoPost
+        editPhotoPost: editPhotoPost,
+        findUniqueHashtags: findUniqueHashtags,
+        findUniqueNames: findUniqueNames
     }
 }();

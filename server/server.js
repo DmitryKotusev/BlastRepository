@@ -327,7 +327,14 @@ function getPhotoPosts(skip, top, filterConfig) {
     return JSON.stringify(buffmass.slice(skip, skip + top));//отбрасывание первых skip элементов массива и взятие последующих top элементов
 }
 
-app.use(bodyParser.json());
+function parseDate (key, value) {
+    if (key === 'createdAt' && typeof value === 'string') {
+        return new Date(value);
+    }
+    return value;
+}
+
+app.use(bodyParser.json({reviver: parseDate}));
 //app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('../public/UI'));

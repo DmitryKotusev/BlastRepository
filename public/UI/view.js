@@ -14,21 +14,21 @@ var latestSkip = 0;       //Данное поле хранит количест�
 var latestTop = 10;        //Данное поле хранит количество записей, которое нужно было вывести на экран в последний раз
 var latestFilterConfig;   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
 
-var dom = function () {
+var view = function () {
     function backButtonRestructure(event) {
         let main = document.getElementsByClassName('mainplacing')[0];
         main.innerHTML = '';
-        let filt = dom.makeFilter();
+        let filt = view.makeFilter();
         document.getElementsByTagName('body')[0].replaceChild(filt, event.target);
-        dom.showPosts(0, 10);
+        view.showPosts(0, 10);
         if (currentName !== null && currentName !== '') {
-            dom.checkLogin(currentName);
+            view.checkLogin(currentName);
         }
         else {
-            dom.checkLogin();
+            view.checkLogin();
         }
-        dom.showAuthors();
-        dom.showHashtags();
+        view.showAuthors();
+        view.showHashtags();
         currentState = statesMassive.mainState;
     }
 
@@ -48,7 +48,7 @@ var dom = function () {
             backButton.className = 'buttonback';
             backButton.id = 'Back';
             backButton.innerHTML = 'Back';
-            backButton.addEventListener('click', eve.backButtonEvent);
+            backButton.addEventListener('click', controller.backButtonEvent);
 
             body.replaceChild(backButton, filt);
         }
@@ -73,12 +73,12 @@ var dom = function () {
             if (users[index].login === loginInfo.value && users[index].password === passwordInfo.value) {
                 let main = document.getElementsByClassName('mainplacing')[0];
                 main.innerHTML = '';
-                let filt = dom.makeFilter();
+                let filt = view.makeFilter();
                 document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-                dom.checkLogin(users[index].login);
-                dom.showPosts(0, 10);
-                dom.showAuthors();
-                dom.showHashtags();
+                view.checkLogin(users[index].login);
+                view.showPosts(0, 10);
+                view.showAuthors();
+                view.showHashtags();
                 currentState = statesMassive.mainState;
                 return;
             }
@@ -91,7 +91,7 @@ var dom = function () {
 
     function lookAtPhotoRestructure(event) {
         currentState = statesMassive.lookAtPhotoState; //Состояние просмотра фотографии
-        let post = module.getPhotoPost(event.target.closest('.post').id);
+        let post = model.getPhotoPost(event.target.closest('.post').id);
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         //let loadMoresect = document.getElementsByClassName('mainplacing')[1];
         document.getElementsByClassName('mainplacing')[1].innerHTML = '';
@@ -106,14 +106,14 @@ var dom = function () {
         backButton.className = 'buttonback';
         backButton.id = 'Back';
         backButton.innerHTML = 'Back';
-        backButton.addEventListener('click', eve.backButtonEvent);
+        backButton.addEventListener('click', controller.backButtonEvent);
 
         body.replaceChild(backButton, filt);
 
         mainPlacing = document.getElementsByClassName('mainplacing')[0];
 
 
-        if (currentName === module.getPhotoPost(event.target.closest('.post').id).author) {
+        if (currentName === model.getPhotoPost(event.target.closest('.post').id).author) {
             mainPlacing.innerHTML =
                 `<div class="lookatphoto" id="${post.id}">
                 <div class="bigphoto">
@@ -167,7 +167,7 @@ var dom = function () {
         button.type = 'button';
         button.className = 'buttonusualadd';
         button.innerHTML = params;
-        //button.addEventListener('click', eve.addMore);
+        //button.addEventListener('click', controller.addMore);
         return button;
     }
 
@@ -216,7 +216,7 @@ var dom = function () {
                 </div>
             </form>
         </div>`;
-        filt.getElementsByClassName('buttonusual')[0].addEventListener('click', eve.filter);
+        filt.getElementsByClassName('buttonusual')[0].addEventListener('click', controller.filter);
         return filt;
     }
 
@@ -227,30 +227,19 @@ var dom = function () {
         if (typeof (id) !== 'string') {
             return;
         }
-        /*for (let index = 0; index < module.getPhotoPost(id).likes.length; index++) {
-            if (module.getPhotoPost(id).likes[index] === currentName) {
-                module.getPhotoPost(id).likes.splice(index, 1);
 
-                var post = document.getElementById(id);
-                var amountOfLikes = post.getElementsByTagName('span')[0];
-                amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;
-
-                return;
-            }   
-        }*/
-
-        if (module.getPhotoPost(id) === undefined) {
+        if (model.getPhotoPost(id) === undefined) {
             return;
         }
 
-        if (!module.getPhotoPost(id).likes.every(function (like, index) {
+        if (!model.getPhotoPost(id).likes.every(function (like, index) {
             if (like === currentName) {
-                module.getPhotoPost(id).likes.splice(index, 1);
+                model.getPhotoPost(id).likes.splice(index, 1);
 
                 var post = document.getElementById(id);
                 if (post !== null) {
                     var amountOfLikes = post.getElementsByClassName('likesamount')[0];
-                    amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;
+                    amountOfLikes.innerHTML = model.getPhotoPost(id).likes.length;
                 }
                 return false;
             }
@@ -259,25 +248,25 @@ var dom = function () {
             return;
         }
 
-        module.getPhotoPost(id).likes.push(currentName);
+        model.getPhotoPost(id).likes.push(currentName);
 
         var post = document.getElementById(id);
         if (post !== null) {
             var amountOfLikes = post.getElementsByClassName('likesamount')[0];
-            amountOfLikes.innerHTML = module.getPhotoPost(id).likes.length;
+            amountOfLikes.innerHTML = model.getPhotoPost(id).likes.length;
         }
         localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
     }
 
     function editPostLookAtPhotoRestructure(event) {
         currentState = statesMassive.editPostState; //Состояние редактирования фотопоста
-        let post = module.getPhotoPost(event.target.closest('.lookatphoto').id);
+        let post = model.getPhotoPost(event.target.closest('.lookatphoto').id);
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         let placeForButton = document.getElementsByClassName('mainplacing')[1];
         let main = document.getElementsByTagName('main')[0];
 
         let body = document.getElementsByTagName('body')[0];
-        let filt = dom.makeFilter();
+        let filt = view.makeFilter();
 
         mainPlacing = document.getElementsByClassName('mainplacing')[0];
 
@@ -300,7 +289,7 @@ var dom = function () {
                 </div>
                 <p class="error-text"></p>
             </div>`;
-        let saveButton = dom.makeButton('Save and upload');
+        let saveButton = view.makeButton('Save and upload');
         placeForButton.appendChild(saveButton);
     }
 
@@ -318,14 +307,14 @@ var dom = function () {
         photoPost.hashtags = hash.value.split(' ');
 
         if (confirm('Are you sure you want to save changes?')) {
-            if (module.editPhotoPost(post.id, photoPost)) {
+            if (model.editPhotoPost(post.id, photoPost)) {
 
                 mainPlacing.innerHTML = '';
-                let filt = dom.makeFilter();
+                let filt = view.makeFilter();
                 document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-                dom.showPosts(0, 10);
-                dom.showAuthors();
-                dom.showHashtags();
+                view.showPosts(0, 10);
+                view.showAuthors();
+                view.showHashtags();
                 currentState = statesMassive.mainState;
             }
             else {
@@ -337,7 +326,7 @@ var dom = function () {
 
     function editPostRestructure(event) {
         currentState = statesMassive.editPostState; //Состояние редактирования фотопоста
-        let post = module.getPhotoPost(params.target.closest('.post').id);
+        let post = model.getPhotoPost(params.target.closest('.post').id);
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         let placeForButton = document.getElementsByClassName('mainplacing')[1];
         let main = document.getElementsByTagName('main')[0];
@@ -375,7 +364,7 @@ var dom = function () {
                 </div>
                 <p class="error-text"></p>
             </div>`;
-        let saveButton = dom.makeButton('Save and upload');
+        let saveButton = view.makeButton('Save and upload');
 
         if (placeForButton.getElementsByTagName('button')[0] !== undefined) {
             placeForButton.replaceChild(saveButton, placeForButton.getElementsByTagName('button')[0]);
@@ -386,7 +375,7 @@ var dom = function () {
     }
 
     function uploadButtonRestucture(params) {
-        let ID = module.getNewID();
+        let ID = '0';
         let img = mainPlacing.getElementsByTagName('img')[0];
 
         let description = mainPlacing.getElementsByTagName('textarea')[0];
@@ -405,13 +394,13 @@ var dom = function () {
         photoPost.description = description.value;
         photoPost.hashtags = hash.value.split(' ');*/
         if (confirm('Are you sure you want to save changes and upload new photopost?')) {
-            if (module.addPhotoPost(photoPost)) {
+            if (model.addPhotoPost(photoPost)) {
                 mainPlacing.innerHTML = '';
-                let filt = dom.makeFilter();
+                let filt = view.makeFilter();
                 document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-                dom.showPosts(0, 10);
-                dom.showAuthors();
-                dom.showHashtags();
+                view.showPosts(0, 10);
+                view.showAuthors();
+                view.showHashtags();
                 //localStorage.removeItem('photoPosts');
                 currentState = statesMassive.mainState;
                 localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
@@ -436,7 +425,7 @@ var dom = function () {
         backButton.className = 'buttonback';
         backButton.id = 'Back';
         backButton.innerHTML = 'Back';
-        backButton.addEventListener('click', eve.backButtonEvent);
+        backButton.addEventListener('click', controller.backButtonEvent);
 
         if (filt !== undefined) {
             body.replaceChild(backButton, filt);
@@ -464,10 +453,7 @@ var dom = function () {
                 <p class="error-text"></p>
             </div>`;
 
-        let uploadButton = dom.makeButton('Save and upload');
-        //let anchor = document.createElement('a');
-        //anchor.setAttribute('href', "#top");
-        //anchor.appendChild(uploadButton);
+        let uploadButton = view.makeButton('Save and upload');
 
         if (placeForButton.getElementsByTagName('button')[0] !== undefined) {
             placeForButton.replaceChild(uploadButton, placeForButton.getElementsByTagName('button')[0]);
@@ -535,10 +521,10 @@ var dom = function () {
             currentName = username;
 
             let exitButton = document.getElementsByClassName('headeralign')[0].getElementsByTagName('button')[1];
-            exitButton.addEventListener('click', eve.exit);
+            exitButton.addEventListener('click', controller.exit);
 
             let addPhotoButton = document.getElementsByClassName('headeralign')[0].getElementsByTagName('button')[0];
-            addPhotoButton.addEventListener('click', eve.uploadPost);
+            addPhotoButton.addEventListener('click', controller.uploadPost);
 
             localStorage.setItem('currentName', JSON.stringify(currentName));
         }
@@ -548,7 +534,7 @@ var dom = function () {
             currentName = null;
             var header = document.getElementsByClassName('headeralign')[0];
             var but = header.getElementsByTagName('button')[0];
-            but.addEventListener('click', eve.login);
+            but.addEventListener('click', controller.login);
 
             localStorage.setItem('currentName', JSON.stringify(currentName));
         }
@@ -557,7 +543,7 @@ var dom = function () {
         }
         if (currentState === statesMassive.editPostState) {
             showPosts(0, 10);
-            let filt = dom.makeFilter();
+            let filt = view.makeFilter();
             if (document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0] !== undefined) {
                 document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
             }
@@ -592,16 +578,16 @@ var dom = function () {
             <span class="likesamount">${photopost.likes.length}</span></button>`;
 
             let likes = icons.getElementsByTagName('button')[3];
-            likes.addEventListener('click', eve.like);
+            likes.addEventListener('click', controller.like);
 
             let look = icons.getElementsByTagName('button')[2];
-            look.addEventListener('click', eve.lookAtPhoto);
+            look.addEventListener('click', controller.lookAtPhoto);
 
             let edit = icons.getElementsByTagName('button')[1];
-            edit.addEventListener('click', eve.editPost);
+            edit.addEventListener('click', controller.editPost);
 
             let del = icons.getElementsByTagName('button')[0];
-            del.addEventListener('click', eve.deletePost);
+            del.addEventListener('click', controller.deletePost);
         }
         else {
             icons.innerHTML =
@@ -610,9 +596,9 @@ var dom = function () {
             <span class="likesamount">${photopost.likes.length}</span></button>`;
 
             let likes = icons.getElementsByTagName('button')[1];
-            likes.addEventListener('click', eve.like);
+            likes.addEventListener('click', controller.like);
             let look = icons.getElementsByTagName('button')[0];
-            look.addEventListener('click', eve.lookAtPhoto);
+            look.addEventListener('click', controller.lookAtPhoto);
         }
 
         var date = document.createElement('div');
@@ -632,34 +618,34 @@ var dom = function () {
     }
 
     function addPhotopost(photopost) {
-        if (module.addPhotoPost(photopost)) {
+        if (model.addPhotoPost(photopost)) {
             showPosts(0, 10);//Поменял параметры фильтра
         }
     }
 
     function deletephotopost(id) {
-        var goalPost = module.getPhotoPost(id);
+        /*var goalPost = module.getPhotoPost(id);
         if (goalPost === undefined) {
             return false;
         }
         if (currentName !== goalPost.author) {
             return false;
-        }
-        if (module.removePhotoPost(id)) {
+        }*/
+        if (model.removePhotoPost(id)) {
             localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
             showPosts(0, latestSkip + latestTop, latestFilterConfig);//Поменял параметры фильтра
         }
     }
 
     function editPost(id, photoPost) {
-        var goalPost = module.getPhotoPost(id);
+        /*var goalPost = model.getPhotoPost(id);
         if (goalPost === undefined) {
             return false;
         }
         if (currentName !== goalPost.author) {
             return false;
-        }
-        if (module.editPhotoPost(id, photoPost)) {
+        }*/
+        if (model.editPhotoPost(id, photoPost)) {
             showPosts(0, 10);//Поменял параметры фильтра
         }
         return true;
@@ -670,7 +656,7 @@ var dom = function () {
         document.getElementsByClassName('mainplacing')[1].innerHTML = `<button type="button" 
         class="buttonusualadd">Load more</button>`;
 
-        var photoPosts = module.getPhotoPosts(skip, top, filterConfig);
+        var photoPosts = model.getPhotoPosts(skip, top, filterConfig);
 
         if (photoPosts === undefined) {
             return;
@@ -683,14 +669,14 @@ var dom = function () {
         latestSkip = skip;
         latestTop = top;
         latestFilterConfig = filterConfig;
-        if (module.getPhotoPosts(skip, top, filterConfig).length === 0) {
+        if (model.getPhotoPosts(skip, top, filterConfig).length === 0) {
             document.getElementsByClassName('mainplacing')[1].innerHTML = '';
             return;
         }
 
         var loadMorButton = document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0];
-        loadMorButton.addEventListener('click', eve.addMore);
-        if (module.getPhotoPosts(latestSkip + latestTop, 10, latestFilterConfig).length === 0) {
+        loadMorButton.addEventListener('click', controller.addMore);
+        if (model.getPhotoPosts(latestSkip + latestTop, 10, latestFilterConfig).length === 0) {
             document.getElementsByClassName('mainplacing')[1].innerHTML = '';
         }
     }
@@ -698,7 +684,7 @@ var dom = function () {
     function addMorePosts() {
         //latestSkip = latestSkip + 10;
 
-        var photoPosts = module.getPhotoPosts(latestTop + latestSkip, 10, latestFilterConfig);
+        var photoPosts = model.getPhotoPosts(latestTop + latestSkip, 10, latestFilterConfig);
 
         if (photoPosts === undefined) {
             return;
@@ -710,7 +696,7 @@ var dom = function () {
 
         latestTop = latestTop + 10;
 
-        if (module.getPhotoPosts(latestTop + latestSkip, 10, latestFilterConfig).length === 0) {
+        if (model.getPhotoPosts(latestTop + latestSkip, 10, latestFilterConfig).length === 0) {
             document.getElementsByClassName('mainplacing')[1].innerHTML = '';
         }
     }
@@ -729,31 +715,31 @@ var dom = function () {
         currentName = JSON.parse(localStorage.getItem('currentName'));
 
         //Отображаение первых 10 постов
-        dom.showPosts(0, 10);
+        view.showPosts(0, 10);
 
-        dom.checkLogin(currentName);
+        view.checkLogin(currentName);
 
         let header = document.getElementsByTagName('main')[0];
 
         let body = document.getElementsByTagName('body')[0];
 
-        body.insertBefore(dom.makeFilter(), header);
+        body.insertBefore(view.makeFilter(), header);
 
         let loadMoreButton = document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0];
         if (loadMoreButton !== undefined && loadMoreButton !== null) {
-            loadMoreButton.addEventListener('click', eve.addMore);
+            loadMoreButton.addEventListener('click', controller.addMore);
         }
 
         let filterButton = document.getElementsByTagName('aside')[0].getElementsByClassName('buttonusual')[0];
         if (filterButton !== undefined && filterButton !== null) {
-            filterButton.addEventListener('click', eve.filter);
+            filterButton.addEventListener('click', controller.filter);
         }
 
         //Вывод тегов
-        dom.showHashtags();
+        view.showHashtags();
 
         //Вывод авторов
-        dom.showAuthors();
+        view.showAuthors();
     }
 
     return {
@@ -782,24 +768,24 @@ var dom = function () {
     }
 }();
 
-dom.startPageDownload();
+view.startPageDownload();
 /*
 //Редактирование
-dom.editPost('9', {description: 'Hello, world!!!', photolink: './ImagesAndIcons/tmp852896240201891842.jpg', likes: ['Vasia', 'Kolia'], hashtags: ['#2018', 'wronghash', '#NewYear']});
+view.editPost('9', {description: 'Hello, world!!!', photolink: './ImagesAndIcons/tmp852896240201891842.jpg', likes: ['Vasia', 'Kolia'], hashtags: ['#2018', 'wronghash', '#NewYear']});
 
 //Удаление фотопоста с id = 9
-dom.deletePhotopost('9');
+view.deletePhotopost('9');
 
 //Добавление нового фотопоста с id = 9
-dom.addPhotopost(new Photopost('9', 'description20', new Date('2018-03-16T02:20:00'), 'Kolia', './ImagesAndIcons/1477469601_nature_gora.jpg', ['Vasia', 'Petia'], ['#summer', '#2018']));
+view.addPhotopost(new Photopost('9', 'description20', new Date('2018-03-16T02:20:00'), 'Kolia', './ImagesAndIcons/1477469601_nature_gora.jpg', ['Vasia', 'Petia'], ['#summer', '#2018']));
 
 //Логин
-dom.checkLogin('Vasia');
+view.checkLogin('Vasia');
 
 //Ставим лайк посту с ID = 9
-dom.addLike('9');
+view.addLike('9');
 
 //Убираем лайк всё тому же посту с ID = 9
-dom.addLike('9');
+view.addLike('9');
 
-dom.checkLogin();*/
+view.checkLogin();*/

@@ -1,40 +1,55 @@
-var eve = function () {
+var controller = function () {
     function like(event) {
         var button = event.target;
         var id = button.closest('.post').id;
-        dom.addLike(id);
+        view.addLike(id);
+    }
+
+    function validhash(item) {
+        if (typeof (item) !== 'string') {
+            return false;
+        }
+        if (item.charAt(0) !== '#') {
+            return false;
+        }
+        for (let index = 1; index < item.length; index++) {
+            if (item.charAt(index) === ' ' || item.charAt(index) === '#' || item.charAt(index) === ',' || item.charAt(index) === '.') {
+                return false;
+            }
+        }
+        return true;
     }
 
     function likeLookAt(event) {
         var button = event.target;
         var id = button.closest('.lookatphoto').id;
-        dom.addLike(id);
+        view.addLike(id);
     }
 
     function addMore(event) {
-        dom.addMorePosts();
+        view.addMorePosts();
     }
 
     function backButtonEvent(event) {
-        dom.backButtonRestructure(event);
+        view.backButtonRestructure(event);
     }
 
     function login(event) {
-        dom.loginRestructure(event);
+        view.loginRestructure(event);
         let main = document.getElementsByClassName('mainplacing')[0];
         let loginButton = main.getElementsByTagName('button')[0];
-        loginButton.addEventListener('click', dom.pressLoginRestructure);
+        loginButton.addEventListener('click', view.pressLoginRestructure);
     }
 
     function exit(params) {
         if (confirm("Are you sure you want to exit?")) {
-            dom.checkLogin();
+            view.checkLogin();
             return;
         }
     }
 
     function lookAtPhoto(event) {
-        if (dom.lookAtPhotoRestructure(event)) {
+        if (view.lookAtPhotoRestructure(event)) {
             //Connect events if this post is yours
             let amountOfLikes = mainPlacing.getElementsByTagName('button')[2];
             amountOfLikes.addEventListener('click', likeLookAt);
@@ -82,7 +97,7 @@ var eve = function () {
                 let tags = hashtag.value.split(' ');
                 filterConfig.hashtags = [];
                 tags.forEach(element => {
-                    if (module.validhash(element)) {
+                    if (validhash(element)) {
                         filterConfig.hashtags.push(element);
                     }
                 });
@@ -99,14 +114,14 @@ var eve = function () {
                 }
             }
         }
-        dom.showPosts(0, 10, filterConfig);
+        view.showPosts(0, 10, filterConfig);
     }
 
     function deletePost(params) {
         if (confirm("Are you sure you want to delete this post?")) {
             var button = event.target;
             var id = button.closest('.post').id;
-            dom.deletePhotopost(id);
+            view.deletePhotopost(id);
         }
     }
 
@@ -114,13 +129,13 @@ var eve = function () {
         if (confirm("Are you sure you want to delete this post?")) {
             var button = event.target;
             var id = button.closest('.lookatphoto').id;
-            let filt = dom.makeFilter();
+            let filt = view.makeFilter();
             document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-            dom.showPosts(0, 10);
-            dom.showAuthors();
-            dom.showHashtags();
+            view.showPosts(0, 10);
+            view.showAuthors();
+            view.showHashtags();
             currentState = statesMassive.mainState;
-            dom.deletePhotopost(id);
+            view.deletePhotopost(id);
         }
     }
 
@@ -150,19 +165,19 @@ var eve = function () {
     }
 
     function editPostLookAtPhoto(event) {
-        dom.editPostLookAtPhotoRestructure(event);
+        view.editPostLookAtPhotoRestructure(event);
         let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
         input.addEventListener('change', updateImageDisplay);
         let saveButton = document.getElementsByClassName('mainplacing')[1].lastChild;
-        saveButton.addEventListener('click', dom.saveEditButtonRestructure);
+        saveButton.addEventListener('click', view.saveEditButtonRestructure);
     }
 
     function editPost(event) {
-        dom.editPostRestructure(event);
+        view.editPostRestructure(event);
         let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
         input.addEventListener('change', updateImageDisplay);
         let saveButton = document.getElementsByClassName('mainplacing')[1].lastChild;
-        saveButton.addEventListener('click', dom.saveEditButtonRestructure);
+        saveButton.addEventListener('click', view.saveEditButtonRestructure);
     }
 
     function uploadPost(event) {
@@ -171,11 +186,11 @@ var eve = function () {
         }
         currentState = statesMassive.uploadPostState; //Состояние добавления фотопоста
 
-        dom.uploadPostRestructure(event);
+        view.uploadPostRestructure(event);
         let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
         input.addEventListener('change', updateImageDisplay);
         let uploadButton = document.getElementsByClassName('mainplacing')[1].lastChild;
-        uploadButton.addEventListener('click', dom.uploadButtonRestucture);
+        uploadButton.addEventListener('click', view.uploadButtonRestucture);
     }
 
     return {

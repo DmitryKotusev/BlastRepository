@@ -243,6 +243,11 @@ var view = function () {
                     let amountOfLikes = postDom.getElementsByClassName('likesamount')[0];
                     amountOfLikes.innerHTML = post.likes.length;
                 }
+                let photoEdit = {};
+                photoEdit.likes = post.likes;
+
+                model.editPhotoPost(id, photoEdit);
+
                 return false;
             }
             return true;
@@ -259,8 +264,8 @@ var view = function () {
         }
 
         let photoEdit = {};
-        photoEdit.likes = post.likes; 
-        
+        photoEdit.likes = post.likes;
+
         model.editPhotoPost(id, photoEdit);
     }
 

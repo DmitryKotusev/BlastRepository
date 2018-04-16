@@ -157,11 +157,12 @@ var controller = function () {
         let image = photoWrapper.getElementsByClassName('imgstyle')[0];
         //let buff = window.URL.createObjectURL(event.target.files[0]);
         //image.src = window.URL.createObjectURL(event.target.files[0]);
-        let reader = new FileReader();
+        /*let reader = new FileReader();
         reader.readAsDataURL(event.target.files[0]);
         reader.onloadend = function () {
             image.src = reader.result;
-        };
+        };*/
+        image.src = event.target.files[0];
     }
 
     function editPostLookAtPhoto(event) {

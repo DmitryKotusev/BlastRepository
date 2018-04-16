@@ -48,7 +48,7 @@ var dom = function () {
             backButton.className = 'buttonback';
             backButton.id = 'Back';
             backButton.innerHTML = 'Back';
-            backButton.addEventListener('click', backButtonEvent);
+            backButton.addEventListener('click', eve.backButtonEvent);
 
             body.replaceChild(backButton, filt);
         }
@@ -109,13 +109,13 @@ var dom = function () {
         backButton.addEventListener('click', eve.backButtonEvent);
 
         body.replaceChild(backButton, filt);
-        
+
         mainPlacing = document.getElementsByClassName('mainplacing')[0];
-        
-        
+
+
         if (currentName === module.getPhotoPost(event.target.closest('.post').id).author) {
-            mainPlacing.innerHTML = 
-            `<div class="lookatphoto" id="${post.id}">
+            mainPlacing.innerHTML =
+                `<div class="lookatphoto" id="${post.id}">
                 <div class="bigphoto">
                     <img class="imgstyle" src="${post.photolink}" alt="Mat">
                 </div>
@@ -134,12 +134,12 @@ var dom = function () {
                     </div>
                 </div>
             </div>`;
-            
+
             return true;
         }
 
-        mainPlacing.innerHTML = 
-        `<div class="lookatphoto" id="${post.id}">
+        mainPlacing.innerHTML =
+            `<div class="lookatphoto" id="${post.id}">
             <div class="bigphoto">
                 <img class="imgstyle" src="${post.photolink}" alt="Mat">
             </div>
@@ -269,7 +269,213 @@ var dom = function () {
         localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
     }
 
+    function editPostLookAtPhotoRestructure(event) {
+        currentState = statesMassive.editPostState; //Состояние редактирования фотопоста
+        let post = module.getPhotoPost(event.target.closest('.lookatphoto').id);
+        document.getElementsByClassName('mainplacing')[0].innerHTML = '';
+        let placeForButton = document.getElementsByClassName('mainplacing')[1];
+        let main = document.getElementsByTagName('main')[0];
 
+        let body = document.getElementsByTagName('body')[0];
+        let filt = dom.makeFilter();
+
+        mainPlacing = document.getElementsByClassName('mainplacing')[0];
+
+        mainPlacing.innerHTML =
+            `<div class="lookatphoto" id="${post.id}">
+                <div class="bigphoto">
+                    <img class="imgstyle" src="${post.photolink}" alt="Mat">
+                </div>
+                <div class="imagemarginclass">
+                    <label class="imagefilemodinput" for="files">Select Image</label>
+                    <input id="files" class="imagefileinput" type="file" name="photo" multiple accept="image/*,image/jpeg">
+                </div>
+                <p class="lookatphototext">Description</p>
+                <textarea class="texttoread" name="description" id="" cols="35" rows="5">${post.description}</textarea>
+                <p class="lookatphototext">Hashtags</p>
+                <textarea class="hashtagstoread" name="hashtags" id="" cols="35" rows="5">${post.hashtags.join(' ')}</textarea>
+                <p class="lookatphototext">Author: ${post.author}</p>
+                <div class="lookatphotoicons">
+                    <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
+                </div>
+                <p class="error-text"></p>
+            </div>`;
+        let saveButton = dom.makeButton('Save and upload');
+        placeForButton.appendChild(saveButton);
+    }
+
+    function saveEditButtonRestructure(params) {
+        let photoPost = {};
+
+        let img = mainPlacing.getElementsByTagName('img')[0];
+
+        let description = mainPlacing.getElementsByTagName('textarea')[0];
+
+        let hash = mainPlacing.getElementsByTagName('textarea')[1];
+
+        photoPost.photolink = img.src;
+        photoPost.description = description.value;
+        photoPost.hashtags = hash.value.split(' ');
+
+        if (confirm('Are you sure you want to save changes?')) {
+            if (module.editPhotoPost(post.id, photoPost)) {
+
+                mainPlacing.innerHTML = '';
+                let filt = dom.makeFilter();
+                document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                dom.showPosts(0, 10);
+                dom.showAuthors();
+                dom.showHashtags();
+                currentState = statesMassive.mainState;
+            }
+            else {
+                let error = mainPlacing.getElementsByClassName('error-text')[0];
+                error.innerHTML = 'Sorry, there are some errors in what you have edit';
+            }
+        }
+    }
+
+    function editPostRestructure(event) {
+        currentState = statesMassive.editPostState; //Состояние редактирования фотопоста
+        let post = module.getPhotoPost(params.target.closest('.post').id);
+        document.getElementsByClassName('mainplacing')[0].innerHTML = '';
+        let placeForButton = document.getElementsByClassName('mainplacing')[1];
+        let main = document.getElementsByTagName('main')[0];
+
+        let body = document.getElementsByTagName('body')[0];
+        let filt = body.getElementsByTagName('aside')[0];
+
+        let backButton = document.createElement('button');
+        backButton.type = 'button';
+        backButton.className = 'buttonback';
+        backButton.id = 'Back';
+        backButton.innerHTML = 'Back';
+        backButton.addEventListener('click', backButtonEvent);
+
+        body.replaceChild(backButton, filt);
+
+        mainPlacing = document.getElementsByClassName('mainplacing')[0];
+
+        mainPlacing.innerHTML =
+            `<div class="lookatphoto" id="${post.id}">
+                <div class="bigphoto">
+                    <img class="imgstyle" src="${post.photolink}" alt="Mat">
+                </div>
+                <div class="imagemarginclass">
+                    <label class="imagefilemodinput" for="files">Select Image</label>
+                    <input id="files" class="imagefileinput" type="file" name="photo" multiple accept="image/*,image/jpeg">
+                </div>
+                <p class="lookatphototext">Description</p>
+                <textarea class="texttoread" name="description" id="" cols="35" rows="5">${post.description}</textarea>
+                <p class="lookatphototext">Hashtags</p>
+                <textarea class="hashtagstoread" name="hashtags" id="" cols="35" rows="5">${post.hashtags.join(' ')}</textarea>
+                <p class="lookatphototext">Author: ${post.author}</p>
+                <div class="lookatphotoicons">
+                    <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
+                </div>
+                <p class="error-text"></p>
+            </div>`;
+        let saveButton = dom.makeButton('Save and upload');
+
+        if (placeForButton.getElementsByTagName('button')[0] !== undefined) {
+            placeForButton.replaceChild(saveButton, placeForButton.getElementsByTagName('button')[0]);
+        }
+        else {
+            placeForButton.appendChild(saveButton);
+        }
+    }
+
+    function uploadButtonRestucture(params) {
+        let ID = module.getNewID();
+        let img = mainPlacing.getElementsByTagName('img')[0];
+
+        let description = mainPlacing.getElementsByTagName('textarea')[0];
+
+        let hash = mainPlacing.getElementsByTagName('textarea')[1];
+        let hashTags = hash.value.split(' ');
+        for (let index = 0; index < hashTags.length; index++) {
+            if (hashTags[index] === '') {
+                hashTags.splice(index, 1);
+            }
+        }
+
+        let photoPost = new Photopost(ID, description.value, new Date(), currentName, img.src, [], hashTags);
+
+        /*photoPost.photolink = img.src;
+        photoPost.description = description.value;
+        photoPost.hashtags = hash.value.split(' ');*/
+        if (confirm('Are you sure you want to save changes and upload new photopost?')) {
+            if (module.addPhotoPost(photoPost)) {
+                mainPlacing.innerHTML = '';
+                let filt = dom.makeFilter();
+                document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                dom.showPosts(0, 10);
+                dom.showAuthors();
+                dom.showHashtags();
+                //localStorage.removeItem('photoPosts');
+                currentState = statesMassive.mainState;
+                localStorage.setItem('photoPosts', JSON.stringify(photoPosts));
+            }
+            else {
+                let error = mainPlacing.getElementsByClassName('error-text')[0];
+                error.innerHTML = 'Sorry, there are some errors in what you try to upload';
+            }
+        }
+    }
+
+    function uploadPostRestructure(event) {
+        document.getElementsByClassName('mainplacing')[0].innerHTML = '';
+        let placeForButton = document.getElementsByClassName('mainplacing')[1];
+        let main = document.getElementsByTagName('main')[0];
+
+        let body = document.getElementsByTagName('body')[0];
+        let filt = body.getElementsByTagName('aside')[0];
+
+        let backButton = document.createElement('button');
+        backButton.type = 'button';
+        backButton.className = 'buttonback';
+        backButton.id = 'Back';
+        backButton.innerHTML = 'Back';
+        backButton.addEventListener('click', eve.backButtonEvent);
+
+        if (filt !== undefined) {
+            body.replaceChild(backButton, filt);
+        }
+
+        mainPlacing = document.getElementsByClassName('mainplacing')[0];
+
+        mainPlacing.innerHTML =
+            `<div class="lookatphoto">
+                <div class="bigphoto">
+                    <img class="imgstyle">
+                </div>
+                <div class="imagemarginclass">
+                    <label class="imagefilemodinput" for="files">Select Image</label>
+                    <input id="files" class="imagefileinput" type="file" name="photo" multiple accept="image/*,image/jpeg">
+                </div>
+                <p class="lookatphototext">Description</p>
+                <textarea class="texttoread" name="description" id="" cols="35" rows="5"></textarea>
+                <p class="lookatphototext">Hashtags</p>
+                <textarea class="hashtagstoread" name="hashtags" id="" cols="35" rows="5"></textarea>
+                <p class="lookatphototext">Author: ${currentName}</p>
+                <div class="lookatphotoicons">
+                    <p class="lookatphototext">Date: ${(new Date()).toLocaleDateString()}</p>
+                </div>
+                <p class="error-text"></p>
+            </div>`;
+
+        let uploadButton = dom.makeButton('Save and upload');
+        //let anchor = document.createElement('a');
+        //anchor.setAttribute('href', "#top");
+        //anchor.appendChild(uploadButton);
+
+        if (placeForButton.getElementsByTagName('button')[0] !== undefined) {
+            placeForButton.replaceChild(uploadButton, placeForButton.getElementsByTagName('button')[0]);
+        }
+        else {
+            placeForButton.appendChild(uploadButton);
+        }
+    }
 
     var hashtags = [];
     function findUniqueHashtags() {
@@ -567,7 +773,12 @@ var dom = function () {
         backButtonRestructure: backButtonRestructure,
         loginRestructure: loginRestructure,
         pressLoginRestructure: pressLoginRestructure,
-        lookAtPhotoRestructure: lookAtPhotoRestructure
+        lookAtPhotoRestructure: lookAtPhotoRestructure,
+        editPostLookAtPhotoRestructure: editPostLookAtPhotoRestructure,
+        saveEditButtonRestructure: saveEditButtonRestructure,
+        editPostRestructure: editPostRestructure,
+        uploadPostRestructure: uploadPostRestructure,
+        uploadButtonRestucture: uploadButtonRestucture
     }
 }();
 

@@ -1,6 +1,19 @@
 const express = require('express');
 const fs = require("fs");
 const bodyParser = require('body-parser');
+const multer = require('multer');
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '../public/UI/ImagesAndIcons');
+    },
+    filename: function (req, file, cb) {
+        console.log('FileFieldname:');
+        console.log(file.fieldname);
+        cb(null, file.fieldname + '-' + Date.now() + '-' + file.originalname);
+    }
+})
+const upload = multer({ storage: storage });
 
 const app = express();
 
@@ -234,9 +247,9 @@ function reanimatePhotoPost(id) {
                 if (photoPosts[index].id === id) {
                     //photoPosts.splice(index, 1);
                     photoPosts[index].isDeleted = false;
-    
+
                     writePostsFile(photoPosts);
-    
+
                     return true;
                 }
             }
@@ -254,9 +267,9 @@ function removePhotoPost(id) {
                 if (photoPosts[index].id === id) {
                     //photoPosts.splice(index, 1);
                     photoPosts[index].isDeleted = true;
-    
+
                     writePostsFile(photoPosts);
-    
+
                     return true;
                 }
             }
@@ -277,13 +290,13 @@ function datesort(a, b) {
 }
 
 function getPhotoPosts(skip, top, filterConfig) {
-    if (typeof(skip) === 'string') {
+    if (typeof (skip) === 'string') {
         skip = JSON.parse(skip);
     }
-    if (typeof(top) === 'string') {
+    if (typeof (top) === 'string') {
         top = JSON.parse(top);
     }
-    if (typeof(filterConfig) === 'string') {
+    if (typeof (filterConfig) === 'string') {
         filterConfig = JSON.parse(filterConfig);
     }
 
@@ -355,16 +368,16 @@ function getPhotoPosts(skip, top, filterConfig) {
     return JSON.stringify(buffmass.slice(skip, skip + top));//отбрасывание первых skip элементов массива и взятие последующих top элементов
 }
 
-function parseDate (key, value) {
+function parseDate(key, value) {
     if (key === 'createdAt' && typeof value === 'string') {
         return new Date(value);
     }
     return value;
 }
 
-app.use(bodyParser.json({reviver: parseDate}));
+app.use(bodyParser.json({ reviver: parseDate }));
 //app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('../public/UI'));
 
 app.get('/findUniqueHashtags', function (req, res) {
@@ -401,14 +414,14 @@ app.post('/getPhotoPosts', function (req, res) {
 })
 
 app.post('/addPhotoPost', function (req, res) {
-    if(addPhotoPost(req.body)) {
+    if (addPhotoPost(req.body)) {
         res.send(200, `Photopost was successfully added`);
     }
     res.send(400, `Operation failed`);
 })
 
 app.put('/reanimatePhotoPost/:id', function (req, res) {
-    if(reanimatePhotoPost(req.params.id)) {
+    if (reanimatePhotoPost(req.params.id)) {
         res.send(200, `Photopost with id = ${req.params.id} was successfully recovered`);
     }
     res.send(404, 'Operation failed');
@@ -426,6 +439,17 @@ app.delete('/removePhotoPost/:id', function (req, res) {
         res.send(200, `Post with id = ${req.params.id} was successfully deleted`);
     }
     res.send(404, `Post with id = ${req.params.id} was not found`);
+})
+
+app.post('/downloadFile', upload.single('file'), function (req, res) {
+    let filename = req.file.filename;
+    console.log(filename);
+    if (filename !== null) {
+        res.send(200, JSON.stringify('./ImagesAndIcons/' + filename));
+    }
+    else {
+        res.send(400, 'Photo downloading failed');
+    }
 })
 
 app.listen(3000, function () {

@@ -11,7 +11,7 @@ function Photopost(id, description, createdAt, author, photolink, likes, hashtag
     this.isDeleted = isDeleted;
 }
 //ВРЕМЕННО!!!
-function user (login, password){
+function user(login, password) {
     this.login = login;
     this.password = password;
 }
@@ -247,6 +247,37 @@ let model = function () {
         return names;
     }
 
+    function downloadFile(file) {
+        if (file === null || file === undefined) {
+            return null;
+        }
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('POST', `downloadFile`, false);
+        //xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+
+        var formData = new FormData();
+        formData.append('file', file);
+        
+        var fileName = null;
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState !== 4) {
+                return;
+            }
+            if (xhr.status !== 200) {
+                console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
+            }
+            else {
+                fileName = JSON.parse(xhr.responseText);
+            }
+        }
+
+        xhr.send(formData);
+
+        return fileName;
+    }
+
     return {
         getPhotoPosts: getPhotoPosts,
         getPhotoPost: getPhotoPost,
@@ -254,6 +285,7 @@ let model = function () {
         removePhotoPost: removePhotoPost,
         editPhotoPost: editPhotoPost,
         findUniqueHashtags: findUniqueHashtags,
-        findUniqueNames: findUniqueNames
+        findUniqueNames: findUniqueNames,
+        downloadFile: downloadFile
     }
 }();

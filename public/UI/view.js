@@ -401,22 +401,33 @@ var view = function () {
 
         let photoPost = new Photopost(ID, description.value, new Date(), currentName, img.src, [], hashTags);
 
-        /*photoPost.photolink = img.src;
-        photoPost.description = description.value;
-        photoPost.hashtags = hash.value.split(' ');*/
+        //photoPost.photolink = img.src;
+
         if (confirm('Are you sure you want to save changes and upload new photopost?')) {
-            if (model.addPhotoPost(photoPost)) {
-                mainPlacing.innerHTML = '';
-                let filt = view.makeFilter();
-                document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-                view.showPosts(0, 10);
-                view.showAuthors();
-                view.showHashtags();
-                currentState = statesMassive.mainState;
+            let selectedFile = document.getElementById('files');
+
+            let filePath = model.downloadFile(selectedFile.files[0]);//Вставить параметр
+            if (filePath !== null) {
+                photoPost.photolink = filePath;
+                photoPost.description = description.value;
+                photoPost.hashtags = hash.value.split(' ');
+                if (model.addPhotoPost(photoPost)) {
+                    mainPlacing.innerHTML = '';
+                    let filt = view.makeFilter();
+                    document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                    view.showPosts(0, 10);
+                    view.showAuthors();
+                    view.showHashtags();
+                    currentState = statesMassive.mainState;
+                }
+                else {
+                    let error = mainPlacing.getElementsByClassName('error-text')[0];
+                    error.innerHTML = 'Sorry, there are some errors in what you try to upload';
+                }
             }
             else {
                 let error = mainPlacing.getElementsByClassName('error-text')[0];
-                error.innerHTML = 'Sorry, there are some errors in what you try to upload';
+                error.innerHTML = 'Error when downloading file on server';
             }
         }
     }

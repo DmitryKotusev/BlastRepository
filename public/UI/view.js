@@ -1,6 +1,6 @@
 var currentName;     //Хранит текущий ник пользователя
 var currentState = 0;     //Отражает текущее состояние страницы
-
+var editSelectedID;
 
 var statesMassive = {
     mainState: 0,      //Главная страница
@@ -313,31 +313,64 @@ var view = function () {
 
         let hash = mainPlacing.getElementsByTagName('textarea')[1];
 
-        photoPost.photolink = img.src;
-        photoPost.description = description.value;
-        photoPost.hashtags = hash.value.split(' ');
-
         if (confirm('Are you sure you want to save changes?')) {
-            if (model.editPhotoPost(post.id, photoPost)) {
+            let imageDOM = document.getElementsByClassName('bigphoto')[0].getElementsByTagName('img')[0].src;
+            //console.log(imageDOM.substring(21));
+            //console.log(model.getPhotoPost(editSelectedID).photolink.substring(1));
+            if (imageDOM.substring(21) === model.getPhotoPost(editSelectedID).photolink.substring(1)) {
+                photoPost.description = description.value;
+                photoPost.hashtags = hash.value.split(' ');
+                if (model.editPhotoPost(editSelectedID, photoPost)) {
 
-                mainPlacing.innerHTML = '';
-                let filt = view.makeFilter();
-                document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-                view.showPosts(0, 10);
-                view.showAuthors();
-                view.showHashtags();
-                currentState = statesMassive.mainState;
+                    mainPlacing.innerHTML = '';
+                    let filt = view.makeFilter();
+                    document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                    view.showPosts(0, 10);
+                    view.showAuthors();
+                    view.showHashtags();
+                    currentState = statesMassive.mainState;
+                }
+                else {
+                    let error = mainPlacing.getElementsByClassName('error-text')[0];
+                    error.innerHTML = 'Sorry, there are some errors in what you have edit';
+                }
+                return;
+            }
+
+            let selectedFile = document.getElementById('files');
+
+            let filePath = model.downloadFile(selectedFile.files[0]);//Вставить параметр
+
+            if (filePath !== null) {
+                photoPost.photolink = filePath;
+                photoPost.description = description.value;
+                photoPost.hashtags = hash.value.split(' ');
+                if (model.editPhotoPost(editSelectedID, photoPost)) {
+
+                    mainPlacing.innerHTML = '';
+                    let filt = view.makeFilter();
+                    document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                    view.showPosts(0, 10);
+                    view.showAuthors();
+                    view.showHashtags();
+                    currentState = statesMassive.mainState;
+                }
+                else {
+                    let error = mainPlacing.getElementsByClassName('error-text')[0];
+                    error.innerHTML = 'Sorry, there are some errors in what you have edit';
+                }
             }
             else {
                 let error = mainPlacing.getElementsByClassName('error-text')[0];
-                error.innerHTML = 'Sorry, there are some errors in what you have edit';
+                error.innerHTML = 'Error when downloading file on server';
             }
         }
     }
 
     function editPostRestructure(event) {
         currentState = statesMassive.editPostState; //Состояние редактирования фотопоста
-        let post = model.getPhotoPost(params.target.closest('.post').id);
+        let post = model.getPhotoPost(event.target.closest('.post').id);
+        editSelectedID = event.target.closest('.post').id;
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         let placeForButton = document.getElementsByClassName('mainplacing')[1];
         let main = document.getElementsByTagName('main')[0];
@@ -350,7 +383,7 @@ var view = function () {
         backButton.className = 'buttonback';
         backButton.id = 'Back';
         backButton.innerHTML = 'Back';
-        backButton.addEventListener('click', backButtonEvent);
+        backButton.addEventListener('click', controller.backButtonEvent);
 
         body.replaceChild(backButton, filt);
 

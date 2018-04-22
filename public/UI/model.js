@@ -259,7 +259,7 @@ let model = function () {
 
         var formData = new FormData();
         formData.append('file', file);
-        
+
         var fileName = null;
         xhr.onreadystatechange = function () {
             if (xhr.readyState !== 4) {
@@ -277,6 +277,31 @@ let model = function () {
 
         return fileName;
     }
+
+    function longPollingControl() {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', `subscribe`, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState !== 4) {
+                return;
+            }
+            if (xhr.status !== 200) {
+                console.log(xhr.status + ': ' + xhr.statusText);
+            } else {
+                let photoPost = JSON.parse(xhr.responseText);
+                //Вызвать метод для перерисовки DOM, если таковой нужен
+                if (currentState = statesMassive.mainState) {
+                    if (view.isSatisfyingFilter(photoPost)) {
+                        view.addPostToDom(photoPost);
+                    }
+                }
+            }
+            longPollingControl();
+        }
+        xhr.send();
+    }
+
+    longPollingControl();
 
     return {
         getPhotoPosts: getPhotoPosts,

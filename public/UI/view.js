@@ -12,7 +12,7 @@ var statesMassive = {
 
 var latestSkip = 0;       //Данное поле хранит количество записей, которое нужно было пропустить в последний раз 
 var latestTop = 10;        //Данное поле хранит количество записей, которое нужно было вывести на экран в последний раз
-var latestFilterConfig;   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
+var latestFilterConfig = {};   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
 
 var view = function () {
     function backButtonRestructure(event) {
@@ -593,9 +593,7 @@ var view = function () {
         }
     }
 
-    function showPhotopost(photopost) {
-        var main = document.getElementsByClassName('mainplacing')[0];
-
+    function createDOMPhotoPost(photopost) {
         var temp = document.createElement('template');
 
         var post = document.createElement('div');
@@ -657,7 +655,15 @@ var view = function () {
 
         temp.content.appendChild(post);
 
-        main.appendChild(temp.content);
+        return temp.content;
+    }
+
+    function showPhotopost(photopost) {
+        var main = document.getElementsByClassName('mainplacing')[0];
+
+        var post = createDOMPhotoPost(photopost);
+
+        main.appendChild(post);
     }
 
     function addPhotopost(photopost) {
@@ -774,6 +780,51 @@ var view = function () {
         view.showAuthors();
     }
 
+    function isSatisfyingFilter(post) {
+        if (post.isDeleted) {
+            return false;
+        }
+
+        if (latestFilterConfig.author !== undefined) {
+            if (typeof (latestFilterConfig.author) === 'string') {
+                if (latestFilterConfig.author !== post.author) {
+                    return false;
+                }
+            }
+        }
+        if (latestFilterConfig.createdAt !== undefined) {
+            if (typeof (latestFilterConfig.createdAt) === 'object') {
+                if (latestFilterConfig.createdAt.getFullYear() !== post.createdAt.getFullYear() || latestFilterConfig.createdAt.getMonth() !== post.createdAt.getMonth() || latestFilterConfig.createdAt.getDate() !== post.createdAt.getDate()) {
+                    return false;
+                }
+            }
+        }
+        if (latestFilterConfig.hashtags !== undefined) {
+            if (typeof (latestFilterConfig.hashtags) === 'object') {
+                for (var index = 0; index < latestFilterConfig.hashtags.length; index++) {
+                    var flag = false;
+                    for (var index2 = 0; index2 < post.hashtags.length; index2++) {
+                        if (post.hashtags[index2] === latestFilterConfig.hashtags[index]) {
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (!flag) {
+                        return false;
+                    }
+                }
+            }
+        }
+        //////////
+        return true;
+    }
+
+    function addPostToDom(post) {
+        let mainPlacing = document.getElementsByClassName('mainplacing')[0];
+        mainPlacing.removeChild(mainPlacing.lastChild);
+        mainPlacing.insertBefore(createDOMPhotoPost(post), mainPlacing.firstChild);
+    }
+
     return {
         showPhotopost: showPhotopost,
         checkLogin: checkLogin,
@@ -796,7 +847,9 @@ var view = function () {
         saveEditButtonRestructure: saveEditButtonRestructure,
         editPostRestructure: editPostRestructure,
         uploadPostRestructure: uploadPostRestructure,
-        uploadButtonRestucture: uploadButtonRestucture
+        uploadButtonRestucture: uploadButtonRestucture,
+        isSatisfyingFilter: isSatisfyingFilter,
+        addPostToDom: addPostToDom
     }
 }();
 

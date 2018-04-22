@@ -17,6 +17,8 @@ const upload = multer({ storage: storage });
 
 const app = express();
 
+var ress = [];
+
 //fs.writeFileSync('filter.json', JSON.stringify({author: 'Dima'}));
 
 function Photopost(id, description, createdAt, author, photolink, likes, hashtags, isDeleted = false) {
@@ -416,6 +418,10 @@ app.post('/getPhotoPosts', function (req, res) {
 app.post('/addPhotoPost', function (req, res) {
     if (addPhotoPost(req.body)) {
         res.send(200, `Photopost was successfully added`);
+        ress.forEach((response) => {
+            response.send(JSON.stringify(req.body));
+        })
+        ress.splice(0, ress.length);
     }
     res.send(400, `Operation failed`);
 })
@@ -451,6 +457,11 @@ app.post('/downloadFile', upload.single('file'), function (req, res) {
         res.send(400, 'Photo downloading failed');
     }
 })
+
+app.get('/subscribe', (req, res, next) => {
+    ress.push(res);
+    console.log(`Number of subscribers: ${ress.length}`);
+});
 
 app.listen(3000, function () {
     console.log('Server is running...');

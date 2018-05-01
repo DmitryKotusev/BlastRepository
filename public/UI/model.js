@@ -27,78 +27,83 @@ var users = [
 ////////////
 let model = function () {
     function getPhotoPosts(skip, top, filterConfig) {
-        var xhr = new XMLHttpRequest();
+        return new Promise((resolve, reject) => {
+            var xhr = new XMLHttpRequest();
 
-        if (skip === undefined) {
-            skip = 0;
-        }
-
-        if (top === undefined) {
-            top = 10;
-        }
-
-        xhr.open('POST', `getPhotoPosts?skip=${skip}&top=${top}`, false);
-
-        xhr.setRequestHeader('Content-Type', 'application/json');
-
-        var photoPosts;
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState !== 4) {
-                return;
+            if (skip === undefined) {
+                skip = 0;
             }
-            if (xhr.status !== 200) {
-                console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
+
+            if (top === undefined) {
+                top = 10;
+            }
+
+            xhr.open('POST', `getPhotoPosts?skip=${skip}&top=${top}`, true);
+
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) {
+                    return;
+                }
+                if (xhr.status !== 200) {
+                    console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
+                    reject(xhr.responseText);
+                }
+                else {
+                    var photoPosts;
+                    photoPosts = JSON.parse(xhr.responseText, function (key, value) {
+                        if (key == 'createdAt')
+                            return new Date(value);
+                        return value;
+                    });
+                    resolve(photoPosts);
+                }
+            }
+
+            if (filterConfig !== undefined) {
+                xhr.send(JSON.stringify(filterConfig));
             }
             else {
-                photoPosts = JSON.parse(xhr.responseText, function (key, value) {
-                    if (key == 'createdAt')
-                        return new Date(value);
-                    return value;
-                });
+                xhr.send();
             }
-        }
-
-        if (filterConfig !== undefined) {
-            xhr.send(JSON.stringify(filterConfig));
-        }
-        else {
-            xhr.send();
-        }
-
-        return photoPosts;
+        });
     }
 
     function getPhotoPost(id) {
-        if (id === undefined) {
-            return;
-        }
-
-        var xhr = new XMLHttpRequest();
-
-        xhr.open('GET', `getPhotoPost/${id}`, false);
-
-        var photoPost;
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState !== 4) {
-                return;
+        return new Promise((resolve, reject) => {
+            if (id === undefined) {
+                reject("Invalid ID");
             }
-            if (xhr.status !== 200) {
-                console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-            }
-            else {
-                photoPost = JSON.parse(xhr.responseText, function (key, value) {
-                    if (key == 'createdAt')
-                        return new Date(value);
-                    return value;
-                });
-            }
-        }
 
-        xhr.send();
+            var xhr = new XMLHttpRequest();
 
-        return photoPost;
+            xhr.open('GET', `getPhotoPost/${id}`, true);
+
+            var photoPost;
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) {
+                    return;
+                }
+                if (xhr.status !== 200) {
+                    console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
+                    reject(xhr.responseText);
+                }
+                else {
+                    photoPost = JSON.parse(xhr.responseText, function (key, value) {
+                        if (key == 'createdAt')
+                            return new Date(value);
+                        return value;
+                    });
+                    resolve(photoPost);
+                }
+            }
+
+            xhr.send();
+        });
     }
 
     function addPhotoPost(photoPost) {

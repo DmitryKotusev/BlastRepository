@@ -220,53 +220,12 @@ var view = function () {
         return filt;
     }
 
-    function addLike(id) {
-        if (currentName === null) {
-            return;
-        }
-        if (typeof (id) !== 'string') {
-            return;
-        }
-
-        let post = model.getPhotoPost(id);
-
-        if (post === undefined) {
-            return;
-        }
-
-        if (!post.likes.every(function (like, index) {
-            if (like === currentName) {
-                post.likes.splice(index, 1);
-
-                let postDom = document.getElementById(id);
-                if (postDom !== null) {
-                    let amountOfLikes = postDom.getElementsByClassName('likesamount')[0];
-                    amountOfLikes.innerHTML = post.likes.length;
-                }
-                let photoEdit = {};
-                photoEdit.likes = post.likes;
-
-                model.editPhotoPost(id, photoEdit);
-
-                return false;
-            }
-            return true;
-        })) {
-            return;
-        }
-
-        post.likes.push(currentName);
-
-        let postDom = document.getElementById(id);
+    function addLike(post) {
+        let postDom = document.getElementById(post.id);
         if (postDom !== null) {
             let amountOfLikes = postDom.getElementsByClassName('likesamount')[0];
             amountOfLikes.innerHTML = post.likes.length;
         }
-
-        let photoEdit = {};
-        photoEdit.likes = post.likes;
-
-        model.editPhotoPost(id, photoEdit);
     }
 
     function editPostLookAtPhotoRestructure(event) {

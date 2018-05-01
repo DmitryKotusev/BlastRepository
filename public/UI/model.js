@@ -288,11 +288,17 @@ let model = function () {
             if (xhr.status !== 200) {
                 console.log(xhr.status + ': ' + xhr.statusText);
             } else {
-                let photoPost = JSON.parse(xhr.responseText);
+                let photoPost = JSON.parse(xhr.responseText, function (key, value) {
+                    if (key == 'createdAt')
+                        return new Date(value);
+                    return value;
+                });
                 //Вызвать метод для перерисовки DOM, если таковой нужен
-                if (currentState = statesMassive.mainState) {
-                    if (view.isSatisfyingFilter(photoPost)) {
-                        view.addPostToDom(photoPost);
+                if (currentState === statesMassive.mainState) {
+                    if (document.getElementById(photoPost.id) === null) {
+                        if (view.isSatisfyingFilter(photoPost)) {
+                            view.addPostToDom(photoPost);
+                        }
                     }
                 }
             }

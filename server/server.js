@@ -408,7 +408,9 @@ app.get('/getPhotoPost/:id', function (req, res) {
         post = JSON.stringify(post);
         res.status(200).send(post);
     }
-    res.status(400).send(`Photopost with id = ${req.params.id} not found`);
+    else {
+        res.status(400).send(`Photopost with id = ${req.params.id} not found`);
+    }
 })
 
 app.post('/getPhotoPosts', function (req, res) {
@@ -417,46 +419,56 @@ app.post('/getPhotoPosts', function (req, res) {
     let filterConfig = req.body;
     //filterConfig = JSON.stringify(filterConfig);
 
-    console.log(filterConfig);
+    //console.log(filterConfig);
 
     let answer = getPhotoPosts(skip, top, filterConfig);
     //console.log(answer);
     if (answer !== undefined) {
         res.status(200).send(answer);
     }
-    res.status(400).send('Error');
+    else {
+        res.status(400).send('Error');
+    }
 })
 
 app.post('/addPhotoPost', function (req, res) {
     if (addPhotoPost(req.body)) {
         ress.forEach((response) => {
-            response.send(JSON.stringify(req.body));
+            response.status(200).send(JSON.stringify(req.body));
         })
         ress.splice(0, ress.length);
         res.status(200).send(`Photopost was successfully added`);
     }
-    res.status(400).send(`Operation failed`);
+    else {
+        res.status(400).send(`Operation failed`);
+    }
 })
 
 app.put('/reanimatePhotoPost/:id', function (req, res) {
     if (reanimatePhotoPost(req.params.id)) {
         res.status(200).send(`Photopost with id = ${req.params.id} was successfully recovered`);
     }
-    res.status(404).send('Operation failed');
+    else {
+        res.status(404).send('Operation failed');
+    }
 })
 
 app.put('/editPhotoPost/:id', function (req, res) {
     if (editPhotoPost(req.params.id, req.body)) {
         res.status(200).send(`Photopost with id = ${req.params.id} was successfully edited`);
     }
-    res.status(400).send('Operation failed');
+    else {
+        res.status(400).send('Operation failed');
+    }
 })
 
 app.delete('/removePhotoPost/:id', function (req, res) {
     if (removePhotoPost(req.params.id)) {
         res.status(200).send(`Post with id = ${req.params.id} was successfully deleted`);
     }
-    res.status(404).send(`Post with id = ${req.params.id} was not found`);
+    else {
+        res.status(404).send(`Post with id = ${req.params.id} was not found`);
+    }
 })
 
 app.post('/downloadFile', upload.single('file'), function (req, res) {

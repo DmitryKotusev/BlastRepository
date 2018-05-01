@@ -383,20 +383,32 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('../public/UI'));
 
 app.get('/findUniqueHashtags', function (req, res) {
-    res.send(200, JSON.stringify(findUniqueHashtags()));
+    let result = findUniqueHashtags();
+    if (result !== undefined) {
+        res.status(200).send(JSON.stringify(result));   
+    }
+    else {
+        res.status(400).send(`Operation "findUniqueHashtags" failed`);
+    }
 })
 
 app.get('/findUniqueNames', function (req, res) {
-    res.send(200, JSON.stringify(findUniqueNames()));
+    let result = findUniqueNames();
+    if (result !== undefined) {
+        res.status(200).send(JSON.stringify(result));   
+    }
+    else {
+        res.status(400).send(`Operation "findUniqueNames" failed`);
+    }
 })
 
 app.get('/getPhotoPost/:id', function (req, res) {
     let post = getPhotoPost(req.params.id);
     if (post !== undefined) {
         post = JSON.stringify(post);
-        res.send(200, post);
+        res.status(200).send(post);
     }
-    res.send(400, `Photopost with id = ${req.params.id} not found`);
+    res.status(400).send(`Photopost with id = ${req.params.id} not found`);
 })
 
 app.post('/getPhotoPosts', function (req, res) {
@@ -410,51 +422,51 @@ app.post('/getPhotoPosts', function (req, res) {
     let answer = getPhotoPosts(skip, top, filterConfig);
     //console.log(answer);
     if (answer !== undefined) {
-        res.send(200, answer);
+        res.status(200).send(answer);
     }
-    res.send(400, 'Error');
+    res.status(400).send('Error');
 })
 
 app.post('/addPhotoPost', function (req, res) {
     if (addPhotoPost(req.body)) {
-        res.send(200, `Photopost was successfully added`);
         ress.forEach((response) => {
             response.send(JSON.stringify(req.body));
         })
         ress.splice(0, ress.length);
+        res.status(200).send(`Photopost was successfully added`);
     }
-    res.send(400, `Operation failed`);
+    res.status(400).send(`Operation failed`);
 })
 
 app.put('/reanimatePhotoPost/:id', function (req, res) {
     if (reanimatePhotoPost(req.params.id)) {
-        res.send(200, `Photopost with id = ${req.params.id} was successfully recovered`);
+        res.status(200).send(`Photopost with id = ${req.params.id} was successfully recovered`);
     }
-    res.send(404, 'Operation failed');
+    res.status(404).send('Operation failed');
 })
 
 app.put('/editPhotoPost/:id', function (req, res) {
     if (editPhotoPost(req.params.id, req.body)) {
-        res.send(200, `Photopost with id = ${req.params.id} was successfully edited`);
+        res.status(200).send(`Photopost with id = ${req.params.id} was successfully edited`);
     }
-    res.send(400, 'Operation failed');
+    res.status(400).send('Operation failed');
 })
 
 app.delete('/removePhotoPost/:id', function (req, res) {
     if (removePhotoPost(req.params.id)) {
-        res.send(200, `Post with id = ${req.params.id} was successfully deleted`);
+        res.status(200).send(`Post with id = ${req.params.id} was successfully deleted`);
     }
-    res.send(404, `Post with id = ${req.params.id} was not found`);
+    res.status(404).send(`Post with id = ${req.params.id} was not found`);
 })
 
 app.post('/downloadFile', upload.single('file'), function (req, res) {
     let filename = req.file.filename;
     console.log(filename);
     if (filename !== null) {
-        res.send(200, JSON.stringify('./ImagesAndIcons/' + filename));
+        res.status(200).send(JSON.stringify('./ImagesAndIcons/' + filename));
     }
     else {
-        res.send(400, 'Photo downloading failed');
+        res.status(400).send('Photo downloading failed');
     }
 })
 

@@ -2,7 +2,45 @@ var controller = function () {
     function like(event) {
         var button = event.target;
         var id = button.closest('.post').id;
-        view.addLike(id);
+        if (currentName === null) {
+            return;
+        }
+        if (typeof (id) !== 'string') {
+            return;
+        }
+
+        let post = model.getPhotoPost(id);
+
+        if (post === undefined) {
+            return;
+        }
+
+        if (!post.likes.every(function (like, index) {
+            if (like === currentName) {
+                post.likes.splice(index, 1);
+
+                view.addLike(post);
+
+                let photoEdit = {};
+                photoEdit.likes = post.likes;
+
+                model.editPhotoPost(id, photoEdit);
+
+                return false;
+            }
+            return true;
+        })) {
+            return;
+        }
+
+        post.likes.push(currentName);
+
+        view.addLike(post);
+
+        let photoEdit = {};
+        photoEdit.likes = post.likes;
+
+        model.editPhotoPost(id, photoEdit);
     }
 
     function validhash(item) {
@@ -23,7 +61,45 @@ var controller = function () {
     function likeLookAt(event) {
         var button = event.target;
         var id = button.closest('.lookatphoto').id;
-        view.addLike(id);
+        if (currentName === null) {
+            return;
+        }
+        if (typeof (id) !== 'string') {
+            return;
+        }
+
+        let post = model.getPhotoPost(id);
+
+        if (post === undefined) {
+            return;
+        }
+
+        if (!post.likes.every(function (like, index) {
+            if (like === currentName) {
+                post.likes.splice(index, 1);
+
+                view.addLike(post);
+
+                let photoEdit = {};
+                photoEdit.likes = post.likes;
+
+                model.editPhotoPost(id, photoEdit);
+
+                return false;
+            }
+            return true;
+        })) {
+            return;
+        }
+
+        post.likes.push(currentName);
+
+        view.addLike(post);
+
+        let photoEdit = {};
+        photoEdit.likes = post.likes;
+
+        model.editPhotoPost(id, photoEdit);
     }
 
     function addMore(event) {
@@ -193,6 +269,7 @@ var controller = function () {
         let uploadButton = document.getElementsByClassName('mainplacing')[1].lastChild;
         uploadButton.addEventListener('click', view.uploadButtonRestucture);
     }
+
 
     return {
         like: like,

@@ -1,8 +1,23 @@
 const express = require('express');
 const fs = require("fs");
 const bodyParser = require('body-parser');
+const multer = require('multer');
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '../public/UI/ImagesAndIcons');
+    },
+    filename: function (req, file, cb) {
+        console.log('FileFieldname:');
+        console.log(file.fieldname);
+        cb(null, file.fieldname + '-' + Date.now() + '-' + file.originalname);
+    }
+})
+const upload = multer({ storage: storage });
 
 const app = express();
+
+var ress = [];
 
 //fs.writeFileSync('filter.json', JSON.stringify({author: 'Dima'}));
 
@@ -17,7 +32,53 @@ function Photopost(id, description, createdAt, author, photolink, likes, hashtag
     this.isDeleted = isDeleted;
 }
 
+function readPostsFile() {
+    let stringOfPosts = fs.readFileSync('./data/posts.json');
+    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
+        if (key == 'createdAt') {
+            return new Date(value);
+        }
+        return value;
+    })
+
+    return photoPosts;
+}
+
+function writePostsFile(photoPosts) {
+    fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
+}
+
+function findUniqueHashtags() {
+    let photoPosts = readPostsFile();
+
+    let hashtags = [];
+    for (let i = 0; i < photoPosts.length; i++) {
+        for (let j = 0; j < photoPosts[i].hashtags.length; j++) {
+            if (hashtags.every(item => item !== photoPosts[i].hashtags[j])) {
+                hashtags.push(photoPosts[i].hashtags[j]);
+            }
+        }
+    }
+
+    return hashtags;
+}
+
+function findUniqueNames() {
+    let photoPosts = readPostsFile();
+
+    let authorNames = [];
+    for (let i = 0; i < photoPosts.length; i++) {
+        if (authorNames.every(item => item !== photoPosts[i].author)) {
+            authorNames.push(photoPosts[i].author);
+        }
+    }
+
+    return authorNames;
+}
+
 function getMaxID() {
+    let photoPosts = readPostsFile();
+
     if (photoPosts.length === 0) {
         return null;
     }
@@ -90,30 +151,20 @@ function validatePhotoPost(photoPost, photoPosts) {
 }
 
 function addPhotoPost(photoPost) {
-    let stringOfPosts = fs.readFileSync('./data/posts.json');
-    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
-        if (key == 'createdAt') {
-            return new Date(value);
-        }
-        return value;
-    })
+    let photoPosts = readPostsFile();
+
+    photoPost.id = getNewID();
 
     if (validatePhotoPost(photoPost, photoPosts)) {
         photoPosts.push(photoPost);
-        fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
+        writePostsFile(photoPosts);
         return true;
     }
     return false;
 }
 
 function getPhotoPost(id) {
-    let stringOfPosts = fs.readFileSync('./data/posts.json');
-    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
-        if (key === 'createdAt') {
-            return new Date(value);
-        }
-        return value;
-    })
+    let photoPosts = readPostsFile();
 
     for (var index = 0; index < photoPosts.length; index++) {
         if (photoPosts[index].id === id && !photoPosts[index].isDeleted) {
@@ -123,13 +174,7 @@ function getPhotoPost(id) {
 }
 
 function getPhotoPostIndex(id) {
-    let stringOfPosts = fs.readFileSync('./data/posts.json');
-    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
-        if (key === 'createdAt') {
-            return new Date(value);
-        }
-        return value;
-    })
+    let photoPosts = readPostsFile();
 
     for (var index = 0; index < photoPosts.length; index++) {
         if (photoPosts[index].id === id && !photoPosts[index].isDeleted) {
@@ -151,13 +196,7 @@ function clone(params) {
 function editPhotoPost(id, photoPost) {
     //photoPost = JSON.parse(photoPost);
 
-    let stringOfPosts = fs.readFileSync('./data/posts.json');
-    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
-        if (key === 'createdAt') {
-            return new Date(value);
-        }
-        return value;
-    })
+    let photoPosts = readPostsFile();
 
     if (typeof (id) !== 'string') {
         return false;
@@ -196,19 +235,13 @@ function editPhotoPost(id, photoPost) {
     }
     photoPosts[getPhotoPostIndex(id)] = clone(buff);
 
-    fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
+    writePostsFile(photoPosts);
 
     return true;
 }
 
 function reanimatePhotoPost(id) {
-    let stringOfPosts = fs.readFileSync('./data/posts.json');
-    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
-        if (key == 'createdAt') {
-            return new Date(value);
-        }
-        return value;
-    })
+    let photoPosts = readPostsFile();
 
     if (typeof (id) === 'string') {
         for (var index = 0; index < photoPosts.length; index++) {
@@ -216,9 +249,9 @@ function reanimatePhotoPost(id) {
                 if (photoPosts[index].id === id) {
                     //photoPosts.splice(index, 1);
                     photoPosts[index].isDeleted = false;
-    
-                    fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
-    
+
+                    writePostsFile(photoPosts);
+
                     return true;
                 }
             }
@@ -228,13 +261,7 @@ function reanimatePhotoPost(id) {
 }
 
 function removePhotoPost(id) {
-    let stringOfPosts = fs.readFileSync('./data/posts.json');
-    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
-        if (key == 'createdAt') {
-            return new Date(value);
-        }
-        return value;
-    })
+    let photoPosts = readPostsFile();
 
     if (typeof (id) === 'string') {
         for (var index = 0; index < photoPosts.length; index++) {
@@ -242,9 +269,9 @@ function removePhotoPost(id) {
                 if (photoPosts[index].id === id) {
                     //photoPosts.splice(index, 1);
                     photoPosts[index].isDeleted = true;
-    
-                    fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
-    
+
+                    writePostsFile(photoPosts);
+
                     return true;
                 }
             }
@@ -265,13 +292,13 @@ function datesort(a, b) {
 }
 
 function getPhotoPosts(skip, top, filterConfig) {
-    if (typeof(skip) === 'string') {
+    if (typeof (skip) === 'string') {
         skip = JSON.parse(skip);
     }
-    if (typeof(top) === 'string') {
+    if (typeof (top) === 'string') {
         top = JSON.parse(top);
     }
-    if (typeof(filterConfig) === 'string') {
+    if (typeof (filterConfig) === 'string') {
         filterConfig = JSON.parse(filterConfig);
     }
 
@@ -285,13 +312,7 @@ function getPhotoPosts(skip, top, filterConfig) {
         top = 10;
     }
 
-    let stringOfPosts = fs.readFileSync('./data/posts.json');
-    let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
-        if (key == 'createdAt') {
-            return new Date(value);
-        }
-        return value;
-    })
+    let photoPosts = readPostsFile();
 
     photoPosts.sort(datesort);
 
@@ -349,10 +370,25 @@ function getPhotoPosts(skip, top, filterConfig) {
     return JSON.stringify(buffmass.slice(skip, skip + top));//отбрасывание первых skip элементов массива и взятие последующих top элементов
 }
 
-app.use(bodyParser.json());
+function parseDate(key, value) {
+    if (key === 'createdAt' && typeof value === 'string') {
+        return new Date(value);
+    }
+    return value;
+}
+
+app.use(bodyParser.json({ reviver: parseDate }));
 //app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('../public/UI'));
+
+app.get('/findUniqueHashtags', function (req, res) {
+    res.send(200, JSON.stringify(findUniqueHashtags()));
+})
+
+app.get('/findUniqueNames', function (req, res) {
+    res.send(200, JSON.stringify(findUniqueNames()));
+})
 
 app.get('/getPhotoPost/:id', function (req, res) {
     let post = getPhotoPost(req.params.id);
@@ -360,7 +396,7 @@ app.get('/getPhotoPost/:id', function (req, res) {
         post = JSON.stringify(post);
         res.send(200, post);
     }
-    res.send(404, `Photopost with id = ${req.params.id} not found`);
+    res.send(400, `Photopost with id = ${req.params.id} not found`);
 })
 
 app.post('/getPhotoPosts', function (req, res) {
@@ -372,21 +408,26 @@ app.post('/getPhotoPosts', function (req, res) {
     console.log(filterConfig);
 
     let answer = getPhotoPosts(skip, top, filterConfig);
+    //console.log(answer);
     if (answer !== undefined) {
         res.send(200, answer);
     }
-    res.send(404, 'Error');
+    res.send(400, 'Error');
 })
 
 app.post('/addPhotoPost', function (req, res) {
-    if(addPhotoPost(req.body)) {
+    if (addPhotoPost(req.body)) {
         res.send(200, `Photopost was successfully added`);
+        ress.forEach((response) => {
+            response.send(JSON.stringify(req.body));
+        })
+        ress.splice(0, ress.length);
     }
-    res.send(404, `Operation failed`);
+    res.send(400, `Operation failed`);
 })
 
 app.put('/reanimatePhotoPost/:id', function (req, res) {
-    if(reanimatePhotoPost(req.params.id)) {
+    if (reanimatePhotoPost(req.params.id)) {
         res.send(200, `Photopost with id = ${req.params.id} was successfully recovered`);
     }
     res.send(404, 'Operation failed');
@@ -396,7 +437,7 @@ app.put('/editPhotoPost/:id', function (req, res) {
     if (editPhotoPost(req.params.id, req.body)) {
         res.send(200, `Photopost with id = ${req.params.id} was successfully edited`);
     }
-    res.send(404, 'Operation failed');
+    res.send(400, 'Operation failed');
 })
 
 app.delete('/removePhotoPost/:id', function (req, res) {
@@ -405,6 +446,22 @@ app.delete('/removePhotoPost/:id', function (req, res) {
     }
     res.send(404, `Post with id = ${req.params.id} was not found`);
 })
+
+app.post('/downloadFile', upload.single('file'), function (req, res) {
+    let filename = req.file.filename;
+    console.log(filename);
+    if (filename !== null) {
+        res.send(200, JSON.stringify('./ImagesAndIcons/' + filename));
+    }
+    else {
+        res.send(400, 'Photo downloading failed');
+    }
+})
+
+app.get('/subscribe', (req, res, next) => {
+    ress.push(res);
+    console.log(`Number of subscribers: ${ress.length}`);
+});
 
 app.listen(3000, function () {
     console.log('Server is running...');

@@ -50,7 +50,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(xhr.responseText);
+                    reject(undefined);
                 }
                 else {
                     var photoPosts;
@@ -90,7 +90,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(xhr.responseText);
+                    reject(undefined);
                 }
                 else {
                     photoPost = JSON.parse(xhr.responseText, function (key, value) {
@@ -118,19 +118,17 @@ let model = function () {
 
             xhr.setRequestHeader('Content-Type', 'application/json');
 
-            var result = false;
-
             xhr.onreadystatechange = function () {
                 if (xhr.readyState !== 4) {
                     return;
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    result = false;
+                    reject(false);
                 }
                 else {
                     console.log(xhr.responseText);
-                    result = true;
+                    resolve(true);
                 }
             }
 
@@ -139,177 +137,180 @@ let model = function () {
     }
 
     function removePhotoPost(id) {
-        if (id === undefined) {
-            return false;
-        }
-
-        var xhr = new XMLHttpRequest();
-
-        xhr.open('DELETE', `removePhotoPost/${id}`, false);
-
-        var result = false;
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState !== 4) {
-                return;
+        return new Promise((resolve, reject) => {
+            if (id === undefined) {
+                return false;
             }
-            if (xhr.status !== 200) {
-                console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                result = false;
-            }
-            else {
-                console.log(xhr.responseText);
-                result = true;
-            }
-        }
 
-        xhr.send();
+            var xhr = new XMLHttpRequest();
 
-        return result;
+            xhr.open('DELETE', `removePhotoPost/${id}`, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) {
+                    return;
+                }
+                if (xhr.status !== 200) {
+                    console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
+                    reject(false);
+                }
+                else {
+                    console.log(xhr.responseText);
+                    resolve(true);
+                }
+            }
+
+            xhr.send();
+        });
     }
 
     function editPhotoPost(id, photoPost) {
-        var xhr = new XMLHttpRequest();
+        return new Promise((resolve, reject) => {
+            var xhr = new XMLHttpRequest();
 
-        if (id === undefined) {
-            return false;
-        }
-
-        if (photoPost === undefined) {
-            return false;
-        }
-
-        xhr.open('PUT', `editPhotoPost/${id}`, false);
-
-        xhr.setRequestHeader('Content-Type', 'application/json');
-
-        var result = false;
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState !== 4) {
-                return;
+            if (id === undefined) {
+                return false;
             }
-            if (xhr.status !== 200) {
-                console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                result = false;
-            }
-            else {
-                console.log(xhr.responseText);
-                result = true;
-            }
-        }
 
-        xhr.send(JSON.stringify(photoPost));
+            if (photoPost === undefined) {
+                return false;
+            }
 
-        return result;
+            xhr.open('PUT', `editPhotoPost/${id}`, true);
+
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) {
+                    return;
+                }
+                if (xhr.status !== 200) {
+                    console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
+                    reject(false);
+                }
+                else {
+                    console.log(xhr.responseText);
+                    resolve(true);
+                }
+            }
+
+            xhr.send(JSON.stringify(photoPost));
+        });
     }
 
     function findUniqueHashtags() {
-        var xhr = new XMLHttpRequest();
+        return new Promise((resolve, reject) => {
+            var xhr = new XMLHttpRequest();
 
-        xhr.open('GET', `findUniqueHashtags`, false);
+            xhr.open('GET', `findUniqueHashtags`, true);
 
-        var hashtags;
+            var hashtags;
 
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState !== 4) {
-                return;
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) {
+                    return;
+                }
+                if (xhr.status !== 200) {
+                    console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
+                    reject(undefined);
+                }
+                else {
+                    hashtags = JSON.parse(xhr.responseText);
+                    resolve(hashtags);
+                }
             }
-            if (xhr.status !== 200) {
-                console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-            }
-            else {
-                hashtags = JSON.parse(xhr.responseText);
-            }
-        }
 
-        xhr.send();
-
-        return hashtags;
+            xhr.send();
+        });
     }
 
     function findUniqueNames() {
-        var xhr = new XMLHttpRequest();
+        return new Promise((resolve, reject) => {
+            var xhr = new XMLHttpRequest();
 
-        xhr.open('GET', `findUniqueNames`, false);
+            xhr.open('GET', `findUniqueNames`, true);
 
-        var names;
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState !== 4) {
-                return;
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) {
+                    return;
+                }
+                if (xhr.status !== 200) {
+                    console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
+                    reject(undefined);
+                }
+                else {
+                    let names;
+                    names = JSON.parse(xhr.responseText);
+                    resolve(names);
+                }
             }
-            if (xhr.status !== 200) {
-                console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-            }
-            else {
-                names = JSON.parse(xhr.responseText);
-            }
-        }
 
-        xhr.send();
-
-        return names;
+            xhr.send();
+        });
     }
 
     function downloadFile(file) {
-        if (file === null || file === undefined) {
-            return null;
-        }
-
-        var xhr = new XMLHttpRequest();
-
-        xhr.open('POST', `downloadFile`, false);
-        //xhr.setRequestHeader('Content-Type', 'multipart/form-data');
-
-        var formData = new FormData();
-        formData.append('file', file);
-
-        var fileName = null;
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState !== 4) {
-                return;
+        return new Promise((resolve, reject) => {
+            if (file === null || file === undefined) {
+                return null;
             }
-            if (xhr.status !== 200) {
-                console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-            }
-            else {
-                fileName = JSON.parse(xhr.responseText);
-            }
-        }
 
-        xhr.send(formData);
+            var xhr = new XMLHttpRequest();
 
-        return fileName;
+            xhr.open('POST', `downloadFile`, true);
+            //xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+
+            var formData = new FormData();
+            formData.append('file', file);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) {
+                    return;
+                }
+                if (xhr.status !== 200) {
+                    console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
+                    reject(null);
+                }
+                else {
+                    let fileName;
+                    fileName = JSON.parse(xhr.responseText);
+                    resolve(fileName);
+                }
+            }
+
+            xhr.send(formData);
+        });
     }
 
     function longPollingControl() {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', `subscribe`, true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState !== 4) {
-                return;
-            }
-            if (xhr.status !== 200) {
-                console.log(xhr.status + ': ' + xhr.statusText);
-            } else {
-                let photoPost = JSON.parse(xhr.responseText, function (key, value) {
-                    if (key == 'createdAt')
-                        return new Date(value);
-                    return value;
-                });
-                //Вызвать метод для перерисовки DOM, если таковой нужен
-                if (currentState === statesMassive.mainState) {
-                    if (document.getElementById(photoPost.id) === null) {
-                        if (view.isSatisfyingFilter(photoPost)) {
-                            view.addPostToDom(photoPost);
+        return new Promise((resolve, reject) => {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', `subscribe`, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) {
+                    return;
+                }
+                if (xhr.status !== 200) {
+                    console.log(xhr.status + ': ' + xhr.statusText);
+                } else {
+                    let photoPost = JSON.parse(xhr.responseText, function (key, value) {
+                        if (key == 'createdAt')
+                            return new Date(value);
+                        return value;
+                    });
+                    //Вызвать метод для перерисовки DOM, если таковой нужен
+                    if (currentState === statesMassive.mainState) {
+                        if (document.getElementById(photoPost.id) === null) {
+                            if (view.isSatisfyingFilter(photoPost)) {
+                                view.addPostToDom(photoPost);
+                            }
                         }
                     }
                 }
+                longPollingControl();
             }
-            longPollingControl();
-        }
-        xhr.send();
+            xhr.send();
+        });
     }
 
     longPollingControl();

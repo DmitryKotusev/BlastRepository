@@ -107,35 +107,35 @@ let model = function () {
     }
 
     function addPhotoPost(photoPost) {
-        var xhr = new XMLHttpRequest();
+        return new Promise((resolve, reject) => {
+            var xhr = new XMLHttpRequest();
 
-        if (photoPost === undefined) {
-            return false;
-        }
-
-        xhr.open('POST', `addPhotoPost`, false);
-
-        xhr.setRequestHeader('Content-Type', 'application/json');
-
-        var result = false;
-
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState !== 4) {
-                return;
+            if (photoPost === undefined) {
+                return false;
             }
-            if (xhr.status !== 200) {
-                console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                result = false;
-            }
-            else {
-                console.log(xhr.responseText);
-                result = true;
-            }
-        }
 
-        xhr.send(JSON.stringify(photoPost));
+            xhr.open('POST', `addPhotoPost`, true);
 
-        return result;
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            var result = false;
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) {
+                    return;
+                }
+                if (xhr.status !== 200) {
+                    console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
+                    result = false;
+                }
+                else {
+                    console.log(xhr.responseText);
+                    result = true;
+                }
+            }
+
+            xhr.send(JSON.stringify(photoPost));
+        });
     }
 
     function removePhotoPost(id) {

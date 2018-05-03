@@ -13,23 +13,39 @@ let dataFunctions = (function () {
     }
 
     function readPostsFile() {
-        let stringOfPosts = fs.readFileSync('./data/posts.json');
-        let photoPosts = JSON.parse(stringOfPosts, function (key, value) {
-            if (key == 'createdAt') {
-                return new Date(value);
-            }
-            return value;
-        })
-
-        return photoPosts;
+        return new Promise((resolve, reject) => {
+            fs.readFile('./data/posts.json', (err, data) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    let photoPosts = JSON.parse(data, function (key, value) {
+                        if (key == 'createdAt') {
+                            return new Date(value);
+                        }
+                        return value;
+                    })
+                    resolve(photoPosts);
+                }
+            });
+        });
     }
 
     function writePostsFile(photoPosts) {
-        fs.writeFileSync('./data/posts.json', JSON.stringify(photoPosts));
+        return new Promise((resolve, reject) => {
+            writeFile('./data/posts.json', JSON.stringify(photoPosts), (err, data) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve('Operation successfull');
+                }
+            });
+        });
     }
 
-    function findUniqueHashtags() {
-        let photoPosts = readPostsFile();
+    async function findUniqueHashtags() {
+        let photoPosts = await readPostsFile();
 
         let hashtags = [];
         for (let i = 0; i < photoPosts.length; i++) {
@@ -43,8 +59,8 @@ let dataFunctions = (function () {
         return hashtags;
     }
 
-    function findUniqueNames() {
-        let photoPosts = readPostsFile();
+    async function findUniqueNames() {
+        let photoPosts = await readPostsFile();
 
         let authorNames = [];
         for (let i = 0; i < photoPosts.length; i++) {
@@ -56,8 +72,8 @@ let dataFunctions = (function () {
         return authorNames;
     }
 
-    function getMaxID() {
-        let photoPosts = readPostsFile();
+    async function getMaxID() {
+        let photoPosts = await readPostsFile();
 
         if (photoPosts.length === 0) {
             return null;
@@ -71,9 +87,9 @@ let dataFunctions = (function () {
         return max;
     }
 
-    function getNewID() {
+    async function getNewID() {
         let newID;
-        let maxID = getMaxID();
+        let maxID = await getMaxID();
         if (maxID === null) {
             newID = '1';
         }
@@ -130,10 +146,10 @@ let dataFunctions = (function () {
         return true;
     }
 
-    function addPhotoPost(photoPost) {
-        let photoPosts = readPostsFile();
+    async function addPhotoPost(photoPost) {
+        let photoPosts = await readPostsFile();
 
-        photoPost.id = getNewID();
+        photoPost.id = await getNewID();
 
         if (validatePhotoPost(photoPost, photoPosts)) {
             photoPosts.push(photoPost);
@@ -143,8 +159,8 @@ let dataFunctions = (function () {
         return false;
     }
 
-    function getPhotoPost(id) {
-        let photoPosts = readPostsFile();
+    async function getPhotoPost(id) {
+        let photoPosts = await readPostsFile();
 
         for (var index = 0; index < photoPosts.length; index++) {
             if (photoPosts[index].id === id && !photoPosts[index].isDeleted) {
@@ -153,8 +169,8 @@ let dataFunctions = (function () {
         }
     }
 
-    function getPhotoPostIndex(id) {
-        let photoPosts = readPostsFile();
+    async function getPhotoPostIndex(id) {
+        let photoPosts = await readPostsFile();
 
         for (var index = 0; index < photoPosts.length; index++) {
             if (photoPosts[index].id === id && !photoPosts[index].isDeleted) {
@@ -173,10 +189,10 @@ let dataFunctions = (function () {
         return clone;
     }
 
-    function editPhotoPost(id, photoPost) {
+    async function editPhotoPost(id, photoPost) {
         //photoPost = JSON.parse(photoPost);
 
-        let photoPosts = readPostsFile();
+        let photoPosts = await readPostsFile();
 
         if (typeof (id) !== 'string') {
             return false;
@@ -185,7 +201,7 @@ let dataFunctions = (function () {
             return false;
         }
 
-        var buff = getPhotoPost(id);
+        var buff = await getPhotoPost(id);
 
         if (buff === undefined) {
             return false;
@@ -213,15 +229,15 @@ let dataFunctions = (function () {
                 }
             }
         }
-        photoPosts[getPhotoPostIndex(id)] = clone(buff);
+        photoPosts[await getPhotoPostIndex(id)] = clone(buff);
 
         writePostsFile(photoPosts);
 
         return true;
     }
 
-    function reanimatePhotoPost(id) {
-        let photoPosts = readPostsFile();
+    async function reanimatePhotoPost(id) {
+        let photoPosts = await readPostsFile();
 
         if (typeof (id) === 'string') {
             for (var index = 0; index < photoPosts.length; index++) {
@@ -240,8 +256,8 @@ let dataFunctions = (function () {
         return false;
     }
 
-    function removePhotoPost(id) {
-        let photoPosts = readPostsFile();
+    async function removePhotoPost(id) {
+        let photoPosts = await readPostsFile();
 
         if (typeof (id) === 'string') {
             for (var index = 0; index < photoPosts.length; index++) {
@@ -271,7 +287,7 @@ let dataFunctions = (function () {
         return 0;
     }
 
-    function getPhotoPosts(skip, top, filterConfig) {
+    async function getPhotoPosts(skip, top, filterConfig) {
         if (typeof (skip) === 'string') {
             skip = JSON.parse(skip);
         }
@@ -292,7 +308,7 @@ let dataFunctions = (function () {
             top = 10;
         }
 
-        let photoPosts = readPostsFile();
+        let photoPosts = await readPostsFile();
 
         photoPosts.sort(datesort);
 

@@ -36,8 +36,8 @@ app.use(bodyParser.json({ reviver: parseDate }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('../public/UI'));
 
-app.get('/findUniqueHashtags', function (req, res) {
-    let result = dataFunctions.findUniqueHashtags();
+app.get('/findUniqueHashtags', async function (req, res) {
+    let result = await dataFunctions.findUniqueHashtags();
     if (result !== undefined) {
         res.status(200).send(JSON.stringify(result));   
     }
@@ -46,8 +46,8 @@ app.get('/findUniqueHashtags', function (req, res) {
     }
 })
 
-app.get('/findUniqueNames', function (req, res) {
-    let result = dataFunctions.findUniqueNames();
+app.get('/findUniqueNames', async function (req, res) {
+    let result = await dataFunctions.findUniqueNames();
     if (result !== undefined) {
         res.status(200).send(JSON.stringify(result));   
     }
@@ -56,8 +56,8 @@ app.get('/findUniqueNames', function (req, res) {
     }
 })
 
-app.get('/getPhotoPost/:id', function (req, res) {
-    let post = dataFunctions.getPhotoPost(req.params.id);
+app.get('/getPhotoPost/:id', async function (req, res) {
+    let post = await dataFunctions.getPhotoPost(req.params.id);
     if (post !== undefined) {
         post = JSON.stringify(post);
         res.status(200).send(post);
@@ -67,7 +67,7 @@ app.get('/getPhotoPost/:id', function (req, res) {
     }
 })
 
-app.post('/getPhotoPosts', function (req, res) {
+app.post('/getPhotoPosts', async function (req, res) {
     let skip = req.query.skip;
     let top = req.query.top;
     let filterConfig = req.body;
@@ -75,7 +75,7 @@ app.post('/getPhotoPosts', function (req, res) {
 
     //console.log(filterConfig);
 
-    let answer = dataFunctions.getPhotoPosts(skip, top, filterConfig);
+    let answer = await dataFunctions.getPhotoPosts(skip, top, filterConfig);
     //console.log(answer);
     if (answer !== undefined) {
         res.status(200).send(answer);
@@ -85,8 +85,8 @@ app.post('/getPhotoPosts', function (req, res) {
     }
 })
 
-app.post('/addPhotoPost', function (req, res) {
-    if (dataFunctions.addPhotoPost(req.body)) {
+app.post('/addPhotoPost', async function (req, res) {
+    if (await dataFunctions.addPhotoPost(req.body)) {
         ress.forEach((response) => {
             response.status(200).send(JSON.stringify(req.body));
         })
@@ -98,8 +98,8 @@ app.post('/addPhotoPost', function (req, res) {
     }
 })
 
-app.put('/reanimatePhotoPost/:id', function (req, res) {
-    if (dataFunctions.reanimatePhotoPost(req.params.id)) {
+app.put('/reanimatePhotoPost/:id', async function (req, res) {
+    if (await dataFunctions.reanimatePhotoPost(req.params.id)) {
         res.status(200).send(`Photopost with id = ${req.params.id} was successfully recovered`);
     }
     else {
@@ -107,8 +107,8 @@ app.put('/reanimatePhotoPost/:id', function (req, res) {
     }
 })
 
-app.put('/editPhotoPost/:id', function (req, res) {
-    if (dataFunctions.editPhotoPost(req.params.id, req.body)) {
+app.put('/editPhotoPost/:id', async function (req, res) {
+    if (await dataFunctions.editPhotoPost(req.params.id, req.body)) {
         res.status(200).send(`Photopost with id = ${req.params.id} was successfully edited`);
     }
     else {
@@ -116,8 +116,8 @@ app.put('/editPhotoPost/:id', function (req, res) {
     }
 })
 
-app.delete('/removePhotoPost/:id', function (req, res) {
-    if (dataFunctions.removePhotoPost(req.params.id)) {
+app.delete('/removePhotoPost/:id', async function (req, res) {
+    if (await dataFunctions.removePhotoPost(req.params.id)) {
         res.status(200).send(`Post with id = ${req.params.id} was successfully deleted`);
     }
     else {
@@ -125,7 +125,7 @@ app.delete('/removePhotoPost/:id', function (req, res) {
     }
 })
 
-app.post('/downloadFile', upload.single('file'), function (req, res) {
+app.post('/downloadFile', upload.single('file'), async function (req, res) {
     let filename = req.file.filename;
     console.log(filename);
     if (filename !== null) {
@@ -136,7 +136,7 @@ app.post('/downloadFile', upload.single('file'), function (req, res) {
     }
 })
 
-app.get('/subscribe', (req, res, next) => {
+app.get('/subscribe', async (req, res, next) => {
     ress.push(res);
     console.log(`Number of subscribers: ${ress.length}`);
 });

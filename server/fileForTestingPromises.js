@@ -1,5 +1,5 @@
 
-new Promise((resolve, reject) => {
+/*new Promise((resolve, reject) => {
     console.log('Promise code started');
     for (let index = 0; index < 1000000; index++) {
         let b = 2 + 3;
@@ -10,4 +10,4 @@ new Promise((resolve, reject) => {
 
 console.log('Hello, world! 1');
 console.log('Hello, world! 2');
-console.log('Hello, world! 3');
+console.log('Hello, world! 3');*/

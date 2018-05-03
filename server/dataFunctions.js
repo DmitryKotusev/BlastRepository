@@ -33,7 +33,7 @@ let dataFunctions = (function () {
 
     function writePostsFile(photoPosts) {
         return new Promise((resolve, reject) => {
-            writeFile('./data/posts.json', JSON.stringify(photoPosts), (err, data) => {
+            fs.writeFile('./data/posts.json', JSON.stringify(photoPosts), (err, data) => {
                 if (err) {
                     reject(err);
                 }
@@ -153,7 +153,7 @@ let dataFunctions = (function () {
 
         if (validatePhotoPost(photoPost, photoPosts)) {
             photoPosts.push(photoPost);
-            writePostsFile(photoPosts);
+            await writePostsFile(photoPosts);
             return true;
         }
         return false;
@@ -231,7 +231,7 @@ let dataFunctions = (function () {
         }
         photoPosts[await getPhotoPostIndex(id)] = clone(buff);
 
-        writePostsFile(photoPosts);
+        await writePostsFile(photoPosts);
 
         return true;
     }
@@ -246,7 +246,7 @@ let dataFunctions = (function () {
                         //photoPosts.splice(index, 1);
                         photoPosts[index].isDeleted = false;
 
-                        writePostsFile(photoPosts);
+                        await writePostsFile(photoPosts);
 
                         return true;
                     }
@@ -266,7 +266,7 @@ let dataFunctions = (function () {
                         //photoPosts.splice(index, 1);
                         photoPosts[index].isDeleted = true;
 
-                        writePostsFile(photoPosts);
+                        await writePostsFile(photoPosts);
 
                         return true;
                     }

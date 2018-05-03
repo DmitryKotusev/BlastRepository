@@ -19,17 +19,15 @@ var controller = function () {
             if (like === currentName) {
                 post.likes.splice(index, 1);
 
-                view.addLike(post);
-
-                let photoEdit = {};
-                photoEdit.likes = post.likes;
-
-                await model.editPhotoPost(id, photoEdit);
-
                 return false;
             }
             return true;
         })) {
+            let photoEdit = {};
+            photoEdit.likes = post.likes;
+
+            await model.editPhotoPost(id, photoEdit);
+            view.addLike(post);
             return;
         }
 
@@ -74,21 +72,19 @@ var controller = function () {
             return;
         }
 
-        if (!post.likes.every(function (like, index) {
+        if (!post.likes.every(await async function (like, index) {
             if (like === currentName) {
                 post.likes.splice(index, 1);
-
-                view.addLike(post);
-
-                let photoEdit = {};
-                photoEdit.likes = post.likes;
-
-                await model.editPhotoPost(id, photoEdit);
 
                 return false;
             }
             return true;
         })) {
+            let photoEdit = {};
+            photoEdit.likes = post.likes;
+
+            await model.editPhotoPost(id, photoEdit);
+            view.addLike(post);
             return;
         }
 
@@ -117,9 +113,9 @@ var controller = function () {
         loginButton.addEventListener('click', view.pressLoginRestructure);
     }
 
-    function exit(params) {
+    async function exit(params) {
         if (confirm("Are you sure you want to exit?")) {
-            view.checkLogin();
+            await view.checkLogin();
             return;
         }
     }
@@ -193,7 +189,7 @@ var controller = function () {
         await view.showPosts(0, 10, filterConfig);
     }
 
-    function deletePost(params) {
+    async function deletePost(params) {
         if (confirm("Are you sure you want to delete this post?")) {
             var button = event.target;
             var id = button.closest('.post').id;

@@ -50,7 +50,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(undefined);
+                    reject(xhr.responseText);
                 }
                 else {
                     var photoPosts;
@@ -75,7 +75,7 @@ let model = function () {
     function getPhotoPost(id) {
         return new Promise((resolve, reject) => {
             if (id === undefined) {
-                reject("Invalid ID");
+                reject("Undefined ID");
             }
 
             var xhr = new XMLHttpRequest();
@@ -90,7 +90,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(undefined);
+                    reject(xhr.responseText);
                 }
                 else {
                     photoPost = JSON.parse(xhr.responseText, function (key, value) {
@@ -111,7 +111,7 @@ let model = function () {
             var xhr = new XMLHttpRequest();
 
             if (photoPost === undefined) {
-                return false;
+                reject('Undefined photopost');
             }
 
             xhr.open('POST', `addPhotoPost`, true);
@@ -124,11 +124,11 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(false);
+                    reject(xhr.responseText);
                 }
                 else {
                     console.log(xhr.responseText);
-                    resolve(true);
+                    resolve('Operation successfull');
                 }
             }
 
@@ -139,7 +139,7 @@ let model = function () {
     function removePhotoPost(id) {
         return new Promise((resolve, reject) => {
             if (id === undefined) {
-                return false;
+                reject('ID undefined');
             }
 
             var xhr = new XMLHttpRequest();
@@ -152,11 +152,11 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(false);
+                    reject(xhr.responseText);
                 }
                 else {
                     console.log(xhr.responseText);
-                    resolve(true);
+                    resolve('Operation successfull');
                 }
             }
 
@@ -169,11 +169,11 @@ let model = function () {
             var xhr = new XMLHttpRequest();
 
             if (id === undefined) {
-                return false;
+                reject('ID undefined');
             }
 
             if (photoPost === undefined) {
-                return false;
+                reject('Edit parameters undefined');
             }
 
             xhr.open('PUT', `editPhotoPost/${id}`, true);
@@ -186,11 +186,11 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(false);
+                    reject(xhr.responseText);
                 }
                 else {
                     console.log(xhr.responseText);
-                    resolve(true);
+                    resolve('Operation successfull');
                 }
             }
 
@@ -212,7 +212,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(undefined);
+                    reject(xhr.responseText);
                 }
                 else {
                     hashtags = JSON.parse(xhr.responseText);
@@ -236,7 +236,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(undefined);
+                    reject(xhr.responseText);
                 }
                 else {
                     let names;
@@ -269,7 +269,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(null);
+                    reject(xhr.statusText);
                 }
                 else {
                     let fileName;
@@ -292,6 +292,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.statusText);
+                    reject(xhr.statusText);
                 } else {
                     let photoPost = JSON.parse(xhr.responseText, function (key, value) {
                         if (key == 'createdAt')
@@ -308,6 +309,7 @@ let model = function () {
                     }
                 }
                 longPollingControl();
+                resolve();
             }
             xhr.send();
         });

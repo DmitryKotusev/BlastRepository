@@ -15,12 +15,12 @@ var latestTop = 10;        //Данное поле хранит количест
 var latestFilterConfig = new Object();   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
 
 var view = function () {
-    function backButtonRestructure(event) {
+    await function backButtonRestructure(event) {
         let main = document.getElementsByClassName('mainplacing')[0];
         main.innerHTML = '';
         let filt = view.makeFilter();
         document.getElementsByTagName('body')[0].replaceChild(filt, event.target);
-        view.showPosts(0, 10);
+        await view.showPosts(0, 10);
         if (currentName !== null && currentName !== '') {
             view.checkLogin(currentName);
         }
@@ -66,7 +66,7 @@ var view = function () {
         </div>`;
     }
 
-    function pressLoginRestructure(event) {
+    async function pressLoginRestructure(event) {
         let loginInfo = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('input')[0];
         let passwordInfo = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('input')[1];
         for (let index = 0; index < users.length; index++) {
@@ -76,7 +76,7 @@ var view = function () {
                 let filt = view.makeFilter();
                 document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
                 view.checkLogin(users[index].login);
-                view.showPosts(0, 10);
+                await view.showPosts(0, 10);
                 view.showAuthors();
                 view.showHashtags();
                 currentState = statesMassive.mainState;
@@ -89,9 +89,9 @@ var view = function () {
         errorText.innerHTML = 'Error, invalid login or password';
     }
 
-    function lookAtPhotoRestructure(event) {
+    async function lookAtPhotoRestructure(event) {
         currentState = statesMassive.lookAtPhotoState; //Состояние просмотра фотографии
-        let post = model.getPhotoPost(event.target.closest('.post').id);
+        let post = await model.getPhotoPost(event.target.closest('.post').id);
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         //let loadMoresect = document.getElementsByClassName('mainplacing')[1];
         document.getElementsByClassName('mainplacing')[1].innerHTML = '';
@@ -113,7 +113,7 @@ var view = function () {
         mainPlacing = document.getElementsByClassName('mainplacing')[0];
 
 
-        if (currentName === model.getPhotoPost(event.target.closest('.post').id).author) {
+        if (currentName === await model.getPhotoPost(event.target.closest('.post').id).author) {
             mainPlacing.innerHTML =
                 `<div class="lookatphoto" id="${post.id}">
                 <div class="bigphoto">
@@ -228,9 +228,9 @@ var view = function () {
         }
     }
 
-    function editPostLookAtPhotoRestructure(event) {
+    async function editPostLookAtPhotoRestructure(event) {
         currentState = statesMassive.editPostState; //Состояние редактирования фотопоста
-        let post = model.getPhotoPost(event.target.closest('.lookatphoto').id);
+        let post = await model.getPhotoPost(event.target.closest('.lookatphoto').id);
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         let placeForButton = document.getElementsByClassName('mainplacing')[1];
         let main = document.getElementsByTagName('main')[0];
@@ -263,7 +263,7 @@ var view = function () {
         placeForButton.appendChild(saveButton);
     }
 
-    function saveEditButtonRestructure(params) {
+    async function saveEditButtonRestructure(params) {
         let photoPost = {};
 
         let img = mainPlacing.getElementsByTagName('img')[0];
@@ -276,15 +276,15 @@ var view = function () {
             let imageDOM = document.getElementsByClassName('bigphoto')[0].getElementsByTagName('img')[0].src;
             //console.log(imageDOM.substring(21));
             //console.log(model.getPhotoPost(editSelectedID).photolink.substring(1));
-            if (imageDOM.substring(21) === model.getPhotoPost(editSelectedID).photolink.substring(1)) {
+            if (imageDOM.substring(21) === await model.getPhotoPost(editSelectedID).photolink.substring(1)) {
                 photoPost.description = description.value;
                 photoPost.hashtags = hash.value.split(' ');
-                if (model.editPhotoPost(editSelectedID, photoPost)) {
+                if (await model.editPhotoPost(editSelectedID, photoPost)) {
 
                     mainPlacing.innerHTML = '';
                     let filt = view.makeFilter();
                     document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-                    view.showPosts(0, 10);
+                    await view.showPosts(0, 10);
                     view.showAuthors();
                     view.showHashtags();
                     currentState = statesMassive.mainState;
@@ -298,18 +298,18 @@ var view = function () {
 
             let selectedFile = document.getElementById('files');
 
-            let filePath = model.downloadFile(selectedFile.files[0]);//Вставить параметр
+            let filePath = await model.downloadFile(selectedFile.files[0]);//Вставить параметр
 
             if (filePath !== null) {
                 photoPost.photolink = filePath;
                 photoPost.description = description.value;
                 photoPost.hashtags = hash.value.split(' ');
-                if (model.editPhotoPost(editSelectedID, photoPost)) {
+                if (await model.editPhotoPost(editSelectedID, photoPost)) {//Обработать исключение, текущая конструкция не подходит
 
                     mainPlacing.innerHTML = '';
                     let filt = view.makeFilter();
                     document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-                    view.showPosts(0, 10);
+                    await view.showPosts(0, 10);
                     view.showAuthors();
                     view.showHashtags();
                     currentState = statesMassive.mainState;
@@ -326,9 +326,9 @@ var view = function () {
         }
     }
 
-    function editPostRestructure(event) {
+    async function editPostRestructure(event) {
         currentState = statesMassive.editPostState; //Состояние редактирования фотопоста
-        let post = model.getPhotoPost(event.target.closest('.post').id);
+        let post = await model.getPhotoPost(event.target.closest('.post').id);
         editSelectedID = event.target.closest('.post').id;
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         let placeForButton = document.getElementsByClassName('mainplacing')[1];
@@ -377,7 +377,7 @@ var view = function () {
         }
     }
 
-    function uploadButtonRestucture(params) {
+    async function uploadButtonRestucture(params) {
         let ID = '0';
         let img = mainPlacing.getElementsByTagName('img')[0];
 
@@ -398,16 +398,16 @@ var view = function () {
         if (confirm('Are you sure you want to save changes and upload new photopost?')) {
             let selectedFile = document.getElementById('files');
 
-            let filePath = model.downloadFile(selectedFile.files[0]);//Вставить параметр
+            let filePath = await model.downloadFile(selectedFile.files[0]);//Вставить параметр
             if (filePath !== null) {
                 photoPost.photolink = filePath;
                 photoPost.description = description.value;
                 photoPost.hashtags = hash.value.split(' ');
-                if (model.addPhotoPost(photoPost)) {
+                if (await model.addPhotoPost(photoPost)) {//Обработать!!
                     mainPlacing.innerHTML = '';
                     let filt = view.makeFilter();
                     document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-                    view.showPosts(0, 10);
+                    await view.showPosts(0, 10);
                     view.showAuthors();
                     view.showHashtags();
                     currentState = statesMassive.mainState;
@@ -476,19 +476,19 @@ var view = function () {
     }
 
     var hashtags = [];
-    function findUniqueHashtags() {
-        hashtags = model.findUniqueHashtags();
+    async function findUniqueHashtags() {
+        hashtags = await model.findUniqueHashtags();
     }
 
     var authorNames = [];
-    function findUniqueNames() {
-        authorNames = model.findUniqueNames();
+    async function findUniqueNames() {
+        authorNames = await model.findUniqueNames();
     }
 
-    function showHashtags() {
+    async function showHashtags() {
         var elem = document.getElementById('filterselectors');
         elem.innerHTML = '';
-        findUniqueHashtags();
+        await findUniqueHashtags();
         for (let i = 0; i < hashtags.length && i < 10; i++) {
             var option = document.createElement('option');
             option.innerHTML = hashtags[i];
@@ -496,10 +496,10 @@ var view = function () {
         }
     }
 
-    function showAuthors() {
+    async function showAuthors() {
         var elem = document.getElementById('authorselectors');
         elem.innerHTML = '';
-        findUniqueNames();
+        await findUniqueNames();
         for (let i = 0; i < authorNames.length && i < 10; i++) {
             var option = document.createElement('option');
             option.innerHTML = authorNames[i];
@@ -507,7 +507,7 @@ var view = function () {
         }
     }
 
-    function checkLogin(username) {
+    async function checkLogin(username) {
         if (username === '' || username === null) {
             username = undefined;
         }
@@ -541,10 +541,10 @@ var view = function () {
             localStorage.setItem('currentName', JSON.stringify(currentName));
         }
         if (currentState === statesMassive.mainState) {
-            showPosts(0, latestTop + latestSkip, latestFilterConfig);//Поменял параметры фильтра   
+            await showPosts(0, latestTop + latestSkip, latestFilterConfig);//Поменял параметры фильтра   
         }
         if (currentState === statesMassive.editPostState) {
-            showPosts(0, 10);
+            await showPosts(0, 10);
             let filt = view.makeFilter();
             if (document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0] !== undefined) {
                 document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
@@ -625,13 +625,13 @@ var view = function () {
         main.appendChild(post);
     }
 
-    function addPhotopost(photopost) {
-        if (model.addPhotoPost(photopost)) {
-            showPosts(0, 10);//Поменял параметры фильтра
+    async function addPhotopost(photopost) {
+        if (await model.addPhotoPost(photopost)) {
+            await showPosts(0, 10);//Поменял параметры фильтра
         }
     }
 
-    function deletephotopost(id) {
+    async function deletephotopost(id) {
         /*var goalPost = module.getPhotoPost(id);
         if (goalPost === undefined) {
             return false;
@@ -639,12 +639,12 @@ var view = function () {
         if (currentName !== goalPost.author) {
             return false;
         }*/
-        if (model.removePhotoPost(id)) {
-            showPosts(0, latestSkip + latestTop, latestFilterConfig);//Поменял параметры фильтра
+        if (await model.removePhotoPost(id)) {
+            await showPosts(0, latestSkip + latestTop, latestFilterConfig);//Поменял параметры фильтра
         }
     }
 
-    function editPost(id, photoPost) {
+    async function editPost(id, photoPost) {
         /*var goalPost = model.getPhotoPost(id);
         if (goalPost === undefined) {
             return false;
@@ -652,18 +652,18 @@ var view = function () {
         if (currentName !== goalPost.author) {
             return false;
         }*/
-        if (model.editPhotoPost(id, photoPost)) {
-            showPosts(0, 10);//Поменял параметры фильтра
+        if (await model.editPhotoPost(id, photoPost)) {//Обработать
+            await showPosts(0, 10);//Поменял параметры фильтра
         }
         return true;
     }
 
-    function showPosts(skip, top, filterConfig) {
+    async function showPosts(skip, top, filterConfig) {
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
         document.getElementsByClassName('mainplacing')[1].innerHTML = `<button type="button" 
         class="buttonusualadd">Load more</button>`;
 
-        var photoPosts = model.getPhotoPosts(skip, top, filterConfig);
+        var photoPosts = await model.getPhotoPosts(skip, top, filterConfig);
 
         if (photoPosts === undefined) {
             return;
@@ -676,22 +676,22 @@ var view = function () {
         latestSkip = skip;
         latestTop = top;
         latestFilterConfig = filterConfig;
-        if (model.getPhotoPosts(skip, top, filterConfig).length === 0) {
+        if (await model.getPhotoPosts(skip, top, filterConfig).length === 0) {
             document.getElementsByClassName('mainplacing')[1].innerHTML = '';
             return;
         }
 
         var loadMorButton = document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0];
         loadMorButton.addEventListener('click', controller.addMore);
-        if (model.getPhotoPosts(latestSkip + latestTop, 10, latestFilterConfig).length === 0) {
+        if (await model.getPhotoPosts(latestSkip + latestTop, 10, latestFilterConfig).length === 0) {
             document.getElementsByClassName('mainplacing')[1].innerHTML = '';
         }
     }
 
-    function addMorePosts() {
+    async function addMorePosts() {
         //latestSkip = latestSkip + 10;
 
-        var photoPosts = model.getPhotoPosts(latestTop + latestSkip, 10, latestFilterConfig);
+        var photoPosts = await model.getPhotoPosts(latestTop + latestSkip, 10, latestFilterConfig);
 
         if (photoPosts === undefined) {
             return;
@@ -703,16 +703,16 @@ var view = function () {
 
         latestTop = latestTop + 10;
 
-        if (model.getPhotoPosts(latestTop + latestSkip, 10, latestFilterConfig).length === 0) {
+        if (await model.getPhotoPosts(latestTop + latestSkip, 10, latestFilterConfig).length === 0) {
             document.getElementsByClassName('mainplacing')[1].innerHTML = '';
         }
     }
 
-    function startPageDownload(params) {
+    async function startPageDownload(params) {
         currentName = JSON.parse(localStorage.getItem('currentName'));
 
         //Отображаение первых 10 постов
-        view.showPosts(0, 10);
+        await view.showPosts(0, 10);
 
         view.checkLogin(currentName);
 

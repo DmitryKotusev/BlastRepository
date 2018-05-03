@@ -1,5 +1,5 @@
 var controller = function () {
-    function like(event) {
+    async function like(event) {
         var button = event.target;
         var id = button.closest('.post').id;
         if (currentName === null) {
@@ -9,7 +9,7 @@ var controller = function () {
             return;
         }
 
-        let post = model.getPhotoPost(id);
+        let post = await model.getPhotoPost(id);
 
         if (post === undefined) {
             return;
@@ -24,7 +24,7 @@ var controller = function () {
                 let photoEdit = {};
                 photoEdit.likes = post.likes;
 
-                model.editPhotoPost(id, photoEdit);
+                await model.editPhotoPost(id, photoEdit);
 
                 return false;
             }
@@ -40,7 +40,7 @@ var controller = function () {
         let photoEdit = {};
         photoEdit.likes = post.likes;
 
-        model.editPhotoPost(id, photoEdit);
+        await model.editPhotoPost(id, photoEdit);
     }
 
     function validhash(item) {
@@ -58,7 +58,7 @@ var controller = function () {
         return true;
     }
 
-    function likeLookAt(event) {
+    async function likeLookAt(event) {
         var button = event.target;
         var id = button.closest('.lookatphoto').id;
         if (currentName === null) {
@@ -68,7 +68,7 @@ var controller = function () {
             return;
         }
 
-        let post = model.getPhotoPost(id);
+        let post = await model.getPhotoPost(id);
 
         if (post === undefined) {
             return;
@@ -83,7 +83,7 @@ var controller = function () {
                 let photoEdit = {};
                 photoEdit.likes = post.likes;
 
-                model.editPhotoPost(id, photoEdit);
+                await model.editPhotoPost(id, photoEdit);
 
                 return false;
             }
@@ -99,7 +99,7 @@ var controller = function () {
         let photoEdit = {};
         photoEdit.likes = post.likes;
 
-        model.editPhotoPost(id, photoEdit);
+        await model.editPhotoPost(id, photoEdit);
     }
 
     function addMore(event) {
@@ -124,8 +124,8 @@ var controller = function () {
         }
     }
 
-    function lookAtPhoto(event) {
-        if (view.lookAtPhotoRestructure(event)) {
+    async function lookAtPhoto(event) {
+        if (await view.lookAtPhotoRestructure(event)) {
             //Connect events if this post is yours
             let amountOfLikes = mainPlacing.getElementsByTagName('button')[2];
             amountOfLikes.addEventListener('click', likeLookAt);
@@ -149,7 +149,7 @@ var controller = function () {
         return isValid;
     }
 
-    function filter(params) {
+    async function filter(params) {
         let filt = document.getElementsByTagName('aside')[0];
 
         let authorCheck = document.getElementsByName('authorcheck')[0];//Чекбокс
@@ -190,28 +190,28 @@ var controller = function () {
                 }
             }
         }
-        view.showPosts(0, 10, filterConfig);
+        await view.showPosts(0, 10, filterConfig);
     }
 
     function deletePost(params) {
         if (confirm("Are you sure you want to delete this post?")) {
             var button = event.target;
             var id = button.closest('.post').id;
-            view.deletePhotopost(id);
+            await view.deletePhotopost(id);
         }
     }
 
-    function deletePostLookAtPhoto(params) {
+    async function deletePostLookAtPhoto(params) {
         if (confirm("Are you sure you want to delete this post?")) {
             var button = event.target;
             var id = button.closest('.lookatphoto').id;
             let filt = view.makeFilter();
             document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-            view.showPosts(0, 10);
-            view.showAuthors();
-            view.showHashtags();
+            await view.showPosts(0, 10);
+            await view.showAuthors();
+            await view.showHashtags();
             currentState = statesMassive.mainState;
-            view.deletePhotopost(id);
+            await view.deletePhotopost(id);
         }
     }
 
@@ -241,16 +241,16 @@ var controller = function () {
         //image.src = event.target.files[0].name;
     }
 
-    function editPostLookAtPhoto(event) {
-        view.editPostLookAtPhotoRestructure(event);
+    async function editPostLookAtPhoto(event) {
+        await view.editPostLookAtPhotoRestructure(event);
         let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
         input.addEventListener('change', updateImageDisplay);
         let saveButton = document.getElementsByClassName('mainplacing')[1].lastChild;
         saveButton.addEventListener('click', view.saveEditButtonRestructure);
     }
 
-    function editPost(event) {
-        view.editPostRestructure(event);
+    async function editPost(event) {
+        await view.editPostRestructure(event);
         let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
         input.addEventListener('change', updateImageDisplay);
         let saveButton = document.getElementsByClassName('mainplacing')[1].lastChild;

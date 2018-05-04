@@ -229,19 +229,20 @@ var view = function () {
     }
 
     async function editPostLookAtPhotoRestructure(event) {
-        currentState = statesMassive.editPostState; //Состояние редактирования фотопоста
-        let post = await model.getPhotoPost(event.target.closest('.lookatphoto').id);
-        document.getElementsByClassName('mainplacing')[0].innerHTML = '';
-        let placeForButton = document.getElementsByClassName('mainplacing')[1];
-        let main = document.getElementsByTagName('main')[0];
+        try {
+            currentState = statesMassive.editPostState; //Состояние редактирования фотопоста
+            let post = await model.getPhotoPost(event.target.closest('.lookatphoto').id);
+            document.getElementsByClassName('mainplacing')[0].innerHTML = '';
+            let placeForButton = document.getElementsByClassName('mainplacing')[1];
+            let main = document.getElementsByTagName('main')[0];
 
-        let body = document.getElementsByTagName('body')[0];
-        let filt = view.makeFilter();
+            let body = document.getElementsByTagName('body')[0];
+            let filt = view.makeFilter();
 
-        mainPlacing = document.getElementsByClassName('mainplacing')[0];
+            mainPlacing = document.getElementsByClassName('mainplacing')[0];
 
-        mainPlacing.innerHTML =
-            `<div class="lookatphoto" id="${post.id}">
+            mainPlacing.innerHTML =
+                `<div class="lookatphoto" id="${post.id}">
                 <div class="bigphoto">
                     <img class="imgstyle" src="${post.photolink}" alt="Mat">
                 </div>
@@ -259,8 +260,12 @@ var view = function () {
                 </div>
                 <p class="error-text"></p>
             </div>`;
-        let saveButton = view.makeButton('Save and upload');
-        placeForButton.appendChild(saveButton);
+            let saveButton = view.makeButton('Save and upload');
+            placeForButton.appendChild(saveButton);
+        } catch (error) {
+            console.log(error);
+            return;
+        }
     }
 
     async function saveEditButtonRestructure(params) {
@@ -378,50 +383,52 @@ var view = function () {
     }
 
     async function uploadButtonRestucture(params) {
-        let ID = '0';
-        let img = mainPlacing.getElementsByTagName('img')[0];
+        try {
+            let ID = '0';
+            let img = mainPlacing.getElementsByTagName('img')[0];
 
-        let description = mainPlacing.getElementsByTagName('textarea')[0];
+            let description = mainPlacing.getElementsByTagName('textarea')[0];
 
-        let hash = mainPlacing.getElementsByTagName('textarea')[1];
-        let hashTags = hash.value.split(' ');
-        for (let index = 0; index < hashTags.length; index++) {
-            if (hashTags[index] === '') {
-                hashTags.splice(index, 1);
+            let hash = mainPlacing.getElementsByTagName('textarea')[1];
+            let hashTags = hash.value.split(' ');
+            for (let index = 0; index < hashTags.length; index++) {
+                if (hashTags[index] === '') {
+                    hashTags.splice(index, 1);
+                }
             }
-        }
 
-        let photoPost = new Photopost(ID, description.value, new Date(), currentName, img.src, [], hashTags);
+            let photoPost = new Photopost(ID, description.value, new Date(), currentName, img.src, [], hashTags);
 
-        //photoPost.photolink = img.src;
+            //photoPost.photolink = img.src;
 
-        if (confirm('Are you sure you want to save changes and upload new photopost?')) {
-            let selectedFile = document.getElementById('files');
+            if (confirm('Are you sure you want to save changes and upload new photopost?')) {
+                let selectedFile = document.getElementById('files');
 
-            let filePath = await model.downloadFile(selectedFile.files[0]);//Вставить параметр
-            if (filePath !== null) {
-                photoPost.photolink = filePath;
-                photoPost.description = description.value;
-                photoPost.hashtags = hash.value.split(' ');
-                if (await model.addPhotoPost(photoPost)) {//Обработать!!
-                    mainPlacing.innerHTML = '';
-                    let filt = view.makeFilter();
-                    document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-                    await view.showPosts(0, 10);
-                    await view.showAuthors();
-                    await view.showHashtags();
-                    currentState = statesMassive.mainState;
+                let filePath = await model.downloadFile(selectedFile.files[0]);//Вставить параметр
+                if (filePath !== null) {
+                    photoPost.photolink = filePath;
+                    photoPost.description = description.value;
+                    photoPost.hashtags = hash.value.split(' ');
+                    await model.addPhotoPost(photoPost); {//Обработать!!
+                        mainPlacing.innerHTML = '';
+                        let filt = view.makeFilter();
+                        document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                        await view.showPosts(0, 10);
+                        await view.showAuthors();
+                        await view.showHashtags();
+                        currentState = statesMassive.mainState;
+                    }
                 }
                 else {
                     let error = mainPlacing.getElementsByClassName('error-text')[0];
-                    error.innerHTML = 'Sorry, there are some errors in what you try to upload';
+                    error.innerHTML = 'Error when downloading file on server';
                 }
             }
-            else {
-                let error = mainPlacing.getElementsByClassName('error-text')[0];
-                error.innerHTML = 'Error when downloading file on server';
-            }
+        } catch (error) {
+            let error = mainPlacing.getElementsByClassName('error-text')[0];
+            error.innerHTML = `Sorry, ${error}`;
         }
+
     }
 
     function uploadPostRestructure(event) {
@@ -486,24 +493,34 @@ var view = function () {
     }
 
     async function showHashtags() {
-        var elem = document.getElementById('filterselectors');
-        elem.innerHTML = '';
-        await findUniqueHashtags();
-        for (let i = 0; i < hashtags.length && i < 10; i++) {
-            var option = document.createElement('option');
-            option.innerHTML = hashtags[i];
-            elem.appendChild(option);
+        try {
+            var elem = document.getElementById('filterselectors');
+            elem.innerHTML = '';
+            await findUniqueHashtags();
+            for (let i = 0; i < hashtags.length && i < 10; i++) {
+                var option = document.createElement('option');
+                option.innerHTML = hashtags[i];
+                elem.appendChild(option);
+            }
+        } catch (error) {
+            console.log(error);
+            return;
         }
     }
 
     async function showAuthors() {
-        var elem = document.getElementById('authorselectors');
-        elem.innerHTML = '';
-        await findUniqueNames();
-        for (let i = 0; i < authorNames.length && i < 10; i++) {
-            var option = document.createElement('option');
-            option.innerHTML = authorNames[i];
-            elem.appendChild(option);
+        try {
+            var elem = document.getElementById('authorselectors');
+            elem.innerHTML = '';
+            await findUniqueNames();
+            for (let i = 0; i < authorNames.length && i < 10; i++) {
+                var option = document.createElement('option');
+                option.innerHTML = authorNames[i];
+                elem.appendChild(option);
+            }
+        } catch (error) {
+            console.log(error);
+            return;
         }
     }
 

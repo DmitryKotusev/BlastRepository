@@ -9,25 +9,32 @@ var controller = function () {
             return;
         }
 
-        let post = await model.getPhotoPost(id);
-
-        if (post === undefined) {
+        try {
+            let post = await model.getPhotoPost(id);
+        } catch (error) {
+            console.log(error);
             return;
         }
 
-        if (!post.likes.every(function (like, index) {
-            if (like === currentName) {
-                post.likes.splice(index, 1);
+        try {
+            if (!post.likes.every(function (like, index) {
+                if (like === currentName) {
+                    post.likes.splice(index, 1);
 
-                return false;
+                    return false;
+                }
+                return true;
+            })) {
+                let photoEdit = {};
+                photoEdit.likes = post.likes;
+
+                await model.editPhotoPost(id, photoEdit);
+
+                view.addLike(post);
+                return;
             }
-            return true;
-        })) {
-            let photoEdit = {};
-            photoEdit.likes = post.likes;
-
-            await model.editPhotoPost(id, photoEdit);
-            view.addLike(post);
+        } catch (error) {
+            console.log(error);
             return;
         }
 
@@ -38,7 +45,12 @@ var controller = function () {
         let photoEdit = {};
         photoEdit.likes = post.likes;
 
-        await model.editPhotoPost(id, photoEdit);
+        try {
+            await model.editPhotoPost(id, photoEdit);
+        } catch (error) {
+            console.log(error);
+            return;
+        }
     }
 
     function validhash(item) {
@@ -66,25 +78,35 @@ var controller = function () {
             return;
         }
 
-        let post = await model.getPhotoPost(id);
+        try {
+            let post = await model.getPhotoPost(id);
+        } catch (error) {
+            console.log(error);
+            return;
+        }
 
         if (post === undefined) {
             return;
         }
 
-        if (!post.likes.every(await async function (like, index) {
-            if (like === currentName) {
-                post.likes.splice(index, 1);
+        try {
+            if (!post.likes.every(await async function (like, index) {
+                if (like === currentName) {
+                    post.likes.splice(index, 1);
 
-                return false;
+                    return false;
+                }
+                return true;
+            })) {
+                let photoEdit = {};
+                photoEdit.likes = post.likes;
+
+                await model.editPhotoPost(id, photoEdit);
+                view.addLike(post);
+                return;
             }
-            return true;
-        })) {
-            let photoEdit = {};
-            photoEdit.likes = post.likes;
-
-            await model.editPhotoPost(id, photoEdit);
-            view.addLike(post);
+        } catch (error) {
+            console.log(error);
             return;
         }
 
@@ -95,7 +117,12 @@ var controller = function () {
         let photoEdit = {};
         photoEdit.likes = post.likes;
 
-        await model.editPhotoPost(id, photoEdit);
+        try {
+            await model.editPhotoPost(id, photoEdit);
+        } catch (error) {
+            console.log(error);
+            return;
+        }
     }
 
     function addMore(event) {
@@ -103,7 +130,12 @@ var controller = function () {
     }
 
     function backButtonEvent(event) {
-        view.backButtonRestructure(event);
+        try {
+            view.backButtonRestructure(event);   
+        } catch (error) {
+            console.log(error);
+            return;
+        }
     }
 
     function login(event) {
@@ -121,21 +153,26 @@ var controller = function () {
     }
 
     async function lookAtPhoto(event) {
-        if (await view.lookAtPhotoRestructure(event)) {
-            //Connect events if this post is yours
-            let amountOfLikes = mainPlacing.getElementsByTagName('button')[2];
-            amountOfLikes.addEventListener('click', likeLookAt);
-            let editButton = mainPlacing.getElementsByTagName('button')[1];
-            editButton.addEventListener('click', editPostLookAtPhoto);
-            let deleteButton = mainPlacing.getElementsByTagName('button')[0];
-            deleteButton.addEventListener('click', deletePostLookAtPhoto);
-            ////////////////////
-        }
-        else {
-            //Connect events if this post is not yours
-            let amountOfLikes = mainPlacing.getElementsByTagName('button')[0];
-            amountOfLikes.addEventListener('click', likeLookAt);
-            ////////////////////
+        try {
+            if (await view.lookAtPhotoRestructure(event)) {
+                //Connect events if this post is yours
+                let amountOfLikes = mainPlacing.getElementsByTagName('button')[2];
+                amountOfLikes.addEventListener('click', likeLookAt);
+                let editButton = mainPlacing.getElementsByTagName('button')[1];
+                editButton.addEventListener('click', editPostLookAtPhoto);
+                let deleteButton = mainPlacing.getElementsByTagName('button')[0];
+                deleteButton.addEventListener('click', deletePostLookAtPhoto);
+                ////////////////////
+            }
+            else {
+                //Connect events if this post is not yours
+                let amountOfLikes = mainPlacing.getElementsByTagName('button')[0];
+                amountOfLikes.addEventListener('click', likeLookAt);
+                ////////////////////
+            }
+        } catch (error) {
+            console.log();
+            return;
         }
     }
 
@@ -198,16 +235,21 @@ var controller = function () {
     }
 
     async function deletePostLookAtPhoto(params) {
-        if (confirm("Are you sure you want to delete this post?")) {
-            var button = event.target;
-            var id = button.closest('.lookatphoto').id;
-            let filt = view.makeFilter();
-            document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-            await view.showPosts(0, 10);
-            await view.showAuthors();
-            await view.showHashtags();
-            currentState = statesMassive.mainState;
-            await view.deletePhotopost(id);
+        try {
+            if (confirm("Are you sure you want to delete this post?")) {
+                var button = event.target;
+                var id = button.closest('.lookatphoto').id;
+                let filt = view.makeFilter();
+                document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                await view.showPosts(0, 10);
+                await view.showAuthors();
+                await view.showHashtags();
+                currentState = statesMassive.mainState;
+                await view.deletePhotopost(id);
+            }
+        } catch (error) {
+            console.log(error);
+            return;
         }
     }
 
@@ -238,19 +280,30 @@ var controller = function () {
     }
 
     async function editPostLookAtPhoto(event) {
-        await view.editPostLookAtPhotoRestructure(event);
-        let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
-        input.addEventListener('change', updateImageDisplay);
-        let saveButton = document.getElementsByClassName('mainplacing')[1].lastChild;
-        saveButton.addEventListener('click', view.saveEditButtonRestructure);
+        try {
+            await view.editPostLookAtPhotoRestructure(event);
+            let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
+            input.addEventListener('change', updateImageDisplay);
+            let saveButton = document.getElementsByClassName('mainplacing')[1].lastChild;
+            saveButton.addEventListener('click', view.saveEditButtonRestructure);
+        } catch (error) {
+            console.log(error);
+            return;
+        }
     }
 
     async function editPost(event) {
-        await view.editPostRestructure(event);
-        let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
-        input.addEventListener('change', updateImageDisplay);
-        let saveButton = document.getElementsByClassName('mainplacing')[1].lastChild;
-        saveButton.addEventListener('click', view.saveEditButtonRestructure);
+        try {
+            await view.editPostRestructure(event);
+            let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
+            input.addEventListener('change', updateImageDisplay);
+            let saveButton = document.getElementsByClassName('mainplacing')[1].lastChild;
+            saveButton.addEventListener('click', view.saveEditButtonRestructure);
+        } catch (error) {
+            console.log(error);
+            return;
+        }
+
     }
 
     function uploadPost(event) {

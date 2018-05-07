@@ -7,7 +7,8 @@ var statesMassive = {
     loginState: 1,      //Страница в формой для логина
     lookAtPhotoState: 2,//Страница для просмотра фота
     editPostState: 3,   //Страница редактирования фотопоста
-    uploadPostState: 4  //Страница добавления нового фото
+    uploadPostState: 4,  //Страница добавления нового фото
+    errorPostState: 5 //Страница ошибки
 };
 
 var latestSkip = 0;       //Данное поле хранит количество записей, которое нужно было пропустить в последний раз 
@@ -15,7 +16,7 @@ var latestTop = 10;        //Данное поле хранит количест
 var latestFilterConfig = new Object();   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
 
 var view = function () {
-    async function backButtonRestructure(event) {
+    async function backButtonRestructure(event) {//Проверен
         let main = document.getElementsByClassName('mainplacing')[0];
         main.innerHTML = '';
         let filt = view.makeFilter();
@@ -66,30 +67,34 @@ var view = function () {
         </div>`;
     }
 
-    async function pressLoginRestructure(event) {
-        let loginInfo = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('input')[0];
-        let passwordInfo = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('input')[1];
-        for (let index = 0; index < users.length; index++) {
-            if (users[index].login === loginInfo.value && users[index].password === passwordInfo.value) {
-                let main = document.getElementsByClassName('mainplacing')[0];
-                main.innerHTML = '';
-                let filt = view.makeFilter();
-                document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-                await view.checkLogin(users[index].login);
-                await view.showPosts(0, 10);
-                await view.showAuthors();
-                await view.showHashtags();
-                currentState = statesMassive.mainState;
-                return;
+    async function pressLoginRestructure(event) {//Проверен
+        try {
+            let loginInfo = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('input')[0];
+            let passwordInfo = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('input')[1];
+            for (let index = 0; index < users.length; index++) {
+                if (users[index].login === loginInfo.value && users[index].password === passwordInfo.value) {
+                    let main = document.getElementsByClassName('mainplacing')[0];
+                    main.innerHTML = '';
+                    let filt = view.makeFilter();
+                    document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                    await view.checkLogin(users[index].login);
+                    await view.showPosts(0, 10);
+                    await view.showAuthors();
+                    await view.showHashtags();
+                    currentState = statesMassive.mainState;
+                    return;
+                }
             }
-        }
 
-        //Вывод ошибки
-        let errorText = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('p')[1];
-        errorText.innerHTML = 'Error, invalid login or password';
+            //Вывод ошибки
+            let errorText = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('p')[1];
+            errorText.innerHTML = 'Error, invalid login or password';
+        } catch (error) {//Изменить обработчик
+
+        }
     }
 
-    async function lookAtPhotoRestructure(event) {
+    async function lookAtPhotoRestructure(event) {//Проверен
         currentState = statesMassive.lookAtPhotoState; //Состояние просмотра фотографии
         let post = await model.getPhotoPost(event.target.closest('.post').id);
         document.getElementsByClassName('mainplacing')[0].innerHTML = '';
@@ -228,21 +233,21 @@ var view = function () {
         }
     }
 
-    async function editPostLookAtPhotoRestructure(event) {
-        try {
-            currentState = statesMassive.editPostState; //Состояние редактирования фотопоста
-            let post = await model.getPhotoPost(event.target.closest('.lookatphoto').id);
-            document.getElementsByClassName('mainplacing')[0].innerHTML = '';
-            let placeForButton = document.getElementsByClassName('mainplacing')[1];
-            let main = document.getElementsByTagName('main')[0];
+    async function editPostLookAtPhotoRestructure(event) {//Проверен
 
-            let body = document.getElementsByTagName('body')[0];
-            let filt = view.makeFilter();
+        currentState = statesMassive.editPostState; //Состояние редактирования фотопоста
+        let post = await model.getPhotoPost(event.target.closest('.lookatphoto').id);
+        document.getElementsByClassName('mainplacing')[0].innerHTML = '';
+        let placeForButton = document.getElementsByClassName('mainplacing')[1];
+        let main = document.getElementsByTagName('main')[0];
 
-            mainPlacing = document.getElementsByClassName('mainplacing')[0];
+        let body = document.getElementsByTagName('body')[0];
+        let filt = view.makeFilter();
 
-            mainPlacing.innerHTML =
-                `<div class="lookatphoto" id="${post.id}">
+        mainPlacing = document.getElementsByClassName('mainplacing')[0];
+
+        mainPlacing.innerHTML =
+            `<div class="lookatphoto" id="${post.id}">
                 <div class="bigphoto">
                     <img class="imgstyle" src="${post.photolink}" alt="Mat">
                 </div>
@@ -260,78 +265,80 @@ var view = function () {
                 </div>
                 <p class="error-text"></p>
             </div>`;
-            let saveButton = view.makeButton('Save and upload');
-            placeForButton.appendChild(saveButton);
-        } catch (error) {
-            console.log(error);
-            return;
-        }
+        let saveButton = view.makeButton('Save and upload');
+        placeForButton.appendChild(saveButton);
+
     }
 
-    async function saveEditButtonRestructure(params) {
-        let photoPost = {};
+    async function saveEditButtonRestructure(params) {//Проверен
+        try {
+            let photoPost = {};
 
-        let img = mainPlacing.getElementsByTagName('img')[0];
+            let img = mainPlacing.getElementsByTagName('img')[0];
 
-        let description = mainPlacing.getElementsByTagName('textarea')[0];
+            let description = mainPlacing.getElementsByTagName('textarea')[0];
 
-        let hash = mainPlacing.getElementsByTagName('textarea')[1];
+            let hash = mainPlacing.getElementsByTagName('textarea')[1];
 
-        if (confirm('Are you sure you want to save changes?')) {
-            let imageDOM = document.getElementsByClassName('bigphoto')[0].getElementsByTagName('img')[0].src;
-            //console.log(imageDOM.substring(21));
-            //console.log(model.getPhotoPost(editSelectedID).photolink.substring(1));
-            if (imageDOM.substring(21) === (await model.getPhotoPost(editSelectedID)).photolink.substring(1)) {
-                photoPost.description = description.value;
-                photoPost.hashtags = hash.value.split(' ');
-                if (await model.editPhotoPost(editSelectedID, photoPost)) {
+            if (confirm('Are you sure you want to save changes?')) {
+                let imageDOM = document.getElementsByClassName('bigphoto')[0].getElementsByTagName('img')[0].src;
+                //console.log(imageDOM.substring(21));
+                //console.log(model.getPhotoPost(editSelectedID).photolink.substring(1));
+                if (imageDOM.substring(21) === (await model.getPhotoPost(editSelectedID)).photolink.substring(1)) {
+                    photoPost.description = description.value;
+                    photoPost.hashtags = hash.value.split(' ');
+                    if (await model.editPhotoPost(editSelectedID, photoPost)) {
 
-                    mainPlacing.innerHTML = '';
-                    let filt = view.makeFilter();
-                    document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-                    await view.showPosts(0, 10);
-                    await view.showAuthors();
-                    await view.showHashtags();
-                    currentState = statesMassive.mainState;
+                        mainPlacing.innerHTML = '';
+                        let filt = view.makeFilter();
+                        document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                        await view.showPosts(0, 10);
+                        await view.showAuthors();
+                        await view.showHashtags();
+                        currentState = statesMassive.mainState;
+                    }
+                    else {
+                        let error = mainPlacing.getElementsByClassName('error-text')[0];
+                        error.innerHTML = 'Sorry, there are some errors in what you have edit';
+                    }
+                    return;
+                }
+
+                let selectedFile = document.getElementById('files');
+
+                let filePath = await model.downloadFile(selectedFile.files[0]);//Вставить параметр
+
+                if (filePath !== null) {
+                    photoPost.photolink = filePath;
+                    photoPost.description = description.value;
+                    photoPost.hashtags = hash.value.split(' ');
+                    if (await model.editPhotoPost(editSelectedID, photoPost)) {//Обработать исключение, текущая конструкция не подходит
+
+                        mainPlacing.innerHTML = '';
+                        let filt = view.makeFilter();
+                        document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                        await view.showPosts(0, 10);
+                        await view.showAuthors();
+                        await view.showHashtags();
+                        currentState = statesMassive.mainState;
+                    }
+                    else {
+                        let error = mainPlacing.getElementsByClassName('error-text')[0];
+                        error.innerHTML = 'Sorry, there are some errors in what you have edit';
+                    }
                 }
                 else {
                     let error = mainPlacing.getElementsByClassName('error-text')[0];
-                    error.innerHTML = 'Sorry, there are some errors in what you have edit';
-                }
-                return;
-            }
-
-            let selectedFile = document.getElementById('files');
-
-            let filePath = await model.downloadFile(selectedFile.files[0]);//Вставить параметр
-
-            if (filePath !== null) {
-                photoPost.photolink = filePath;
-                photoPost.description = description.value;
-                photoPost.hashtags = hash.value.split(' ');
-                if (await model.editPhotoPost(editSelectedID, photoPost)) {//Обработать исключение, текущая конструкция не подходит
-
-                    mainPlacing.innerHTML = '';
-                    let filt = view.makeFilter();
-                    document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-                    await view.showPosts(0, 10);
-                    await view.showAuthors();
-                    await view.showHashtags();
-                    currentState = statesMassive.mainState;
-                }
-                else {
-                    let error = mainPlacing.getElementsByClassName('error-text')[0];
-                    error.innerHTML = 'Sorry, there are some errors in what you have edit';
+                    error.innerHTML = 'Error when downloading file on server';
                 }
             }
-            else {
-                let error = mainPlacing.getElementsByClassName('error-text')[0];
-                error.innerHTML = 'Error when downloading file on server';
-            }
+        } catch (error) {//Изменить обработчик
+
         }
+
     }
 
-    async function editPostRestructure(event) {
+    async function editPostRestructure(event) {//Проверен
         currentState = statesMassive.editPostState; //Состояние редактирования фотопоста
         let post = await model.getPhotoPost(event.target.closest('.post').id);
         editSelectedID = event.target.closest('.post').id;
@@ -382,7 +389,7 @@ var view = function () {
         }
     }
 
-    async function uploadButtonRestucture(params) {
+    async function uploadButtonRestucture(params) {//Проверен
         try {
             let ID = '0';
             let img = mainPlacing.getElementsByTagName('img')[0];
@@ -424,7 +431,7 @@ var view = function () {
                     error.innerHTML = 'Error when downloading file on server';
                 }
             }
-        } catch (error) {
+        } catch (error) {//Изменить обработчик
             let error = mainPlacing.getElementsByClassName('error-text')[0];
             error.innerHTML = `Sorry, ${error}`;
         }
@@ -502,7 +509,7 @@ var view = function () {
                 option.innerHTML = hashtags[i];
                 elem.appendChild(option);
             }
-        } catch (error) {
+        } catch (error) {//Изменить обработчик
             console.log(error);
             return;
         }
@@ -518,7 +525,7 @@ var view = function () {
                 option.innerHTML = authorNames[i];
                 elem.appendChild(option);
             }
-        } catch (error) {
+        } catch (error) {//Изменить обработчик
             console.log(error);
             return;
         }
@@ -642,10 +649,9 @@ var view = function () {
         main.appendChild(post);
     }
 
-    async function addPhotopost(photopost) {
-        if (await model.addPhotoPost(photopost)) {
-            await showPosts(0, 10);//Поменял параметры фильтра
-        }
+    async function addPhotopost(photopost) {//Проверен
+        await model.addPhotoPost(photopost);
+        await showPosts(0, 10);//Поменял параметры фильтра
     }
 
     async function deletephotopost(id) {
@@ -661,7 +667,7 @@ var view = function () {
         }
     }
 
-    async function editPost(id, photoPost) {
+    async function editPost(id, photoPost) {//Проверен
         /*var goalPost = model.getPhotoPost(id);
         if (goalPost === undefined) {
             return false;
@@ -669,9 +675,8 @@ var view = function () {
         if (currentName !== goalPost.author) {
             return false;
         }*/
-        if (await model.editPhotoPost(id, photoPost)) {//Обработать
-            await showPosts(0, 10);//Поменял параметры фильтра
-        }
+        await model.editPhotoPost(id, photoPost)//Обработать
+        await showPosts(0, 10);//Поменял параметры фильтра
         return true;
     }
 
@@ -726,34 +731,38 @@ var view = function () {
     }
 
     async function startPageDownload(params) {
-        currentName = JSON.parse(localStorage.getItem('currentName'));
+        try {
+            currentName = JSON.parse(localStorage.getItem('currentName'));
 
-        //Отображаение первых 10 постов
-        await view.showPosts(0, 10);
+            //Отображаение первых 10 постов
+            await view.showPosts(0, 10);
 
-        await view.checkLogin(currentName);
+            await view.checkLogin(currentName);
 
-        let header = document.getElementsByTagName('main')[0];
+            let header = document.getElementsByTagName('main')[0];
 
-        let body = document.getElementsByTagName('body')[0];
+            let body = document.getElementsByTagName('body')[0];
 
-        body.insertBefore(view.makeFilter(), header);
+            body.insertBefore(view.makeFilter(), header);
 
-        let loadMoreButton = document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0];
-        if (loadMoreButton !== undefined && loadMoreButton !== null) {
-            loadMoreButton.addEventListener('click', controller.addMore);
+            let loadMoreButton = document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0];
+            if (loadMoreButton !== undefined && loadMoreButton !== null) {
+                loadMoreButton.addEventListener('click', controller.addMore);
+            }
+
+            let filterButton = document.getElementsByTagName('aside')[0].getElementsByClassName('buttonusual')[0];
+            if (filterButton !== undefined && filterButton !== null) {
+                filterButton.addEventListener('click', controller.filter);
+            }
+
+            //Вывод тегов
+            await view.showHashtags();
+
+            //Вывод авторов
+            await view.showAuthors();
+        } catch (error) {//Изменить обработчик
+
         }
-
-        let filterButton = document.getElementsByTagName('aside')[0].getElementsByClassName('buttonusual')[0];
-        if (filterButton !== undefined && filterButton !== null) {
-            filterButton.addEventListener('click', controller.filter);
-        }
-
-        //Вывод тегов
-        await view.showHashtags();
-
-        //Вывод авторов
-        await view.showAuthors();
     }
 
     function isSatisfyingFilter(post) {

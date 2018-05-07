@@ -50,7 +50,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(xhr.responseText);
+                    reject(new Error(xhr.responseText));
                 }
                 else {
                     var photoPosts;
@@ -90,7 +90,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(xhr.responseText);
+                    reject(new Error(xhr.responseText));
                 }
                 else {
                     photoPost = JSON.parse(xhr.responseText, function (key, value) {
@@ -124,7 +124,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(xhr.responseText);
+                    reject(new Error(xhr.responseText));
                 }
                 else {
                     console.log(xhr.responseText);
@@ -152,7 +152,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(xhr.responseText);
+                    reject(new Error(xhr.responseText));
                 }
                 else {
                     console.log(xhr.responseText);
@@ -186,7 +186,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(xhr.responseText);
+                    reject(new Error(xhr.responseText));
                 }
                 else {
                     console.log(xhr.responseText);
@@ -212,7 +212,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(xhr.responseText);
+                    reject(new Error(xhr.responseText));
                 }
                 else {
                     hashtags = JSON.parse(xhr.responseText);
@@ -236,7 +236,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(xhr.responseText);
+                    reject(new Error(xhr.responseText));
                 }
                 else {
                     let names;
@@ -269,7 +269,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.responseText || xhr.statusText);
-                    reject(xhr.statusText);
+                    reject(new Error(xhr.responseText));
                 }
                 else {
                     let fileName;
@@ -292,7 +292,7 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.statusText);
-                    reject(xhr.statusText);
+                    reject(new Error(xhr.responseText));
                 } else {
                     let photoPost = JSON.parse(xhr.responseText, function (key, value) {
                         if (key == 'createdAt')

@@ -1,22 +1,16 @@
 var controller = function () {
     async function like(event) {
-        var button = event.target;
-        var id = button.closest('.post').id;
-        if (currentName === null) {
-            return;
-        }
-        if (typeof (id) !== 'string') {
-            return;
-        }
-
         try {
+            var button = event.target;
+            var id = button.closest('.post').id;
+            if (currentName === null) {
+                return;
+            }
+            if (typeof (id) !== 'string') {
+                return;
+            }
             let post = await model.getPhotoPost(id);
-        } catch (error) {
-            console.log(error);
-            return;
-        }
 
-        try {
             if (!post.likes.every(function (like, index) {
                 if (like === currentName) {
                     post.likes.splice(index, 1);
@@ -33,21 +27,15 @@ var controller = function () {
                 view.addLike(post);
                 return;
             }
-        } catch (error) {
-            console.log(error);
-            return;
-        }
 
-        post.likes.push(currentName);
+            post.likes.push(currentName);
 
-        view.addLike(post);
+            view.addLike(post);
 
-        let photoEdit = {};
-        photoEdit.likes = post.likes;
-
-        try {
+            let photoEdit = {};
+            photoEdit.likes = post.likes;
             await model.editPhotoPost(id, photoEdit);
-        } catch (error) {
+        } catch (error) {//Окей, надо изменить обработчик
             console.log(error);
             return;
         }
@@ -80,16 +68,11 @@ var controller = function () {
 
         try {
             let post = await model.getPhotoPost(id);
-        } catch (error) {
-            console.log(error);
-            return;
-        }
 
-        if (post === undefined) {
-            return;
-        }
 
-        try {
+            if (post === undefined) {
+                return;
+            }
             if (!post.likes.every(await async function (like, index) {
                 if (like === currentName) {
                     post.likes.splice(index, 1);
@@ -105,34 +88,33 @@ var controller = function () {
                 view.addLike(post);
                 return;
             }
-        } catch (error) {
-            console.log(error);
-            return;
-        }
 
-        post.likes.push(currentName);
+            post.likes.push(currentName);
 
-        view.addLike(post);
+            view.addLike(post);
 
-        let photoEdit = {};
-        photoEdit.likes = post.likes;
+            let photoEdit = {};
+            photoEdit.likes = post.likes;
 
-        try {
             await model.editPhotoPost(id, photoEdit);
-        } catch (error) {
+        } catch (error) {//Окей, надо изменить обработчик
             console.log(error);
             return;
         }
     }
 
     function addMore(event) {
-        view.addMorePosts();
+        try {
+            view.addMorePosts();
+        } catch (error) {//Изменить обработчик
+            
+        }
     }
 
     function backButtonEvent(event) {
         try {
-            view.backButtonRestructure(event);   
-        } catch (error) {
+            view.backButtonRestructure(event);
+        } catch (error) {//Изменить обработчик
             console.log(error);
             return;
         }
@@ -146,9 +128,13 @@ var controller = function () {
     }
 
     async function exit(params) {
-        if (confirm("Are you sure you want to exit?")) {
-            await view.checkLogin();
-            return;
+        try {
+            if (confirm("Are you sure you want to exit?")) {
+                await view.checkLogin();
+                return;
+            }
+        } catch (error) {//Изменить обработчик
+
         }
     }
 
@@ -170,7 +156,7 @@ var controller = function () {
                 amountOfLikes.addEventListener('click', likeLookAt);
                 ////////////////////
             }
-        } catch (error) {
+        } catch (error) {//Изменить обработчик
             console.log();
             return;
         }
@@ -183,54 +169,62 @@ var controller = function () {
     }
 
     async function filter(params) {
-        let filt = document.getElementsByTagName('aside')[0];
+        try {
+            let filt = document.getElementsByTagName('aside')[0];
 
-        let authorCheck = document.getElementsByName('authorcheck')[0];//Чекбокс
-        let hashCheck = document.getElementsByName('hashtagcheck')[0];//Чекбокс
-        let dateCheck = document.getElementsByName('datecheck')[0];//Чекбокс
-        let author = document.getElementsByName('author')[0];//input поле
-        let hashtag = document.getElementsByName('hashtag')[0];//input поле
-        let day = document.getElementsByName('day')[0];//input поле
-        let month = document.getElementsByName('month')[0];//input поле
-        let year = document.getElementsByName('year')[0];//input поле
-        var filterConfig = {};
+            let authorCheck = document.getElementsByName('authorcheck')[0];//Чекбокс
+            let hashCheck = document.getElementsByName('hashtagcheck')[0];//Чекбокс
+            let dateCheck = document.getElementsByName('datecheck')[0];//Чекбокс
+            let author = document.getElementsByName('author')[0];//input поле
+            let hashtag = document.getElementsByName('hashtag')[0];//input поле
+            let day = document.getElementsByName('day')[0];//input поле
+            let month = document.getElementsByName('month')[0];//input поле
+            let year = document.getElementsByName('year')[0];//input поле
+            var filterConfig = {};
 
-        if (authorCheck.checked) {
-            if (author.value !== '') {
-                filterConfig.author = author.value;
-            }
-        }
-
-        if (hashCheck.checked) {
-            if (hashtag.value !== '') {
-                let tags = hashtag.value.split(' ');
-                filterConfig.hashtags = [];
-                tags.forEach(element => {
-                    if (validhash(element)) {
-                        filterConfig.hashtags.push(element);
-                    }
-                });
-            }
-        }
-
-        if (dateCheck.checked) {
-            if (day.value !== '' && month.value !== '' && year.value !== '') {
-                let daynum = +day.value;
-                let daymonth = +month.value - 1;
-                let dayyear = +year.value;
-                if (isValidDate(dayyear, daymonth, daynum)) {
-                    filterConfig.createdAt = new Date(dayyear, daymonth, daynum);
+            if (authorCheck.checked) {
+                if (author.value !== '') {
+                    filterConfig.author = author.value;
                 }
             }
+
+            if (hashCheck.checked) {
+                if (hashtag.value !== '') {
+                    let tags = hashtag.value.split(' ');
+                    filterConfig.hashtags = [];
+                    tags.forEach(element => {
+                        if (validhash(element)) {
+                            filterConfig.hashtags.push(element);
+                        }
+                    });
+                }
+            }
+
+            if (dateCheck.checked) {
+                if (day.value !== '' && month.value !== '' && year.value !== '') {
+                    let daynum = +day.value;
+                    let daymonth = +month.value - 1;
+                    let dayyear = +year.value;
+                    if (isValidDate(dayyear, daymonth, daynum)) {
+                        filterConfig.createdAt = new Date(dayyear, daymonth, daynum);
+                    }
+                }
+            }
+            await view.showPosts(0, 10, filterConfig);
+        } catch (error) {//Изменить обработчик
+
         }
-        await view.showPosts(0, 10, filterConfig);
     }
 
     async function deletePost(params) {
-        if (confirm("Are you sure you want to delete this post?")) {
-            var button = event.target;
-            var id = button.closest('.post').id;
-            await view.deletePhotopost(id);
+        try {
+            if (confirm("Are you sure you want to delete this post?")) {
+                var button = event.target;
+                var id = button.closest('.post').id;
+                await view.deletePhotopost(id);
+            }
+        } catch (error) {//Изменить обработчик
+
         }
     }
 
@@ -247,7 +241,7 @@ var controller = function () {
                 currentState = statesMassive.mainState;
                 await view.deletePhotopost(id);
             }
-        } catch (error) {
+        } catch (error) {//Изменить обработчик
             console.log(error);
             return;
         }
@@ -286,7 +280,7 @@ var controller = function () {
             input.addEventListener('change', updateImageDisplay);
             let saveButton = document.getElementsByClassName('mainplacing')[1].lastChild;
             saveButton.addEventListener('click', view.saveEditButtonRestructure);
-        } catch (error) {
+        } catch (error) {//Изменить обработчик
             console.log(error);
             return;
         }
@@ -299,7 +293,7 @@ var controller = function () {
             input.addEventListener('change', updateImageDisplay);
             let saveButton = document.getElementsByClassName('mainplacing')[1].lastChild;
             saveButton.addEventListener('click', view.saveEditButtonRestructure);
-        } catch (error) {
+        } catch (error) {//Изменить обработчик
             console.log(error);
             return;
         }

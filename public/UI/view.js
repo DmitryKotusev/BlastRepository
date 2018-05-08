@@ -432,8 +432,8 @@ var view = function () {
                 }
             }
         } catch (error) {//Изменить обработчик
-            let error = mainPlacing.getElementsByClassName('error-text')[0];
-            error.innerHTML = `Sorry, ${error}`;
+            let errorElement = mainPlacing.getElementsByClassName('error-text')[0];
+            errorElement.innerHTML = `Sorry, ${error}`;
         }
 
     }
@@ -810,6 +810,23 @@ var view = function () {
         let mainPlacing = document.getElementsByClassName('mainplacing')[0];
         mainPlacing.removeChild(mainPlacing.lastChild);
         mainPlacing.insertBefore(createDOMPhotoPost(post), mainPlacing.firstChild);
+    }
+
+    function drawErrorPage() {
+        let mainPlacing = document.getElementsByClassName('mainplacing')[0];
+        let buttonSpace = document.getElementsByClassName('mainplacing')[1];
+        mainPlacing.innerHTML =
+        `<div class="errorplacing">
+            <div>
+                <img class="imageerror" src="./ImagesAndIcons/error-803716_960_720.png">
+            </div>
+            <div>
+                <p class="error-text"></p>
+                <p class="error-text">Text</p>
+            </div>
+        </div>`;
+        buttonSpace.innerHTML = `<button type="button" class="buttonerrorcomeback">Get back to main page</button>`;
+
     }
 
     return {

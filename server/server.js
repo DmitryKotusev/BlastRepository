@@ -18,7 +18,7 @@ const upload = multer({ storage: storage });
 
 const app = express();
 
-var ress = [];
+var arrayOfSubcribers = [];
 
 //fs.writeFileSync('filter.json', JSON.stringify({author: 'Dima'}));
 
@@ -87,10 +87,10 @@ app.post('/getPhotoPosts', async function (req, res) {
 
 app.post('/addPhotoPost', async function (req, res) {
     if (await dataFunctions.addPhotoPost(req.body)) {
-        ress.forEach((response) => {
+        arrayOfSubcribers.forEach((response) => {
             response.status(200).send(JSON.stringify(req.body));
         })
-        ress.splice(0, ress.length);
+        arrayOfSubcribers.splice(0, arrayOfSubcribers.length);
         res.status(200).send(`Photopost was successfully added`);
     }
     else {
@@ -137,8 +137,8 @@ app.post('/downloadFile', upload.single('file'), async function (req, res) {
 })
 
 app.get('/subscribe', async (req, res, next) => {
-    ress.push(res);
-    console.log(`Number of subscribers: ${ress.length}`);
+    arrayOfSubcribers.push(res);
+    console.log(`Number of subscribers: ${arrayOfSubcribers.length}`);
 });
 
 app.listen(3000, function () {

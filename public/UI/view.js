@@ -1,6 +1,5 @@
 var currentName;     //Хранит текущий ник пользователя
 var currentState = 0;     //Отражает текущее состояние страницы
-var editSelectedID;
 
 var statesMassive = {
     mainState: 0,      //Главная страница
@@ -16,6 +15,8 @@ var latestTop = 10;        //Данное поле хранит количест
 var latestFilterConfig = new Object();   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
 
 var view = function () {
+    var editSelectedID;
+    
     var filterElement = makeFilter();
     var backButtonElement = makeBackButton();
 
@@ -94,7 +95,8 @@ var view = function () {
             let errorText = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('p')[1];
             errorText.innerHTML = 'Error, invalid login or password';
         } catch (error) {//Изменить обработчик
-
+            loadErrorPage(error);
+            return;
         }
     }
 
@@ -324,7 +326,8 @@ var view = function () {
                 }
             }
         } catch (error) {//Изменить обработчик
-
+            loadErrorPage(error);
+            return;
         }
 
     }
@@ -415,8 +418,8 @@ var view = function () {
                 }
             }
         } catch (error) {//Изменить обработчик
-            let errorElement = mainPlacing.getElementsByClassName('error-text')[0];
-            errorElement.innerHTML = `Sorry, ${error}`;
+            loadErrorPage(error);
+            return;
         }
 
     }
@@ -486,7 +489,7 @@ var view = function () {
                 elem.appendChild(option);
             }
         } catch (error) {//Изменить обработчик
-            console.log(error);
+            loadErrorPage(error);
             return;
         }
     }
@@ -502,7 +505,7 @@ var view = function () {
                 elem.appendChild(option);
             }
         } catch (error) {//Изменить обработчик
-            console.log(error);
+            loadErrorPage(error);
             return;
         }
     }
@@ -719,7 +722,8 @@ var view = function () {
             //Вывод авторов
             await view.showAuthors();
         } catch (error) {//Изменить обработчик
-
+            loadErrorPage(error);
+            return;
         }
     }
 
@@ -823,8 +827,43 @@ var view = function () {
             //Вывод авторов
             await view.showAuthors();
         } catch (error) {
-
+            loadErrorPage(error);
+            return;
         }
+    }
+
+    function loadErrorPage(error) {
+        let nicknamePlace = document.getElementsByClassName('nicknamealign')[0];
+        let headerButtonsPlace = document.getElementsByClassName('headeralign')[0];
+        let mainPlacing = document.getElementsByClassName('mainplacing')[0];
+        let mainPlacingForButtons = document.getElementsByClassName('mainplacing')[1];
+        let main = document.getElementsByTagName('main')[0];
+        let body = document.getElementsByTagName('body')[0];
+
+        nicknamePlace.innerHTML = '';
+        headerButtonsPlace.innerHTML = '';
+        mainPlacing.innerHTML = '';
+        mainPlacingForButtons.innerHTML = '';
+
+        if (body.getElementsByClassName('buttonback')[0] !== undefined) {
+            body.removeChild(body.getElementsByClassName('buttonback')[0]);
+        }
+
+        if (body.getElementsByTagName('aside')[0] !== undefined) {
+            body.removeChild(body.getElementsByTagName('aside')[0]);
+        }
+
+        mainPlacing.innerHTML =
+        `<div class="errorplacing">
+            <div>
+                <img class="imageerror" src="./ImagesAndIcons/error-803716_960_720.png">
+            </div>
+            <div class="error-block">
+                <p class="error-text">${error.message}</p>
+            </div>
+        </div>`
+
+        mainPlacingForButtons.innerHTML = `<button type="button" class="buttonerrorcomeback">Get back to main page</button>`
     }
 
     return {
@@ -852,7 +891,8 @@ var view = function () {
         uploadButtonRestucture: uploadButtonRestucture,
         isSatisfyingFilter: isSatisfyingFilter,
         addPostToDom: addPostToDom,
-        loadMainPage: loadMainPage
+        loadMainPage: loadMainPage,
+        loadErrorPage: loadErrorPage
     }
 }();
 

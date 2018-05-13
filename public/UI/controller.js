@@ -36,8 +36,8 @@ var controller = function () {
             let photoEdit = {};
             photoEdit.likes = post.likes;
             await model.editPhotoPost(id, photoEdit);
-        } catch (error) {//Окей, надо изменить обработчик
-            console.log(error);
+        } catch (error) {
+            view.loadErrorPage(error);
             return;
         }
     }
@@ -99,7 +99,7 @@ var controller = function () {
 
             await model.editPhotoPost(id, photoEdit);
         } catch (error) {//Окей, надо изменить обработчик
-            console.log(error);
+            view.loadErrorPage(error);
             return;
         }
     }
@@ -108,15 +108,17 @@ var controller = function () {
         try {
             view.addMorePosts();
         } catch (error) {//Изменить обработчик
-
+            view.loadErrorPage(error);
+            return;
         }
     }
 
     function backButtonEvent(event) {
         try {
-            view.backButtonRestructure(event);
+            view.loadMainPage();
+            currentState = statesMassive.mainState;
         } catch (error) {//Изменить обработчик
-            console.log(error);
+            view.loadErrorPage(error);
             return;
         }
     }
@@ -131,20 +133,21 @@ var controller = function () {
                 if (currentState === statesMassive.editPostState) {
                     view.loadMainPage();
                     view.checkLogin();
-
+                    currentState = statesMassive.mainState;
                     return;
                 }
                 if (currentState === statesMassive.lookAtPhotoState) {
                     view.loadMainPage();
                     view.checkLogin();
-
+                    currentState = statesMassive.mainState;
                     return;
                 }
                 await view.checkLogin();
                 return;
             }
         } catch (error) {//Изменить обработчик
-
+            view.loadErrorPage(error);
+            return;
         }
     }
 
@@ -152,7 +155,7 @@ var controller = function () {
         try {
             await view.lookAtPhotoRestructure(event);
         } catch (error) {//Изменить обработчик
-            console.log();
+            view.loadErrorPage(error);
             return;
         }
     }
@@ -207,7 +210,8 @@ var controller = function () {
             }
             await view.showPosts(0, 10, filterConfig);
         } catch (error) {//Изменить обработчик
-
+            view.loadErrorPage(error);
+            return;
         }
     }
 
@@ -219,7 +223,8 @@ var controller = function () {
                 await view.deletePhotopost(id);
             }
         } catch (error) {//Изменить обработчик
-
+            view.loadErrorPage(error);
+            return;
         }
     }
 
@@ -237,7 +242,7 @@ var controller = function () {
                 await view.deletePhotopost(id);
             }
         } catch (error) {//Изменить обработчик
-            console.log(error);
+            view.loadErrorPage(error);
             return;
         }
     }
@@ -262,7 +267,7 @@ var controller = function () {
         try {
             await view.editPostLookAtPhotoRestructure(event);
         } catch (error) {//Изменить обработчик
-            console.log(error);
+            view.loadErrorPage(error);
             return;
         }
     }
@@ -271,7 +276,7 @@ var controller = function () {
         try {
             await view.editPostRestructure(event);
         } catch (error) {//Изменить обработчик
-            console.log(error);
+            view.loadErrorPage(error);
             return;
         }
 
@@ -352,6 +357,11 @@ var controller = function () {
 
         if (event.target.className === 'buttonusualupload') {
             view.uploadButtonRestucture(event);
+            return;
+        }
+
+        if (event.target.className === 'buttonerrorcomeback') {
+            view.loadMainPage();
             return;
         }
     }

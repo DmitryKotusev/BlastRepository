@@ -282,7 +282,7 @@ let model = function () {
         });
     }
 
-    function longPollingControl() {
+    async function longPollingControl() {
         return new Promise((resolve, reject) => {
             var xhr = new XMLHttpRequest();
             xhr.open('GET', `subscribe`, true);

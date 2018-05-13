@@ -47,6 +47,10 @@
     color: red;
 }
 
+.error-block {
+    max-width: 100%;
+}
+
 .lookatphoto .error-text {
     font-size: 2vw;
 }
@@ -558,11 +562,14 @@ footer {
     justify-content: space-between;
     flex-wrap: wrap;
     justify-content: center;
+    max-width: 100%;
 }
 .errorplacing .error-text {
     color: black;
     font-size: 2vw;
     text-align: start;
+    white-space: normal;
+    max-width: 100%;
 }
 
 .mainplacing {

@@ -292,7 +292,10 @@ let model = function () {
                 }
                 if (xhr.status !== 200) {
                     console.log(xhr.status + ': ' + xhr.statusText);
-                    reject(new Error(xhr.responseText));
+
+                    longPollingControl();
+                    
+                    console.log(xhr.responseText);
                 } else {
                     let photoPost = JSON.parse(xhr.responseText, function (key, value) {
                         if (key == 'createdAt')

@@ -16,6 +16,19 @@ var latestTop = 10;        //Данное поле хранит количест
 var latestFilterConfig = new Object();   //Данный объект хранит параметры фильтрации, которые были применены в последний раз
 
 var view = function () {
+    var filterElement = makeFilter();
+    var backButtonElement = makeBackButton();
+
+    function makeBackButton() {
+        let backButton = document.createElement('button');
+        backButton.type = 'button';
+        backButton.className = 'buttonback';
+        backButton.id = 'Back';
+        backButton.innerHTML = 'Back';
+        backButton.addEventListener('click', controller.backButtonEvent);
+        return backButton;
+    }
+
     async function backButtonRestructure(event) {//Проверен
         let main = document.getElementsByClassName('mainplacing')[0];
         main.innerHTML = '';
@@ -44,14 +57,7 @@ var view = function () {
         let filt = body.getElementsByTagName('aside')[0];
 
         if (filt !== undefined) {
-            let backButton = document.createElement('button');
-            backButton.type = 'button';
-            backButton.className = 'buttonback';
-            backButton.id = 'Back';
-            backButton.innerHTML = 'Back';
-            backButton.addEventListener('click', controller.backButtonEvent);
-
-            body.replaceChild(backButton, filt);
+            body.replaceChild(backButtonElement, filt);
         }
         //////
         let main = document.getElementsByClassName('mainplacing')[0];
@@ -106,19 +112,11 @@ var view = function () {
         let body = document.getElementsByTagName('body')[0];
         let filt = body.getElementsByTagName('aside')[0];
 
-        let backButton = document.createElement('button');
-        backButton.type = 'button';
-        backButton.className = 'buttonback';
-        backButton.id = 'Back';
-        backButton.innerHTML = 'Back';
-        backButton.addEventListener('click', controller.backButtonEvent);
-
-        body.replaceChild(backButton, filt);
+        body.replaceChild(backButtonElement, filt);
 
         mainPlacing = document.getElementsByClassName('mainplacing')[0];
 
-
-        if (currentName === await model.getPhotoPost(event.target.closest('.post').id).author) {
+        if (currentName === (await model.getPhotoPost(event.target.closest('.post').id)).author) {
             mainPlacing.innerHTML =
                 `<div class="lookatphoto" id="${post.id}">
                 <div class="bigphoto">
@@ -132,9 +130,9 @@ var view = function () {
                 <div class="lookatphotoicons">
                     <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
                     <div class="nickandiconsspec">
-                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/delete-512.png" alt="Bin"></button>
-                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/221649.png" alt="Edit"></button>
-                        <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin">
+                        <button type="button" class="buttonsetspecdelete"><img class="iconstyles" src="./ImagesAndIcons/delete-512.png" alt="Bin"></button>
+                        <button type="button" class="buttonsetspecedit"><img class="iconstyles" src="./ImagesAndIcons/221649.png" alt="Edit"></button>
+                        <button type="button" class="buttonsetspeclike"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin">
                         <span class="likesamount">${post.likes.length}</span></button>
                     </div>
                 </div>
@@ -156,7 +154,7 @@ var view = function () {
             <div class="lookatphotoicons">
                 <p class="lookatphototext">Date: ${post.createdAt.toLocaleDateString()}</p>
                 <div class="nickandiconsspec">
-                    <button type="button" class="buttonsetspec"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin">
+                    <button type="button" class="buttonsetspeclike"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin">
                     <span class="likesamount">${post.likes.length}</span></button>
                 </div>
             </div>
@@ -166,13 +164,11 @@ var view = function () {
     }
 
     //Возвращает кнопку, параметр функции идёт в качестве надписи
-    function makeButton(params) {
-        //<button type="button" class="buttonusualadd">Load more</button>
+    function makeButton(params, className) {
         let button = document.createElement('button');
         button.type = 'button';
-        button.className = 'buttonusualadd';
+        button.className = className;
         button.innerHTML = params;
-        //button.addEventListener('click', controller.addMore);
         return button;
     }
 
@@ -265,7 +261,7 @@ var view = function () {
                 </div>
                 <p class="error-text"></p>
             </div>`;
-        let saveButton = view.makeButton('Save and upload');
+        let saveButton = view.makeButton('Save and upload', 'buttonusualedit');
         placeForButton.appendChild(saveButton);
 
     }
@@ -349,14 +345,7 @@ var view = function () {
         let body = document.getElementsByTagName('body')[0];
         let filt = body.getElementsByTagName('aside')[0];
 
-        let backButton = document.createElement('button');
-        backButton.type = 'button';
-        backButton.className = 'buttonback';
-        backButton.id = 'Back';
-        backButton.innerHTML = 'Back';
-        backButton.addEventListener('click', controller.backButtonEvent);
-
-        body.replaceChild(backButton, filt);
+        body.replaceChild(backButtonElement, filt);
 
         mainPlacing = document.getElementsByClassName('mainplacing')[0];
 
@@ -379,7 +368,7 @@ var view = function () {
                 </div>
                 <p class="error-text"></p>
             </div>`;
-        let saveButton = view.makeButton('Save and upload');
+        let saveButton = view.makeButton('Save and upload', 'buttonusualedit');
 
         if (placeForButton.getElementsByTagName('button')[0] !== undefined) {
             placeForButton.replaceChild(saveButton, placeForButton.getElementsByTagName('button')[0]);
@@ -446,15 +435,8 @@ var view = function () {
         let body = document.getElementsByTagName('body')[0];
         let filt = body.getElementsByTagName('aside')[0];
 
-        let backButton = document.createElement('button');
-        backButton.type = 'button';
-        backButton.className = 'buttonback';
-        backButton.id = 'Back';
-        backButton.innerHTML = 'Back';
-        backButton.addEventListener('click', controller.backButtonEvent);
-
         if (filt !== undefined) {
-            body.replaceChild(backButton, filt);
+            body.replaceChild(backButtonElement, filt);
         }
 
         mainPlacing = document.getElementsByClassName('mainplacing')[0];
@@ -479,7 +461,7 @@ var view = function () {
                 <p class="error-text"></p>
             </div>`;
 
-        let uploadButton = view.makeButton('Save and upload');
+        let uploadButton = view.makeButton('Save and upload', 'buttonusualupload');
 
         if (placeForButton.getElementsByTagName('button')[0] !== undefined) {
             placeForButton.replaceChild(uploadButton, placeForButton.getElementsByTagName('button')[0]);
@@ -540,27 +522,18 @@ var view = function () {
             document.getElementsByClassName('nicknamealign')[0].innerHTML = `<p> ${username} </p>`;
             document.getElementsByClassName('headeralign')[0].innerHTML =
                 `<a href = "#top">
-            <button type="button" class="buttonusual">
+            <button type="button" class="buttonusualaddphoto">
             Add photo</button>
             </a>
-            <button type="button" class="buttonusual">Exit</button>`;
+            <button type="button" class="buttonusualexit">Exit</button>`;
             currentName = username;
-
-            let exitButton = document.getElementsByClassName('headeralign')[0].getElementsByTagName('button')[1];
-            exitButton.addEventListener('click', controller.exit);
-
-            let addPhotoButton = document.getElementsByClassName('headeralign')[0].getElementsByTagName('button')[0];
-            addPhotoButton.addEventListener('click', controller.uploadPost);
 
             localStorage.setItem('currentName', JSON.stringify(currentName));
         }
         else {
             document.getElementsByClassName('nicknamealign')[0].innerHTML = '';
-            document.getElementsByClassName('headeralign')[0].innerHTML = `<button type="button" class="buttonusual">Login</button>`;
+            document.getElementsByClassName('headeralign')[0].innerHTML = `<button type="button" class="buttonusuallogin">Login</button>`;
             currentName = null;
-            var header = document.getElementsByClassName('headeralign')[0];
-            var but = header.getElementsByTagName('button')[0];
-            but.addEventListener('click', controller.login);
 
             localStorage.setItem('currentName', JSON.stringify(currentName));
         }
@@ -595,34 +568,17 @@ var view = function () {
         icons.className = 'nickandicons';
         if (currentName === photopost.author) {
             icons.innerHTML =
-                `<button type="button" class="buttonset"><img class="iconstyles" src="./ImagesAndIcons/delete-512.png" alt="Bin"></button>
-            <button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="./ImagesAndIcons/221649.png" alt="Edit"></a></button>
-            <button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="./ImagesAndIcons/comments.png" alt="Bin"></a></button>
-            <button type="button" class="buttonset"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin"> 
+                `<button type="button" class="buttonsetdelete"><img class="iconstyles" src="./ImagesAndIcons/delete-512.png" alt="Bin"></button>
+            <button type="button" class="buttonsetedit"><a href="#top"><img class="iconstyles" src="./ImagesAndIcons/221649.png" alt="Edit"></a></button>
+            <button type="button" class="buttonsetlook"><a href="#top"><img class="iconstyles" src="./ImagesAndIcons/comments.png" alt="Bin"></a></button>
+            <button type="button" class="buttonsetlike"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin"> 
             <span class="likesamount">${photopost.likes.length}</span></button>`;
-
-            let likes = icons.getElementsByTagName('button')[3];
-            likes.addEventListener('click', controller.like);
-
-            let look = icons.getElementsByTagName('button')[2];
-            look.addEventListener('click', controller.lookAtPhoto);
-
-            let edit = icons.getElementsByTagName('button')[1];
-            edit.addEventListener('click', controller.editPost);
-
-            let del = icons.getElementsByTagName('button')[0];
-            del.addEventListener('click', controller.deletePost);
         }
         else {
             icons.innerHTML =
-                `<button type="button" class="buttonset"><a href="#top"><img class="iconstyles" src="./ImagesAndIcons/comments.png" alt="Bin"></a></button>
-            <button type="button" class="buttonset"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin"> 
+                `<button type="button" class="buttonsetlook"><a href="#top"><img class="iconstyles" src="./ImagesAndIcons/comments.png" alt="Bin"></a></button>
+            <button type="button" class="buttonsetlike"><img class="iconstyles" src="./ImagesAndIcons/filled-like.png" alt="Bin"> 
             <span class="likesamount">${photopost.likes.length}</span></button>`;
-
-            let likes = icons.getElementsByTagName('button')[1];
-            likes.addEventListener('click', controller.like);
-            let look = icons.getElementsByTagName('button')[0];
-            look.addEventListener('click', controller.lookAtPhoto);
         }
 
         var date = document.createElement('div');
@@ -703,8 +659,6 @@ var view = function () {
             return;
         }
 
-        var loadMorButton = document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0];
-        loadMorButton.addEventListener('click', controller.addMore);
         if ((await model.getPhotoPosts(latestSkip + latestTop, 10, latestFilterConfig)).length === 0) {
             document.getElementsByClassName('mainplacing')[1].innerHTML = '';
         }
@@ -739,21 +693,32 @@ var view = function () {
 
             await view.checkLogin(currentName);
 
-            let header = document.getElementsByTagName('main')[0];
+            let main = document.getElementsByTagName('main')[0];
+            let mainPlacing = main.getElementsByClassName('mainplacing')[0];
+            let mainPlacingForButtons = main.getElementsByClassName('mainplacing')[1];
 
             let body = document.getElementsByTagName('body')[0];
 
-            body.insertBefore(view.makeFilter(), header);
+            body.insertBefore(filterElement, main);
 
-            let loadMoreButton = document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0];
+            let header = document.getElementsByTagName('header')[0];
+
+            header.addEventListener('click', controller.headerEvent);
+            mainPlacing.addEventListener('click', controller.mainPlacingClickEvent);
+            mainPlacing.addEventListener('change', controller.mainPlacingChangeEvent);
+            mainPlacingForButtons.addEventListener('click', controller.mainPlacingForButtonsEvent);
+
+            
+
+            /*let loadMoreButton = document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0];
             if (loadMoreButton !== undefined && loadMoreButton !== null) {
                 loadMoreButton.addEventListener('click', controller.addMore);
-            }
+            }*/
 
-            let filterButton = document.getElementsByTagName('aside')[0].getElementsByClassName('buttonusual')[0];
+            /*let filterButton = document.getElementsByTagName('aside')[0].getElementsByClassName('buttonusual')[0];
             if (filterButton !== undefined && filterButton !== null) {
                 filterButton.addEventListener('click', controller.filter);
-            }
+            }*/
 
             //Вывод тегов
             await view.showHashtags();
@@ -816,7 +781,7 @@ var view = function () {
         let mainPlacing = document.getElementsByClassName('mainplacing')[0];
         let buttonSpace = document.getElementsByClassName('mainplacing')[1];
         mainPlacing.innerHTML =
-        `<div class="errorplacing">
+            `<div class="errorplacing">
             <div>
                 <img class="imageerror" src="./ImagesAndIcons/error-803716_960_720.png">
             </div>

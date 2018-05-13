@@ -117,7 +117,43 @@ header {
     background-color: white;
 }
 
+.buttonusualexit {
+    cursor: pointer;
+    background: #6a82dc;
+    border-radius: 10px;
+    font-size: 1.8vw;
+    border-color: black;
+    top: auto;
+    position: relative;
+    float: right;
+    margin: 4px;
+}
+
 .buttonusual {
+    cursor: pointer;
+    background: #6a82dc;
+    border-radius: 10px;
+    font-size: 1.8vw;
+    border-color: black;
+    top: auto;
+    position: relative;
+    float: right;
+    margin: 4px;
+}
+
+.buttonusualaddphoto {
+    cursor: pointer;
+    background: #6a82dc;
+    border-radius: 10px;
+    font-size: 1.8vw;
+    border-color: black;
+    top: auto;
+    position: relative;
+    float: right;
+    margin: 4px;
+}
+
+.buttonusuallogin {
     cursor: pointer;
     background: #6a82dc;
     border-radius: 10px;
@@ -143,6 +179,26 @@ header {
     position: relative;
 }
 
+.buttonusualedit {
+    cursor: pointer;
+    background: #6a82dc;
+    border-radius: 10px;
+    font-size: 1.8vw;
+    border-color: black;
+    margin: 3vh 1vw 3vh 1vw;
+    position: relative;
+}
+
+.buttonusualupload {
+    cursor: pointer;
+    background: #6a82dc;
+    border-radius: 10px;
+    font-size: 1.8vw;
+    border-color: black;
+    margin: 3vh 1vw 3vh 1vw;
+    position: relative;
+}
+
 .buttonerrorcomeback {
     cursor: pointer;
     background: #6a82dc;
@@ -153,14 +209,39 @@ header {
     position: relative;
 }
 
+.buttonusualexit:hover {
+    background-color: white;
+
+}
+
+.buttonusualaddphoto:hover {
+    background-color: white;
+
+}
+
+.buttonusuallogin:hover {
+    background-color: white;
+
+}
+
 .buttonusual:hover {
     background-color: white;
 
 }
+
 .buttonusualadd:hover {
     background-color: white;
 }
-.buttonsetspec {
+
+.buttonusualedit:hover {
+    background-color: white;
+}
+
+.buttonusualupload:hover {
+    background-color: white;
+}
+
+.buttonsetspeclike {
     background: white;
     border: 0;
     margin: 0;
@@ -171,11 +252,44 @@ header {
     text-align: left;
     color: #b0cae5;
 }
-.buttonsetspec span {
+
+.buttonsetspecdelete {
+    background: white;
+    border: 0;
+    margin: 0;
+    width: 10%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: left;
+    color: #b0cae5;
+}
+
+.buttonsetspecedit {
+    background: white;
+    border: 0;
+    margin: 0;
+    width: 10%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: left;
+    color: #b0cae5;
+}
+
+.buttonsetspeclike span {
     font-size: 1.5vw;
 }
 
-.buttonset {
+.buttonsetspecdelete span {
+    font-size: 1.5vw;
+}
+
+.buttonsetspecedit span {
+    font-size: 1.5vw;
+}
+
+.buttonsetdelete {
     background: white;
     border: 0;
     margin: 0;
@@ -186,9 +300,59 @@ header {
     justify-content: flex-start;
     align-items: center;
 }
-.buttonset span {
+
+.buttonsetedit {
+    background: white;
+    border: 0;
+    margin: 0;
+    width: 15%;
+    height: 2vw;
+    float: none;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.buttonsetlook {
+    background: white;
+    border: 0;
+    margin: 0;
+    width: 15%;
+    height: 2vw;
+    float: none;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.buttonsetlike {
+    background: white;
+    border: 0;
+    margin: 0;
+    width: 15%;
+    height: 2vw;
+    float: none;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.buttonsetdelete span {
     font-size: 1.5vw;
 }
+
+.buttonsetedit span {
+    font-size: 1.5vw;
+}
+
+.buttonsetlook span {
+    font-size: 1.5vw;
+}
+
+.buttonsetlike span {
+    font-size: 1.5vw;
+}
+
 .headeralign {
     position: relative;
     right: 0%;
@@ -453,9 +617,11 @@ footer {
         font-family: 'Times New Roman', Times, serif;
         float: left;
     }
+
     .buttonback {
         font-size: 2.2vw;
     }
+
     .buttonusual {
         background: #6a82dc;
         border-radius: 10px;
@@ -465,6 +631,37 @@ footer {
         position: relative;
         float: right;
     }
+
+    .buttonusualexit {
+        background: #6a82dc;
+        border-radius: 10px;
+        font-size: 2.2vw;
+        border-color: black;
+        margin: 3vh 1vw 3vh 1vw;
+        position: relative;
+        float: right;
+    }
+
+    .buttonusualaddphoto {
+        background: #6a82dc;
+        border-radius: 10px;
+        font-size: 2.2vw;
+        border-color: black;
+        margin: 3vh 1vw 3vh 1vw;
+        position: relative;
+        float: right;
+    }
+
+    .buttonusuallogin {
+        background: #6a82dc;
+        border-radius: 10px;
+        font-size: 2.2vw;
+        border-color: black;
+        margin: 3vh 1vw 3vh 1vw;
+        position: relative;
+        float: right;
+    }
+
     .post {
         width: 46%;
         height: 56%;
@@ -495,7 +692,7 @@ footer {
         font-size: 3vw;
         text-decoration-style: wavy;
     }
-    .buttonset {
+    .buttonsetdelete {
         background: white;
         border: 0;
         margin: 0;
@@ -505,6 +702,40 @@ footer {
         margin-right: 0.1vw;
         
     }
+
+    .buttonsetedit {
+        background: white;
+        border: 0;
+        margin: 0;
+        width: 11%;
+        height: 11%;
+        padding: 0;
+        margin-right: 0.1vw;
+        
+    }
+
+    .buttonsetlook {
+        background: white;
+        border: 0;
+        margin: 0;
+        width: 11%;
+        height: 11%;
+        padding: 0;
+        margin-right: 0.1vw;
+        
+    }
+
+    .buttonsetlike {
+        background: white;
+        border: 0;
+        margin: 0;
+        width: 11%;
+        height: 11%;
+        padding: 0;
+        margin-right: 0.1vw;
+        
+    }
+
     .date {
         width: 100%;
         max-height: calc(100%*2/16);
@@ -537,6 +768,37 @@ footer {
         position: relative;
         float: right;
     }
+
+    .buttonusualexit {
+        background: #6a82dc;
+        border-radius: 10px;
+        font-size: 2.6vw;
+        border-color: black;
+        margin: 3vh 1vw 3vh 1vw;
+        position: relative;
+        float: right;
+    }
+
+    .buttonusualaddphoto {
+        background: #6a82dc;
+        border-radius: 10px;
+        font-size: 2.6vw;
+        border-color: black;
+        margin: 3vh 1vw 3vh 1vw;
+        position: relative;
+        float: right;
+    }
+
+    .buttonusuallogin {
+        background: #6a82dc;
+        border-radius: 10px;
+        font-size: 2.6vw;
+        border-color: black;
+        margin: 3vh 1vw 3vh 1vw;
+        position: relative;
+        float: right;
+    }
+
     .post {
         width: 55%;
         height: 67%;

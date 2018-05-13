@@ -2,6 +2,7 @@ var controller = function () {
     async function like(event) {
         try {
             var button = event.target;
+            console.log(button);
             var id = button.closest('.post').id;
             if (currentName === null) {
                 return;
@@ -73,7 +74,7 @@ var controller = function () {
             if (post === undefined) {
                 return;
             }
-            if (!post.likes.every(await async function (like, index) {
+            if (!post.likes.every(function (like, index) {
                 if (like === currentName) {
                     post.likes.splice(index, 1);
 
@@ -107,7 +108,7 @@ var controller = function () {
         try {
             view.addMorePosts();
         } catch (error) {//Изменить обработчик
-            
+
         }
     }
 
@@ -122,9 +123,6 @@ var controller = function () {
 
     function login(event) {
         view.loginRestructure(event);
-        let main = document.getElementsByClassName('mainplacing')[0];
-        let loginButton = main.getElementsByTagName('button')[0];
-        loginButton.addEventListener('click', view.pressLoginRestructure);
     }
 
     async function exit(params) {
@@ -140,22 +138,7 @@ var controller = function () {
 
     async function lookAtPhoto(event) {
         try {
-            if (await view.lookAtPhotoRestructure(event)) {
-                //Connect events if this post is yours
-                let amountOfLikes = mainPlacing.getElementsByTagName('button')[2];
-                amountOfLikes.addEventListener('click', likeLookAt);
-                let editButton = mainPlacing.getElementsByTagName('button')[1];
-                editButton.addEventListener('click', editPostLookAtPhoto);
-                let deleteButton = mainPlacing.getElementsByTagName('button')[0];
-                deleteButton.addEventListener('click', deletePostLookAtPhoto);
-                ////////////////////
-            }
-            else {
-                //Connect events if this post is not yours
-                let amountOfLikes = mainPlacing.getElementsByTagName('button')[0];
-                amountOfLikes.addEventListener('click', likeLookAt);
-                ////////////////////
-            }
+            await view.lookAtPhotoRestructure(event);
         } catch (error) {//Изменить обработчик
             console.log();
             return;
@@ -247,21 +230,9 @@ var controller = function () {
         }
     }
 
-    /*function setImgSrc(src) {
-        let submitPost = document.forms.submitPost;
-        submitPost.value = src;
-    }
-
-    function loadFoto(file) {
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = function () {
-            setImgSrc(reader.result);
-        };
-    }*/
-    /////ПЕРЕДЕЛАТЬ ЭТОТ МЕТОД!!!!!!
     function updateImageDisplay(event) {
         let photoWrapper = event.target.closest('.lookatphoto');
+        console.log(event.target);
         let image = photoWrapper.getElementsByClassName('imgstyle')[0];
         //let buff = window.URL.createObjectURL(event.target.files[0]);
         //image.src = window.URL.createObjectURL(event.target.files[0]);
@@ -276,10 +247,6 @@ var controller = function () {
     async function editPostLookAtPhoto(event) {
         try {
             await view.editPostLookAtPhotoRestructure(event);
-            let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
-            input.addEventListener('change', updateImageDisplay);
-            let saveButton = document.getElementsByClassName('mainplacing')[1].lastChild;
-            saveButton.addEventListener('click', view.saveEditButtonRestructure);
         } catch (error) {//Изменить обработчик
             console.log(error);
             return;
@@ -289,10 +256,6 @@ var controller = function () {
     async function editPost(event) {
         try {
             await view.editPostRestructure(event);
-            let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
-            input.addEventListener('change', updateImageDisplay);
-            let saveButton = document.getElementsByClassName('mainplacing')[1].lastChild;
-            saveButton.addEventListener('click', view.saveEditButtonRestructure);
         } catch (error) {//Изменить обработчик
             console.log(error);
             return;
@@ -307,12 +270,94 @@ var controller = function () {
         currentState = statesMassive.uploadPostState; //Состояние добавления фотопоста
 
         view.uploadPostRestructure(event);
-        let input = mainPlacing.getElementsByClassName('imagefileinput')[0];
-        input.addEventListener('change', updateImageDisplay);
-        let uploadButton = document.getElementsByClassName('mainplacing')[1].lastChild;
-        uploadButton.addEventListener('click', view.uploadButtonRestucture);
     }
 
+    function mainPlacingClickEvent(event) {
+        if (event.target.className === 'buttonlogin') {
+            view.pressLoginRestructure(event);
+            return;
+        }
+
+        if (event.target.closest('button') !== null) {
+            let button = event.target.closest('button');
+
+            if (button.className === 'buttonsetdelete') {
+                deletePost(event);
+                return;
+            }
+
+            if (button.className === 'buttonsetedit') {
+                editPost(event);
+                return;
+            }
+
+            if (button.className === 'buttonsetlook') {
+                lookAtPhoto(event);
+                return;
+            }
+
+            if (button.className === 'buttonsetlike') {
+                like(event);
+                return;
+            }
+
+            if (button.className === 'buttonsetspeclike') {
+                likeLookAt(event);
+                return;
+            }
+
+            if (button.className === 'buttonsetspecedit') {
+                editPostLookAtPhoto(event);
+                return;
+            }
+
+            if (button.className === 'buttonsetspecdelete') {
+                deletePostLookAtPhoto(event);
+                return;
+            }
+        }
+    }
+
+    function mainPlacingChangeEvent(event) {
+        if (event.target.className === 'imagefileinput') {
+            updateImageDisplay(event);
+            return;
+        }
+    }
+
+    function mainPlacingForButtonsEvent(event) {
+        if (event.target.className === 'buttonusualadd') {
+            addMore(event);
+            return;
+        }
+
+        if (event.target.className === 'buttonusualedit') {
+            view.saveEditButtonRestructure(event);
+            return;
+        }
+
+        if (event.target.className === 'buttonusualupload') {
+            view.uploadButtonRestucture(event);
+            return;
+        }
+    }
+
+    function headerEvent(event) {
+        if (event.target.className === 'buttonusualexit') {
+            exit(event);
+            return;
+        }
+
+        if (event.target.className === 'buttonusualaddphoto') {
+            uploadPost(event);
+            return;
+        }
+
+        if (event.target.className === 'buttonusuallogin') {
+            login(event);
+            return;
+        }
+    }
 
     return {
         like: like,
@@ -324,6 +369,10 @@ var controller = function () {
         deletePost: deletePost,
         editPost: editPost,
         uploadPost: uploadPost,
-        backButtonEvent: backButtonEvent
+        backButtonEvent: backButtonEvent,
+        headerEvent: headerEvent,
+        mainPlacingClickEvent: mainPlacingClickEvent,
+        mainPlacingChangeEvent: mainPlacingChangeEvent,
+        mainPlacingForButtonsEvent: mainPlacingForButtonsEvent
     }
 }();

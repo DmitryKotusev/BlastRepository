@@ -32,8 +32,7 @@ var view = function () {
     async function backButtonRestructure(event) {//Проверен
         let main = document.getElementsByClassName('mainplacing')[0];
         main.innerHTML = '';
-        let filt = view.makeFilter();
-        document.getElementsByTagName('body')[0].replaceChild(filt, event.target);
+        document.getElementsByTagName('body')[0].replaceChild(filterElement, event.target);
         await view.showPosts(0, 10);
         if (currentName !== null && currentName !== '') {
             await view.checkLogin(currentName);
@@ -81,8 +80,7 @@ var view = function () {
                 if (users[index].login === loginInfo.value && users[index].password === passwordInfo.value) {
                     let main = document.getElementsByClassName('mainplacing')[0];
                     main.innerHTML = '';
-                    let filt = view.makeFilter();
-                    document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                    document.getElementsByTagName('body')[0].replaceChild(filterElement, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
                     await view.checkLogin(users[index].login);
                     await view.showPosts(0, 10);
                     await view.showAuthors();
@@ -238,7 +236,6 @@ var view = function () {
         let main = document.getElementsByTagName('main')[0];
 
         let body = document.getElementsByTagName('body')[0];
-        let filt = view.makeFilter();
 
         mainPlacing = document.getElementsByClassName('mainplacing')[0];
 
@@ -276,18 +273,19 @@ var view = function () {
 
             let hash = mainPlacing.getElementsByTagName('textarea')[1];
 
+            let selectedFile = document.getElementById('files');
+
             if (confirm('Are you sure you want to save changes?')) {
                 let imageDOM = document.getElementsByClassName('bigphoto')[0].getElementsByTagName('img')[0].src;
                 //console.log(imageDOM.substring(21));
                 //console.log(model.getPhotoPost(editSelectedID).photolink.substring(1));
-                if (imageDOM.substring(21) === (await model.getPhotoPost(editSelectedID)).photolink.substring(1)) {
+                if (imageDOM.substring(21) === (await model.getPhotoPost(editSelectedID)).photolink.substring(1) || selectedFile.files[0] === undefined) {
                     photoPost.description = description.value;
                     photoPost.hashtags = hash.value.split(' ');
                     if (await model.editPhotoPost(editSelectedID, photoPost)) {
 
                         mainPlacing.innerHTML = '';
-                        let filt = view.makeFilter();
-                        document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                        document.getElementsByTagName('body')[0].replaceChild(filterElement, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
                         await view.showPosts(0, 10);
                         await view.showAuthors();
                         await view.showHashtags();
@@ -300,8 +298,6 @@ var view = function () {
                     return;
                 }
 
-                let selectedFile = document.getElementById('files');
-
                 let filePath = await model.downloadFile(selectedFile.files[0]);//Вставить параметр
 
                 if (filePath !== null) {
@@ -311,8 +307,7 @@ var view = function () {
                     if (await model.editPhotoPost(editSelectedID, photoPost)) {//Обработать исключение, текущая конструкция не подходит
 
                         mainPlacing.innerHTML = '';
-                        let filt = view.makeFilter();
-                        document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                        document.getElementsByTagName('body')[0].replaceChild(filterElement, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
                         await view.showPosts(0, 10);
                         await view.showAuthors();
                         await view.showHashtags();
@@ -407,8 +402,7 @@ var view = function () {
                     photoPost.hashtags = hash.value.split(' ');
                     await model.addPhotoPost(photoPost); {//Обработать!!
                         mainPlacing.innerHTML = '';
-                        let filt = view.makeFilter();
-                        document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                        document.getElementsByTagName('body')[0].replaceChild(filtetElement, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
                         await view.showPosts(0, 10);
                         await view.showAuthors();
                         await view.showHashtags();
@@ -542,9 +536,8 @@ var view = function () {
         }
         if (currentState === statesMassive.editPostState) {
             await showPosts(0, 10);
-            let filt = view.makeFilter();
             if (document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0] !== undefined) {
-                document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+                document.getElementsByTagName('body')[0].replaceChild(filterElement, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
             }
         }
     }
@@ -708,7 +701,7 @@ var view = function () {
             mainPlacing.addEventListener('change', controller.mainPlacingChangeEvent);
             mainPlacingForButtons.addEventListener('click', controller.mainPlacingForButtonsEvent);
 
-            
+
 
             /*let loadMoreButton = document.getElementsByClassName('mainplacing')[1].getElementsByTagName('button')[0];
             if (loadMoreButton !== undefined && loadMoreButton !== null) {
@@ -794,6 +787,46 @@ var view = function () {
 
     }
 
+    async function loadMainPage() {
+        try {
+            let nicknamePlace = document.getElementsByClassName('nicknamealign')[0];
+            let headerButtonsPlace = document.getElementsByClassName('headeralign')[0];
+            let mainPlacing = document.getElementsByClassName('mainplacing')[0];
+            let mainPlacingForButtons = document.getElementsByClassName('mainplacing')[1];
+            let main = document.getElementsByTagName('main')[0];
+            let body = document.getElementsByTagName('body')[0];
+
+            nicknamePlace.innerHTML = '';
+            headerButtonsPlace.innerHTML = '';
+            mainPlacing.innerHTML = '';
+            mainPlacingForButtons.innerHTML = '';
+
+            if (body.getElementsByClassName('buttonback')[0] !== undefined) {
+                body.removeChild(body.getElementsByClassName('buttonback')[0]);
+            }
+
+            if (body.getElementsByTagName('aside')[0] !== undefined) {
+                body.removeChild(body.getElementsByTagName('aside')[0]);
+            }
+
+            body.insertBefore(filterElement, main);
+
+            currentName = JSON.parse(localStorage.getItem('currentName'));
+
+            //Отображаение первых 10 постов
+            await view.showPosts(0, 10);
+
+            await view.checkLogin(currentName);
+
+            await view.showHashtags();
+
+            //Вывод авторов
+            await view.showAuthors();
+        } catch (error) {
+
+        }
+    }
+
     return {
         showPhotopost: showPhotopost,
         checkLogin: checkLogin,
@@ -818,7 +851,8 @@ var view = function () {
         uploadPostRestructure: uploadPostRestructure,
         uploadButtonRestucture: uploadButtonRestucture,
         isSatisfyingFilter: isSatisfyingFilter,
-        addPostToDom: addPostToDom
+        addPostToDom: addPostToDom,
+        loadMainPage: loadMainPage
     }
 }();
 

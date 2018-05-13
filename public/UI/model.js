@@ -252,7 +252,7 @@ let model = function () {
     function downloadFile(file) {
         return new Promise((resolve, reject) => {
             if (file === null || file === undefined) {
-                return null;
+                reject(new Error('Sorry, some problems with image file occured'));
             }
 
             var xhr = new XMLHttpRequest();

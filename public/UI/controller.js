@@ -128,6 +128,18 @@ var controller = function () {
     async function exit(params) {
         try {
             if (confirm("Are you sure you want to exit?")) {
+                if (currentState === statesMassive.editPostState) {
+                    view.loadMainPage();
+                    view.checkLogin();
+
+                    return;
+                }
+                if (currentState === statesMassive.lookAtPhotoState) {
+                    view.loadMainPage();
+                    view.checkLogin();
+
+                    return;
+                }
                 await view.checkLogin();
                 return;
             }
@@ -237,10 +249,12 @@ var controller = function () {
         //let buff = window.URL.createObjectURL(event.target.files[0]);
         //image.src = window.URL.createObjectURL(event.target.files[0]);
         let reader = new FileReader();
-        reader.readAsDataURL(event.target.files[0]);
-        reader.onloadend = function () {
-            image.src = reader.result;
-        };
+        if (event.target.files[0] !== undefined) {
+            reader.readAsDataURL(event.target.files[0]);
+            reader.onloadend = function () {
+                image.src = reader.result;
+            };
+        }
         //image.src = event.target.files[0].name;
     }
 

@@ -307,29 +307,26 @@ const view = (function () {
           photoPost.description = description.value;
           photoPost.hashtags = hash.value.split(' ');
           if (await model.editPhotoPost(editSelectedID, photoPost)) {
-
             mainPlacing.innerHTML = '';
             document.getElementsByTagName('body')[0].replaceChild(filterElement, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
             await view.showPosts(0, 10);
             await view.showAuthors();
             await view.showHashtags();
             currentState = statesMassive.mainState;
-          }
-          else {
+          } else {
             let error = mainPlacing.getElementsByClassName('error-text')[0];
             error.innerHTML = 'Sorry, there are some errors in what you have edit';
           }
           return;
         }
 
-        let filePath = await model.downloadFile(selectedFile.files[0]);//Вставить параметр
+        let filePath = await model.downloadFile(selectedFile.files[0]);
 
         if (filePath !== null) {
           photoPost.photolink = filePath;
           photoPost.description = description.value;
           photoPost.hashtags = hash.value.split(' ');
-          if (await model.editPhotoPost(editSelectedID, photoPost)) {//Обработать исключение, текущая конструкция не подходит
-
+          if (await model.editPhotoPost(editSelectedID, photoPost)) {
             mainPlacing.innerHTML = '';
             document.getElementsByTagName('body')[0].replaceChild(filterElement, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
             await view.showPosts(0, 10);
@@ -494,7 +491,7 @@ const view = (function () {
       let elem = document.getElementById('filterselectors');
       elem.innerHTML = '';
       await findUniqueHashtags();
-      for (let i = 0; i < hashtags.length && i < 10; i++) {
+      for (let i = 0; i < hashtags.length && i < 10; i += 1) {
         let option = document.createElement('option');
         option.innerHTML = hashtags[i];
         elem.appendChild(option);
@@ -800,33 +797,33 @@ const view = (function () {
   }
 
   return {
-    showPhotopost: showPhotopost,
-    checkLogin: checkLogin,
-    addPhotopost: addPhotopost,
-    deletePhotopost: deletephotopost,
-    editPost: editPost,
-    showHashtags: showHashtags,
-    showPosts: showPosts,
-    showAuthors: showAuthors,
-    addLike: addLike,
-    addMorePosts: addMorePosts,
-    makeFilter: makeFilter,
-    makeButton: makeButton,
-    startPageDownload: startPageDownload,
-    backButtonRestructure: backButtonRestructure,
-    loginRestructure: loginRestructure,
-    pressLoginRestructure: pressLoginRestructure,
-    lookAtPhotoRestructure: lookAtPhotoRestructure,
-    editPostLookAtPhotoRestructure: editPostLookAtPhotoRestructure,
-    saveEditButtonRestructure: saveEditButtonRestructure,
-    editPostRestructure: editPostRestructure,
-    uploadPostRestructure: uploadPostRestructure,
-    uploadButtonRestucture: uploadButtonRestucture,
-    isSatisfyingFilter: isSatisfyingFilter,
-    addPostToDom: addPostToDom,
-    loadMainPage: loadMainPage,
-    loadErrorPage: loadErrorPage
-  }
+    showPhotopost,
+    checkLogin,
+    addPhotopost,
+    deletephotopost,
+    editPost,
+    showHashtags,
+    showPosts,
+    showAuthors,
+    addLike,
+    addMorePosts,
+    makeFilter,
+    makeButton,
+    startPageDownload,
+    backButtonRestructure,
+    loginRestructure,
+    pressLoginRestructure,
+    lookAtPhotoRestructure,
+    editPostLookAtPhotoRestructure,
+    saveEditButtonRestructure,
+    editPostRestructure,
+    uploadPostRestructure,
+    uploadButtonRestucture,
+    isSatisfyingFilter,
+    addPostToDom,
+    loadMainPage,
+    loadErrorPage,
+  };
 }());
 
 view.startPageDownload();

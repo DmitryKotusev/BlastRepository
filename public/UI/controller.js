@@ -2,14 +2,14 @@ const controller = (function () {
   async function like(event) {
     try {
       let button = event.target;
-      let id = button.closest('.post').id;
+      let idx = button.closest('.post').id;
       if (currentName === null) {
         return;
       }
-      if (typeof (id) !== 'string') {
+      if (typeof (idx) !== 'string') {
         return;
       }
-      let post = await model.getPhotoPost(id);
+      let post = await model.getPhotoPost(idx);
 
       if (!post.likes.every(function (plus, index) {
         if (plus === currentName) {
@@ -22,7 +22,7 @@ const controller = (function () {
         let photoEdit = {};
         photoEdit.likes = post.likes;
 
-        await model.editPhotoPost(id, photoEdit);
+        await model.editPhotoPost(idx, photoEdit);
 
         view.addLike(post);
         return;
@@ -34,7 +34,7 @@ const controller = (function () {
 
       let photoEdit = {};
       photoEdit.likes = post.likes;
-      await model.editPhotoPost(id, photoEdit);
+      await model.editPhotoPost(idx, photoEdit);
     } catch (error) {
       view.loadErrorPage(error);
     }
@@ -47,7 +47,7 @@ const controller = (function () {
     if (item.charAt(0) !== '#') {
       return false;
     }
-    for (let index = 1; index < item.length; index++) {
+    for (let index = 1; index < item.length; index += 1) {
       if (item.charAt(index) === ' ' || item.charAt(index) === '#' || item.charAt(index) === ',' || item.charAt(index) === '.') {
         return false;
       }
@@ -57,16 +57,16 @@ const controller = (function () {
 
   async function likeLookAt(event) {
     let button = event.target;
-    let id = button.closest('.lookatphoto').id;
+    let idx = button.closest('.lookatphoto').id;
     if (currentName === null) {
       return;
     }
-    if (typeof (id) !== 'string') {
+    if (typeof (idx) !== 'string') {
       return;
     }
 
     try {
-      let post = await model.getPhotoPost(id);
+      let post = await model.getPhotoPost(idx);
 
 
       if (post === undefined) {
@@ -83,7 +83,7 @@ const controller = (function () {
         let photoEdit = {};
         photoEdit.likes = post.likes;
 
-        await model.editPhotoPost(id, photoEdit);
+        await model.editPhotoPost(idx, photoEdit);
         view.addLike(post);
         return;
       }
@@ -95,7 +95,7 @@ const controller = (function () {
       let photoEdit = {};
       photoEdit.likes = post.likes;
 
-      await model.editPhotoPost(id, photoEdit);
+      await model.editPhotoPost(idx, photoEdit);
     } catch (error) {
       view.loadErrorPage(error);
     }
@@ -182,7 +182,7 @@ const controller = (function () {
         if (hashtag.value !== '') {
           let tags = hashtag.value.split(' ');
           filterConfig.hashtags = [];
-          tags.forEach(element => {
+          tags.forEach((element) => {
             if (validhash(element)) {
               filterConfig.hashtags.push(element);
             }
@@ -264,7 +264,6 @@ const controller = (function () {
     } catch (error) {
       view.loadErrorPage(error);
     }
-
   }
 
   function uploadPost(event) {
@@ -365,19 +364,19 @@ const controller = (function () {
   }
 
   return {
-    like: like,
-    addMore: addMore,
-    login: login,
-    exit: exit,
-    lookAtPhoto: lookAtPhoto,
-    filter: filter,
-    deletePost: deletePost,
-    editPost: editPost,
-    uploadPost: uploadPost,
-    backButtonEvent: backButtonEvent,
-    headerEvent: headerEvent,
-    mainPlacingClickEvent: mainPlacingClickEvent,
-    mainPlacingChangeEvent: mainPlacingChangeEvent,
-    mainPlacingForButtonsEvent: mainPlacingForButtonsEvent
+    like,
+    addMore,
+    login,
+    exit,
+    lookAtPhoto,
+    filter,
+    deletePost,
+    editPost,
+    uploadPost,
+    backButtonEvent,
+    headerEvent,
+    mainPlacingClickEvent,
+    mainPlacingChangeEvent,
+    mainPlacingForButtonsEvent,
   };
 }());

@@ -47,22 +47,21 @@ const model = (function () {
         if (xhr.status !== 200) {
           console.log(`${xhr.status}: ${xhr.responseText || xhr.statusText}`);
           reject(new Error(xhr.responseText));
-        }
-        else {
+        } else {
           let photoPosts;
           photoPosts = JSON.parse(xhr.responseText, function (key, value) {
-            if (key == 'createdAt')
+            if (key === 'createdAt') {
               return new Date(value);
+            }
             return value;
           });
           resolve(photoPosts);
         }
-      }
+      };
 
       if (filterConfig !== undefined) {
         xhr.send(JSON.stringify(filterConfig));
-      }
-      else {
+      } else {
         xhr.send();
       }
     });
@@ -87,8 +86,7 @@ const model = (function () {
         if (xhr.status !== 200) {
           console.log(`${xhr.status}: ${xhr.responseText || xhr.statusText}`);
           reject(new Error(xhr.responseText));
-        }
-        else {
+        } else {
           photoPost = JSON.parse(xhr.responseText, function (key, value) {
             if (key === 'createdAt') {
               return new Date(value);
@@ -303,7 +301,7 @@ const model = (function () {
         }
         longPollingControl();
         resolve();
-      }
+      };
       xhr.send();
     });
   }
@@ -311,13 +309,13 @@ const model = (function () {
   longPollingControl();
 
   return {
-    getPhotoPosts: getPhotoPosts,
-    getPhotoPost: getPhotoPost,
-    addPhotoPost: addPhotoPost,
-    removePhotoPost: removePhotoPost,
-    editPhotoPost: editPhotoPost,
-    findUniqueHashtags: findUniqueHashtags,
-    findUniqueNames: findUniqueNames,
-    downloadFile: downloadFile
-  }
+    getPhotoPosts,
+    getPhotoPost,
+    addPhotoPost,
+    removePhotoPost,
+    editPhotoPost,
+    findUniqueHashtags,
+    findUniqueNames,
+    downloadFile,
+  };
 }());

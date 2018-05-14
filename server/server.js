@@ -4,15 +4,15 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const dataFunctions = require('./dataFunctions.js');
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+const storagex = multer.diskStorage({
+  destination(req, file, cb) {
     cb(null, '../public/UI/ImagesAndIcons');
   },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + '-' + file.originalname);
-  }
+  filename(req, file, cb) {
+    cb(null, `${file.fieldname}-${Date.now()}-${file.originalname}`);
+  },
 });
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storagex });
 
 const app = express();
 
@@ -58,11 +58,11 @@ app.get('/getPhotoPost/:id', async function (req, res) {
 });
 
 app.post('/getPhotoPosts', async function (req, res) {
-  let skip = req.query.skip;
-  let top = req.query.top;
+  let skipx = req.query.skip;
+  let topx = req.query.top;
   let filterConfig = req.body;
 
-  let answer = await dataFunctions.getPhotoPosts(skip, top, filterConfig);
+  let answer = await dataFunctions.getPhotoPosts(skipx, topx, filterConfig);
   if (answer !== undefined) {
     res.status(200).send(answer);
   } else {
@@ -76,9 +76,9 @@ app.post('/addPhotoPost', async function (req, res) {
       response.status(200).send(JSON.stringify(req.body));
     });
     arrayOfSubcribers.splice(0, arrayOfSubcribers.length);
-    res.status(200).send(`Photopost was successfully added`);
+    res.status(200).send('Photopost was successfully added');
   } else {
-    res.status(400).send(`Operation failed`);
+    res.status(400).send('Operation failed');
   }
 });
 

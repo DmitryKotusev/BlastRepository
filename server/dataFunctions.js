@@ -17,8 +17,7 @@ const dataFunctions = (function () {
       fs.readFile('./data/posts.json', (err, data) => {
         if (err) {
           reject(err);
-        }
-        else {
+        } else {
           let photoPosts = JSON.parse(data, function (key, value) {
             if (key === 'createdAt') {
               return new Date(value);
@@ -184,7 +183,9 @@ const dataFunctions = (function () {
     let clonex = {};
 
     for (let key in params) {
-      clonex[key] = params[key];
+      if (params.hasOwnProperty(key)) {
+        clonex[key] = params[key];
+      }
     }
 
     return clonex;
@@ -309,8 +310,9 @@ const dataFunctions = (function () {
 
     photoPosts.sort(datesort);
 
+    let buffmass;
     if (filterConfig !== undefined) {
-      function filtfunc(param) {
+      buffmass = photoPosts.filter(function (param) {
         if (param.isDeleted) {
           return false;
         }
@@ -331,9 +333,9 @@ const dataFunctions = (function () {
         }
         if (filterConfig.hashtags !== undefined) {
           if (typeof (filterConfig.hashtags) === 'object') {
-            for (var index = 0; index < filterConfig.hashtags.length; index++) {
-              var flag = false;
-              for (var index2 = 0; index2 < param.hashtags.length; index2++) {
+            for (let index = 0; index < filterConfig.hashtags.length; index += 1) {
+              let flag = false;
+              for (let index2 = 0; index2 < param.hashtags.length; index2 += 1) {
                 if (param.hashtags[index2] === filterConfig.hashtags[index]) {
                   flag = true;
                   break;
@@ -346,11 +348,9 @@ const dataFunctions = (function () {
           }
         }
         return true;
-      }
-      var buffmass = photoPosts.filter(filtfunc);
-    }
-    else {
-      var buffmass = photoPosts.filter(el => {
+      });
+    } else {
+      buffmass = photoPosts.filter((el) => {
         if (el.isDeleted) {
           return false;
         }
@@ -362,14 +362,14 @@ const dataFunctions = (function () {
   }
 
   return {
-    findUniqueHashtags: findUniqueHashtags,
-    findUniqueNames: findUniqueNames,
-    getPhotoPost: getPhotoPost,
-    getPhotoPosts: getPhotoPosts,
-    addPhotoPost: addPhotoPost,
-    reanimatePhotoPost: reanimatePhotoPost,
-    editPhotoPost: editPhotoPost,
-    removePhotoPost: removePhotoPost
+    findUniqueHashtags,
+    findUniqueNames,
+    getPhotoPost,
+    getPhotoPosts,
+    addPhotoPost,
+    reanimatePhotoPost,
+    editPhotoPost,
+    removePhotoPost,
   };
 }());
 

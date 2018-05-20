@@ -182,10 +182,8 @@ const dataFunctions = (function () {
   function clone(params) {
     let clonex = {};
 
-    for (let key in params) {
-      if (params.hasOwnProperty(key)) {
-        clonex[key] = params[key];
-      }
+    for (let i = 0; i < Object.keys(params).length; i += 1) {
+      clonex[Object.keys(params)[i]] = params[Object.keys(params)[i]];
     }
 
     return clonex;

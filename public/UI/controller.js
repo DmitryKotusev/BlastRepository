@@ -208,7 +208,7 @@ const controller = (function () {
 
   async function deletePost(event) {
     try {
-      if (confirm("Are you sure you want to delete this post?")) {
+      if (confirm('Are you sure you want to delete this post?')) {
         let button = event.target;
         let idx = button.closest('.post').id;
         await view.deletePhotopost(idx);
@@ -220,7 +220,7 @@ const controller = (function () {
 
   async function deletePostLookAtPhoto(event) {
     try {
-      if (confirm("Are you sure you want to delete this post?")) {
+      if (confirm('Are you sure you want to delete this post?')) {
         let button = event.target;
         let idx = button.closest('.lookatphoto').id;
         let filt = view.makeFilter();

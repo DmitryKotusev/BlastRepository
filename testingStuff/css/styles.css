@@ -380,6 +380,67 @@ footer {
     text-align: left;
     color: #b0cae5;
 }
+
+.dialog {
+  display: flex;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  margin: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+  justify-content: center;
+  align-items: center;
+}
+
+.hiddendialog {
+  display: none;
+}
+
+.displayFlex {
+  display: flex;
+}
+
+.dialogForm {
+  width: 40vw;
+  height: calc(40vw * 0.6);
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+
+.confirmbuttonsform {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.confirmbuttonsform p {
+  font-size: 2vw;
+}
+
+.confirmbuttons {
+  cursor: pointer;
+  background: #6a82dc;
+  border-radius: 10px;
+  font-size: 1.8vw;
+  border-color: black;
+  top: auto;
+  position: relative;
+  float: right;
+  margin: 4px;
+}
+
+.confirmbuttons :hover {
+  background-color: white;
+}
+
 .date {
     width: 100%;
     max-height: calc(100%*2/16);

@@ -1,0 +1,35 @@
+{
+  "name": "express_static_content",
+  "version": "1.0.0",
+  "description": "Express static content",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DmitryKotusev/BlastRepository.git"
+  },
+  "keywords": [
+    "task7",
+    "express_static_content",
+    "Dmitry",
+    "Kotusev"
+  ],
+  "author": "Kotusev Dmitry Dmitrievich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DmitryKotusev/BlastRepository/issues"
+  },
+  "homepage": "https://github.com/DmitryKotusev/BlastRepository#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "eslint": "^4.19.1",
+    "express": "^4.16.3",
+    "multer": "^1.3.0"
+  },
+  "devDependencies": {
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.11.0"
+  }
+}

@@ -152,28 +152,24 @@ const view = (function () {
         </div>`;
   }
 
-  async function pressLoginRestructure(event) {
-    try {
-      let loginInfo = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('input')[0];
-      let passwordInfo = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('input')[1];
-      for (let index = 0; index < users.length; index += 1) {
-        if (users[index].login === loginInfo.value && users[index].password === passwordInfo.value) {
-          let main = document.getElementsByClassName('mainplacing')[0];
-          main.innerHTML = '';
-          document.getElementsByTagName('body')[0].replaceChild(filterElement, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-          await view.checkLogin(users[index].login);
-          await view.showPosts(0, 10);
-          await view.showAuthors();
-          await view.showHashtags();
-          currentState = statesMassive.mainState;
-          return;
-        }
-      }
+  function showLoginErrorText(text) {
+    let errorText = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('p')[1];
+    errorText.innerHTML = text;
+  }
 
-      let errorText = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('p')[1];
-      errorText.innerHTML = 'Error, invalid login or password';
+  async function pressLoginRestructure(event, username) {
+    try {
+      let main = document.getElementsByClassName('mainplacing')[0];
+      main.innerHTML = '';
+      document.getElementsByTagName('body')[0].replaceChild(filterElement, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+      await view.checkLogin(username);
+      await view.showPosts(0, 10);
+      await view.showAuthors();
+      await view.showHashtags();
+      currentState = statesMassive.mainState;
+      return;
     } catch (error) {
-      loadErrorPage(error);
+      loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -343,7 +339,7 @@ const view = (function () {
         }
       }
     } catch (error) {
-      loadErrorPage(error);
+      loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -429,7 +425,7 @@ const view = (function () {
         error.innerHTML = 'Error when downloading file on server';
       }
     } catch (error) {
-      loadErrorPage(error);
+      loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -497,7 +493,7 @@ const view = (function () {
         elem.appendChild(option);
       }
     } catch (error) {
-      loadErrorPage(error);
+      loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -512,7 +508,7 @@ const view = (function () {
         elem.appendChild(option);
       }
     } catch (error) {
-      loadErrorPage(error);
+      loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -692,7 +688,7 @@ const view = (function () {
       await view.showHashtags();
       await view.showAuthors();
     } catch (error) {
-      loadErrorPage(error);
+      loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -792,7 +788,7 @@ const view = (function () {
 
       await view.showAuthors();
     } catch (error) {
-      loadErrorPage(error);
+      loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -823,6 +819,7 @@ const view = (function () {
     addPostToDom,
     loadMainPage,
     loadErrorPage,
+    showLoginErrorText,
   };
 }());
 

@@ -7,7 +7,16 @@ const passport = require('passport');
 const JsonStrategy = require('passport-json').Strategy;
 const session = require('express-session');
 const authorization = require('./authorization.js');
+const mongoose = require('mongoose');
 
+async function connectToDataBase() {
+  try {
+    await mongoose.connect('mongodb://localhost:27017/photoPostsData');
+    console.log('Successfully connected');
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const storagex = multer.diskStorage({
   destination(req, file, cb) {
@@ -164,3 +173,9 @@ app.get('/subscribe', async (req, res, next) => {
 app.listen(3000, function () {
   console.log('Server is running...');
 });
+
+connectToDataBase();
+
+// dataFunctions.cleanDataBase();
+// dataFunctions.fillDataBase();
+// authorization.fillDataBase();

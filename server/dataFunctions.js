@@ -1,4 +1,5 @@
 const fs = require('fs');
+const mongoose = require('mongoose');
 
 const dataFunctions = (function () {
   function Photopost(id, description, createdAt, author, photolink, likes, hashtags, isDeleted = false) {
@@ -11,6 +12,19 @@ const dataFunctions = (function () {
     this.hashtags = hashtags || [];
     this.isDeleted = isDeleted;
   }
+
+  const photoPostsSchema = new mongoose.Schema({
+    id: String,
+    description: String,
+    createdAt: Date,
+    author: String,
+    photoLink: String,
+    hashtags: [String],
+    likes: [String],
+    isDeleted: Boolean,
+  });
+
+  const Posts = mongoose.model('Photoposts', photoPostsSchema);
 
   function readPostsFile() {
     return new Promise((resolve, reject) => {
@@ -359,6 +373,39 @@ const dataFunctions = (function () {
     return JSON.stringify(buffmass.slice(skip, skip + top));
   }
 
+  async function fillDataBase() {
+    let photoPosts = await readPostsFile();
+
+    photoPosts.every(function (item) {
+      let post = new Posts({
+        id: item.id,
+        description: item.description,
+        createdAt: item.createdAt,
+        author: item.author,
+        photoLink: item.photoLink,
+        hashtags: item.hashtags,
+        likes: item.likes,
+        isDeleted: item.isDeleted,
+      });
+
+      post.save((err) => {
+        if (err) {
+          throw new Error(err);
+        }
+      });
+      return true;
+    });
+  }
+
+  async function cleanDataBase() {
+    try {
+      await Posts.remove({});
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   return {
     findUniqueHashtags,
     findUniqueNames,
@@ -368,6 +415,8 @@ const dataFunctions = (function () {
     reanimatePhotoPost,
     editPhotoPost,
     removePhotoPost,
+    fillDataBase,
+    cleanDataBase,
   };
 }());
 

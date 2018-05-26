@@ -1,8 +1,16 @@
 const fs = require('fs');
 const crypt = require('./crypt.js');
-
+const mongoose = require('mongoose');
 
 const authorization = (function () {
+  const userSchema = new mongoose.Schema({
+    login: String,
+    hash: String,
+    secret: String,
+  });
+
+  const Users = mongoose.model('Users', userSchema);
+
   function readUsersFile() {
     return new Promise((resolve, reject) => {
       fs.readFile('./data/users.json', (err, data) => {
@@ -29,7 +37,7 @@ const authorization = (function () {
   }
 
   async function checkPassword(login, password) {
-    let users = await readUsersFile();
+    /*let users = await readUsersFile();
 
     let user;
     users.every((el) => {
@@ -38,9 +46,11 @@ const authorization = (function () {
         return false;
       }
       return true;
-    });
+    });*/
 
-    if (user !== undefined) {
+    let user = await Users.findOne({ login });
+
+    if (user !== null) {
       let usersHash = crypt.getPasswordHash(password, user.secret);
 
       if (user.hash === usersHash) {
@@ -53,10 +63,40 @@ const authorization = (function () {
     return null;
   }
 
+  async function fillDataBase() {
+    let users = await readUsersFile();
+
+    users.every(function (item) {
+      let post = new Users({
+        login: item.login,
+        hash: item.hash,
+        secret: item.secret,
+      });
+
+      post.save((err) => {
+        if (err) {
+          throw new Error(err);
+        }
+      });
+      return true;
+    });
+  }
+
+  async function cleanDataBase() {
+    try {
+      await Users.remove({});
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   return {
     readUsersFile,
     writeUsersFile,
     checkPassword,
+    fillDataBase,
+    cleanDataBase,
   };
 }());
 

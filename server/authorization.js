@@ -37,17 +37,6 @@ const authorization = (function () {
   }
 
   async function checkPassword(login, password) {
-    /*let users = await readUsersFile();
-
-    let user;
-    users.every((el) => {
-      if (el.login === login) {
-        user = el;
-        return false;
-      }
-      return true;
-    });*/
-
     let user = await Users.findOne({ login });
 
     if (user !== null) {

@@ -85,32 +85,6 @@ const dataFunctions = (function () {
     return authorNames;
   }
 
-  /*async function getMaxID() {
-    let photoPosts = await readPostsFile();
-
-    if (photoPosts.length === 0) {
-      return null;
-    }
-    let max = photoPosts[0].id;
-    for (let index = 1; index < photoPosts.length; index += 1) {
-      if (parseInt(photoPosts[index].id, 10) > parseInt(max, 10)) {
-        max = photoPosts[index].id;
-      }
-    }
-    return max;
-  }*/
-
-  /*async function getNewID() {
-    let newID;
-    let maxID = await getMaxID();
-    if (maxID === null) {
-      newID = '1';
-    } else {
-      newID = `${parseInt(maxID, 10) + 1}`;
-    }
-    return newID;
-  }*/
-
   function isValidHash(item) {
     if (typeof (item) !== 'string') {
       return false;
@@ -195,18 +169,6 @@ const dataFunctions = (function () {
     }
     return photoPost;
   }
-
-  /*async function getPhotoPostIndex(id) {
-    let photoPosts = await readPostsFile();
-
-    for (let index = 0; index < photoPosts.length; index += 1) {
-      if (photoPosts[index].id === id && !photoPosts[index].isDeleted) {
-        return index;
-      }
-    }
-
-    return undefined;
-  }*/
 
   function clone(params) {
     let clonex = {};

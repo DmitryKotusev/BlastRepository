@@ -64,6 +64,7 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
+  console.log('deserializeUser method worked');
   authorization.Users.findById(id, function (err, user) {
     done(err, user);
   });

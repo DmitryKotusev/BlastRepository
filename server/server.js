@@ -5,6 +5,7 @@ const multer = require('multer');
 const dataFunctions = require('./dataFunctions.js');
 const passport = require('passport');
 const JsonStrategy = require('passport-json').Strategy;
+// const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const authorization = require('./authorization.js');
 const mongoose = require('mongoose');
@@ -42,16 +43,9 @@ function parseDate(key, value) {
 app.use(bodyParser.json({ reviver: parseDate }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('../public/UI'));
+// app.use(express.cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
-
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
 
 passport.use(new JsonStrategy(async function (username, password, done) {
   try {
@@ -64,6 +58,16 @@ passport.use(new JsonStrategy(async function (username, password, done) {
     return done(error);
   }
 }));
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  authorization.Users.findById(id, function (err, user) {
+    done(err, user);
+  });
+});
 
 app.post('/login', passport.authenticate('json', { failureRedirect: '/loginfail' }), async (req, res) => {
   res.redirect('/');

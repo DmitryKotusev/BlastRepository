@@ -97,6 +97,7 @@ const authorization = (function () {
     checkPassword,
     fillDataBase,
     cleanDataBase,
+    Users,
   };
 }());
 

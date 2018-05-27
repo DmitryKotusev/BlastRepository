@@ -139,6 +139,12 @@ const controller = (function () {
             currentState = statesMassive.mainState;
             return;
           }
+          if (currentState === statesMassive.uploadPostState) {
+            view.loadMainPage();
+            view.checkLogin();
+            currentState = statesMassive.mainState;
+            return;
+          }
           await view.checkLogin();
           return;
         }
@@ -214,7 +220,7 @@ const controller = (function () {
       if (confirm('Are you sure you want to delete this post?')) {
         let button = event.target;
         let idx = button.closest('.post').id;
-        await view.deletePhotopost(idx);
+        await view.deletephotopost(idx);
       }
     } catch (error) {
       view.loadErrorPage(new Error('Ooops, something went wrong'));
@@ -224,15 +230,8 @@ const controller = (function () {
   async function deletePostLookAtPhoto(event) {
     try {
       if (confirm('Are you sure you want to delete this post?')) {
-        let button = event.target;
-        let idx = button.closest('.lookatphoto').id;
-        let filt = view.makeFilter();
-        document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-        await view.showPosts(0, 10);
-        await view.showAuthors();
-        await view.showHashtags();
-        currentState = statesMassive.mainState;
-        await view.deletePhotopost(idx);
+        await model.removePhotoPost(event.target.closest('.lookatphoto').id);
+        await view.deletePostLookAtPhotoRestructure(event);
       }
     } catch (error) {
       view.loadErrorPage(new Error('Ooops, something went wrong'));

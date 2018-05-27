@@ -1,5 +1,4 @@
-function Photopost(id, description, createdAt, author, photolink, likes, hashtags, isDeleted = false) {
-  this.id = id;
+function Photopost(description, createdAt, author, photolink, likes, hashtags, isDeleted = false) {
   this.description = description;
   this.createdAt = createdAt;
   this.author = author;

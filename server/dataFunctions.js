@@ -2,8 +2,7 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 
 const dataFunctions = (function () {
-  function Photopost(id, description, createdAt, author, photolink, likes, hashtags, isDeleted = false) {
-    this.id = id;
+  function Photopost(description, createdAt, author, photolink, likes, hashtags, isDeleted = false) {
     this.description = description;
     this.createdAt = createdAt;
     this.author = author;
@@ -14,11 +13,11 @@ const dataFunctions = (function () {
   }
 
   const photoPostsSchema = new mongoose.Schema({
-    id: String,
+    _id: mongoose.Schema.Types.ObjectId,
     description: String,
     createdAt: Date,
     author: String,
-    photoLink: String,
+    photolink: String,
     hashtags: [String],
     likes: [String],
     isDeleted: Boolean,
@@ -56,35 +55,37 @@ const dataFunctions = (function () {
     });
   }
 
-  async function findUniqueHashtags() {
-    let photoPosts = await readPostsFile();
-
-    let hashtags = [];
-    for (let i = 0; i < photoPosts.length; i += 1) {
-      for (let j = 0; j < photoPosts[i].hashtags.length; j += 1) {
-        if (hashtags.every(item => item !== photoPosts[i].hashtags[j])) {
-          hashtags.push(photoPosts[i].hashtags[j]);
-        }
-      }
-    }
-
-    return hashtags;
+  async function findUniqueHashtags() { // Checked
+    let hashtags = await Posts.aggregate([
+      { $group: { _id: null, uniqueTags: { $push: '$hashtags' } } },
+      {
+        $project: {
+          _id: 0,
+          uniqueTags: {
+            $reduce: {
+              input: '$uniqueTags',
+              initialValue: [],
+              in: {
+                $let: {
+                  vars: { elem: { $concatArrays: ['$$this', '$$value'] } },
+                  in: { $setUnion: '$$elem' },
+                },
+              },
+            },
+          },
+        },
+      },
+    ]);
+    let result = hashtags[0].uniqueTags;
+    return result;
   }
 
-  async function findUniqueNames() {
-    let photoPosts = await readPostsFile();
-
-    let authorNames = [];
-    for (let i = 0; i < photoPosts.length; i += 1) {
-      if (authorNames.every(item => item !== photoPosts[i].author)) {
-        authorNames.push(photoPosts[i].author);
-      }
-    }
-
+  async function findUniqueNames() { // Checked
+    let authorNames = await Posts.distinct('author');
     return authorNames;
   }
 
-  async function getMaxID() {
+  /*async function getMaxID() {
     let photoPosts = await readPostsFile();
 
     if (photoPosts.length === 0) {
@@ -97,9 +98,9 @@ const dataFunctions = (function () {
       }
     }
     return max;
-  }
+  }*/
 
-  async function getNewID() {
+  /*async function getNewID() {
     let newID;
     let maxID = await getMaxID();
     if (maxID === null) {
@@ -108,7 +109,7 @@ const dataFunctions = (function () {
       newID = `${parseInt(maxID, 10) + 1}`;
     }
     return newID;
-  }
+  }*/
 
   function isValidHash(item) {
     if (typeof (item) !== 'string') {
@@ -125,8 +126,8 @@ const dataFunctions = (function () {
     return true;
   }
 
-  function validatePhotoPost(photoPost, photoPosts) {
-    if (typeof (photoPost.id) !== 'string' || typeof (photoPost.description) !== 'string' || typeof (photoPost.author) !== 'string' || typeof (photoPost.photolink) !== 'string') {
+  function validatePhotoPost(photoPost) { // Checked
+    if (typeof (photoPost.description) !== 'string' || typeof (photoPost.author) !== 'string' || typeof (photoPost.photolink) !== 'string') {
       return false;
     }
     if (photoPost.description.length >= 200 || photoPost.description.length === 0) {
@@ -150,38 +151,52 @@ const dataFunctions = (function () {
     if (!photoPost.hashtags.every(isString)) {
       return false;
     }
-    if (!photoPosts.every(item => item.id !== photoPost.id)) {
-      return false;
-    }
+    // if (!photoPosts.every(item => item.id !== photoPost.id)) {
+    //  return false;
+    // }
 
     return true;
   }
 
-  async function addPhotoPost(photoPost) {
-    let photoPosts = await readPostsFile();
+  async function addPhotoPost(photoPost) { // Checked
+    // let photoPosts = await readPostsFile();
+    // photoPost.id = await getNewID();
 
-    photoPost.id = await getNewID();
+    if (validatePhotoPost(photoPost)) {
+      try {
+        let post = new Posts({
+          _id: new mongoose.Types.ObjectId(),
+          description: photoPost.description,
+          createdAt: photoPost.createdAt,
+          author: photoPost.author,
+          photolink: photoPost.photolink,
+          hashtags: photoPost.hashtags,
+          likes: photoPost.likes,
+          isDeleted: photoPost.isDeleted,
+        });
 
-    if (validatePhotoPost(photoPost, photoPosts)) {
-      photoPosts.push(photoPost);
-      await writePostsFile(photoPosts);
+        await post.save((err) => {
+          if (err) {
+            throw new Error(err);
+          }
+        });
+      } catch (error) {
+        return false;
+      }
       return true;
     }
     return false;
   }
 
-  async function getPhotoPost(id) {
-    let photoPosts = await readPostsFile();
-
-    for (let index = 0; index < photoPosts.length; index += 1) {
-      if (photoPosts[index].id === id && !photoPosts[index].isDeleted) {
-        return photoPosts[index];
-      }
+  async function getPhotoPost(id) { // Checked
+    let photoPost = Posts.findById(id);
+    if (photoPost === null) {
+      return undefined;
     }
-    return undefined;
+    return photoPost;
   }
 
-  async function getPhotoPostIndex(id) {
+  /*async function getPhotoPostIndex(id) {
     let photoPosts = await readPostsFile();
 
     for (let index = 0; index < photoPosts.length; index += 1) {
@@ -191,7 +206,7 @@ const dataFunctions = (function () {
     }
 
     return undefined;
-  }
+  }*/
 
   function clone(params) {
     let clonex = {};
@@ -203,8 +218,8 @@ const dataFunctions = (function () {
     return clonex;
   }
 
-  async function editPhotoPost(id, photoPost) {
-    let photoPosts = await readPostsFile();
+  async function editPhotoPost(id, photoPost) { // Checked
+    // let photoPosts = await readPostsFile();
 
     if (typeof (id) !== 'string') {
       return false;
@@ -218,8 +233,6 @@ const dataFunctions = (function () {
     if (buff === undefined) {
       return false;
     }
-
-    buff = clone(buff);
 
     if (photoPost.description !== undefined && typeof (photoPost.description) === 'string') {
       if (photoPost.description.length > 200) {
@@ -241,47 +254,29 @@ const dataFunctions = (function () {
         }
       }
     }
-    photoPosts[await getPhotoPostIndex(id)] = clone(buff);
+    // photoPosts[await getPhotoPostIndex(id)] = clone(buff);
 
-    await writePostsFile(photoPosts);
-
-    return true;
+    let result = await Posts.findByIdAndUpdate(id, {
+      description: buff.description,
+      hashtags: buff.hashtags,
+      likes: buff.likes,
+      photolink: buff.photolink,
+    });
+    return result;
   }
 
-  async function reanimatePhotoPost(id) {
-    let photoPosts = await readPostsFile();
-
+  async function reanimatePhotoPost(id) { // Checked
     if (typeof (id) === 'string') {
-      for (let index = 0; index < photoPosts.length; index += 1) {
-        if (photoPosts[index].isDeleted) {
-          if (photoPosts[index].id === id) {
-            photoPosts[index].isDeleted = false;
-
-            await writePostsFile(photoPosts);
-
-            return true;
-          }
-        }
-      }
+      let result = Posts.findByIdAndUpdate(id, { isDeleted: false });
+      return result;
     }
     return false;
   }
 
-  async function removePhotoPost(id) {
-    let photoPosts = await readPostsFile();
-
+  async function removePhotoPost(id) { // Checked
     if (typeof (id) === 'string') {
-      for (let index = 0; index < photoPosts.length; index += 1) {
-        if (!photoPosts[index].isDeleted) {
-          if (photoPosts[index].id === id) {
-            photoPosts[index].isDeleted = true;
-
-            await writePostsFile(photoPosts);
-
-            return true;
-          }
-        }
-      }
+      let result = Posts.findByIdAndUpdate(id, { isDeleted: true });
+      return result;
     }
     return false;
   }
@@ -297,7 +292,7 @@ const dataFunctions = (function () {
     return 0;
   }
 
-  async function getPhotoPosts(skip, top, filterConfig) {
+  async function getPhotoPosts(skip, top, filterConfig) { // Checked
     if (typeof (skip) === 'string') {
       skip = JSON.parse(skip);
     }
@@ -318,59 +313,34 @@ const dataFunctions = (function () {
       top = 10;
     }
 
-    let photoPosts = await readPostsFile();
+    let buffmass = {};
+    buffmass.isDeleted = false;
 
-    photoPosts.sort(datesort);
-
-    let buffmass;
     if (filterConfig !== undefined) {
-      buffmass = photoPosts.filter(function (param) {
-        if (param.isDeleted) {
-          return false;
+      if (filterConfig.author !== undefined) {
+        if (typeof (filterConfig.author) === 'string') {
+          buffmass.author = filterConfig.author;
         }
+      }
 
-        if (filterConfig.author !== undefined) {
-          if (typeof (filterConfig.author) === 'string') {
-            if (filterConfig.author !== param.author) {
-              return false;
-            }
-          }
+      if (filterConfig.createdAt !== undefined) {
+        if (typeof (filterConfig.createdAt) === 'object') {
+          buffmass.createdAt = filterConfig.createdAt;
         }
-        if (filterConfig.createdAt !== undefined) {
-          if (typeof (filterConfig.createdAt) === 'object') {
-            if (filterConfig.createdAt.getFullYear() !== param.createdAt.getFullYear() || filterConfig.createdAt.getMonth() !== param.createdAt.getMonth() || filterConfig.createdAt.getDate() !== param.createdAt.getDate()) {
-              return false;
-            }
-          }
+      }
+
+      if (filterConfig.hashtags !== undefined) {
+        if (typeof (filterConfig.hashtags) === 'object') {
+          buffmass.hashtags = filterConfig.hashtags;
         }
-        if (filterConfig.hashtags !== undefined) {
-          if (typeof (filterConfig.hashtags) === 'object') {
-            for (let index = 0; index < filterConfig.hashtags.length; index += 1) {
-              let flag = false;
-              for (let index2 = 0; index2 < param.hashtags.length; index2 += 1) {
-                if (param.hashtags[index2] === filterConfig.hashtags[index]) {
-                  flag = true;
-                  break;
-                }
-              }
-              if (!flag) {
-                return false;
-              }
-            }
-          }
-        }
-        return true;
-      });
-    } else {
-      buffmass = photoPosts.filter((el) => {
-        if (el.isDeleted) {
-          return false;
-        }
-        return true;
-      });
+      }
     }
 
-    return JSON.stringify(buffmass.slice(skip, skip + top));
+    let result = await Posts.find(buffmass).sort({ 'createdAt': -1 }).skip(skip).limit(top);
+    if (result === null) {
+      return undefined;
+    }
+    return JSON.stringify(result);
   }
 
   async function fillDataBase() {
@@ -378,11 +348,11 @@ const dataFunctions = (function () {
 
     photoPosts.every(function (item) {
       let post = new Posts({
-        id: item.id,
+        _id: new mongoose.Types.ObjectId(),
         description: item.description,
         createdAt: item.createdAt,
         author: item.author,
-        photoLink: item.photoLink,
+        photolink: item.photolink,
         hashtags: item.hashtags,
         likes: item.likes,
         isDeleted: item.isDeleted,

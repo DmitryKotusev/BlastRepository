@@ -187,9 +187,9 @@ const view = (function () {
 
     let mainPlacing = document.getElementsByClassName('mainplacing')[0];
 
-    if (currentName === (await model.getPhotoPost(event.target.closest('.post').id)).author) {
+    if (currentName === post.author) {
       mainPlacing.innerHTML =
-        `<div class="lookatphoto" id="${post.id}">
+        `<div class="lookatphoto" id="${post._id}">
                 <div class="bigphoto">
                     <img class="imgstyle" src="${post.photolink}" alt="Mat">
                 </div>
@@ -213,7 +213,7 @@ const view = (function () {
     }
 
     mainPlacing.innerHTML =
-      `<div class="lookatphoto" id="${post.id}">
+      `<div class="lookatphoto" id="${post._id}">
             <div class="bigphoto">
                 <img class="imgstyle" src="${post.photolink}" alt="Mat">
             </div>
@@ -243,7 +243,7 @@ const view = (function () {
   }
 
   function addLike(post) {
-    let postDom = document.getElementById(post.id);
+    let postDom = document.getElementById(post._id);
     if (postDom !== null) {
       let amountOfLikes = postDom.getElementsByClassName('likesamount')[0];
       amountOfLikes.innerHTML = post.likes.length;
@@ -262,7 +262,7 @@ const view = (function () {
     let mainPlacing = document.getElementsByClassName('mainplacing')[0];
 
     mainPlacing.innerHTML =
-      `<div class="lookatphoto" id="${post.id}">
+      `<div class="lookatphoto" id="${post._id}">
                 <div class="bigphoto">
                     <img class="imgstyle" src="${post.photolink}" alt="Mat">
                 </div>
@@ -359,7 +359,7 @@ const view = (function () {
     let mainPlacing = document.getElementsByClassName('mainplacing')[0];
 
     mainPlacing.innerHTML =
-      `<div class="lookatphoto" id="${post.id}">
+      `<div class="lookatphoto" id="${post._id}">
                 <div class="bigphoto">
                     <img class="imgstyle" src="${post.photolink}" alt="Mat">
                 </div>
@@ -389,7 +389,7 @@ const view = (function () {
   async function uploadButtonRestucture(params) {
     try {
       let mainPlacing = document.getElementsByClassName('mainplacing')[0];
-      let ID = '0';
+
       let img = mainPlacing.getElementsByTagName('img')[0];
 
       let description = mainPlacing.getElementsByTagName('textarea')[0];
@@ -402,7 +402,7 @@ const view = (function () {
         }
       }
 
-      let photoPost = new Photopost(ID, description.value, new Date(), currentName, img.src, [], hashTags);
+      let photoPost = new Photopost(description.value, new Date(), currentName, img.src, [], hashTags);
 
       if (confirm('Are you sure you want to save changes and upload new photopost?')) {
         let selectedFile = document.getElementById('files');
@@ -472,25 +472,27 @@ const view = (function () {
     }
   }
 
-  let hashtags = [];
   async function findUniqueHashtags() {
-    hashtags = await model.findUniqueHashtags();
+    let hashtags = await model.findUniqueHashtags();
+    return hashtags;
   }
 
-  let authorNames = [];
   async function findUniqueNames() {
-    authorNames = await model.findUniqueNames();
+    let authorNames = await model.findUniqueNames();
+    return authorNames;
   }
 
   async function showHashtags() {
     try {
       let elem = document.getElementById('filterselectors');
       elem.innerHTML = '';
-      await findUniqueHashtags();
-      for (let i = 0; i < hashtags.length && i < 10; i += 1) {
-        let option = document.createElement('option');
-        option.innerHTML = hashtags[i];
-        elem.appendChild(option);
+      let hashtags = await findUniqueHashtags();
+      if (hashtags !== null) {
+        for (let i = 0; i < hashtags.length && i < 10; i += 1) {
+          let option = document.createElement('option');
+          option.innerHTML = hashtags[i];
+          elem.appendChild(option);
+        }
       }
     } catch (error) {
       loadErrorPage(new Error('Ooops, something went wrong'));
@@ -501,11 +503,13 @@ const view = (function () {
     try {
       let elem = document.getElementById('authorselectors');
       elem.innerHTML = '';
-      await findUniqueNames();
-      for (let i = 0; i < authorNames.length && i < 10; i += 1) {
-        let option = document.createElement('option');
-        option.innerHTML = authorNames[i];
-        elem.appendChild(option);
+      let authorNames = await findUniqueNames();
+      if (authorNames !== null) {
+        for (let i = 0; i < authorNames.length && i < 10; i += 1) {
+          let option = document.createElement('option');
+          option.innerHTML = authorNames[i];
+          elem.appendChild(option);
+        }
       }
     } catch (error) {
       loadErrorPage(new Error('Ooops, something went wrong'));
@@ -517,7 +521,7 @@ const view = (function () {
 
     let post = document.createElement('div');
     post.className = 'post';
-    post.id = photopost.id;
+    post.id = photopost._id;
 
     let photo = document.createElement('div');
     photo.className = 'photo';
@@ -632,14 +636,14 @@ const view = (function () {
     await showPosts(0, 10);
   }
 
-  async function deletephotopost(id) {
-    if (await model.removePhotoPost(id)) {
+  async function deletephotopost(_id) {
+    if (await model.removePhotoPost(_id)) {
       await showPosts(0, latestSkip + latestTop, latestFilterConfig);
     }
   }
 
-  async function editPost(id, photoPost) {
-    await model.editPhotoPost(id, photoPost);
+  async function editPost(_id, photoPost) {
+    await model.editPhotoPost(_id, photoPost);
     await showPosts(0, 10);
     return true;
   }
@@ -792,6 +796,16 @@ const view = (function () {
     }
   }
 
+  async function deletePostLookAtPhotoRestructure(event) {
+    let button = event.target;
+    let idx = button.closest('.lookatphoto').id;
+    document.getElementsByTagName('body')[0].replaceChild(filterElement, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
+    await view.showPosts(0, 10);
+    await view.showAuthors();
+    await view.showHashtags();
+    currentState = statesMassive.mainState;
+  }
+
   return {
     showPhotopost,
     checkLogin,
@@ -820,6 +834,7 @@ const view = (function () {
     loadMainPage,
     loadErrorPage,
     showLoginErrorText,
+    deletePostLookAtPhotoRestructure,
   };
 }());
 

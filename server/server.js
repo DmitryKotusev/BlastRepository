@@ -5,7 +5,7 @@ const multer = require('multer');
 const dataFunctions = require('./dataFunctions.js');
 const passport = require('passport');
 const JsonStrategy = require('passport-json').Strategy;
-// const cookieParser = require('cookie-parser');
+
 const session = require('express-session');
 const authorization = require('./authorization.js');
 const mongoose = require('mongoose');

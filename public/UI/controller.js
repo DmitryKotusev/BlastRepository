@@ -36,7 +36,7 @@ const controller = (function () {
       photoEdit.likes = post.likes;
       await model.editPhotoPost(idx, photoEdit);
     } catch (error) {
-      view.loadErrorPage(error);
+      view.loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -97,7 +97,7 @@ const controller = (function () {
 
       await model.editPhotoPost(idx, photoEdit);
     } catch (error) {
-      view.loadErrorPage(error);
+      view.loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -105,7 +105,7 @@ const controller = (function () {
     try {
       view.addMorePosts();
     } catch (error) {
-      view.loadErrorPage(error);
+      view.loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -114,7 +114,7 @@ const controller = (function () {
       view.loadMainPage();
       currentState = statesMassive.mainState;
     } catch (error) {
-      view.loadErrorPage(error);
+      view.loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -125,23 +125,32 @@ const controller = (function () {
   async function exit(params) {
     try {
       if (confirm('Are you sure you want to exit?')) {
-        if (currentState === statesMassive.editPostState) {
-          view.loadMainPage();
-          view.checkLogin();
-          currentState = statesMassive.mainState;
+        let result = await model.logOut();
+        if (result === 'true') {
+          if (currentState === statesMassive.editPostState) {
+            view.loadMainPage();
+            view.checkLogin();
+            currentState = statesMassive.mainState;
+            return;
+          }
+          if (currentState === statesMassive.lookAtPhotoState) {
+            view.loadMainPage();
+            view.checkLogin();
+            currentState = statesMassive.mainState;
+            return;
+          }
+          if (currentState === statesMassive.uploadPostState) {
+            view.loadMainPage();
+            view.checkLogin();
+            currentState = statesMassive.mainState;
+            return;
+          }
+          await view.checkLogin();
           return;
         }
-        if (currentState === statesMassive.lookAtPhotoState) {
-          view.loadMainPage();
-          view.checkLogin();
-          currentState = statesMassive.mainState;
-          return;
-        }
-        await view.checkLogin();
-        return;
       }
     } catch (error) {
-      view.loadErrorPage(error);
+      view.loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -149,7 +158,7 @@ const controller = (function () {
     try {
       await view.lookAtPhotoRestructure(event);
     } catch (error) {
-      view.loadErrorPage(error);
+      view.loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -202,7 +211,7 @@ const controller = (function () {
       }
       await view.showPosts(0, 10, filterConfig);
     } catch (error) {
-      view.loadErrorPage(error);
+      view.loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -211,28 +220,21 @@ const controller = (function () {
       if (confirm('Are you sure you want to delete this post?')) {
         let button = event.target;
         let idx = button.closest('.post').id;
-        await view.deletePhotopost(idx);
+        await view.deletephotopost(idx);
       }
     } catch (error) {
-      view.loadErrorPage(error);
+      view.loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
   async function deletePostLookAtPhoto(event) {
     try {
       if (confirm('Are you sure you want to delete this post?')) {
-        let button = event.target;
-        let idx = button.closest('.lookatphoto').id;
-        let filt = view.makeFilter();
-        document.getElementsByTagName('body')[0].replaceChild(filt, document.getElementsByTagName('body')[0].getElementsByClassName('buttonback')[0]);
-        await view.showPosts(0, 10);
-        await view.showAuthors();
-        await view.showHashtags();
-        currentState = statesMassive.mainState;
-        await view.deletePhotopost(idx);
+        await model.removePhotoPost(event.target.closest('.lookatphoto').id);
+        await view.deletePostLookAtPhotoRestructure(event);
       }
     } catch (error) {
-      view.loadErrorPage(error);
+      view.loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -254,7 +256,7 @@ const controller = (function () {
     try {
       await view.editPostLookAtPhotoRestructure(event);
     } catch (error) {
-      view.loadErrorPage(error);
+      view.loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -262,7 +264,7 @@ const controller = (function () {
     try {
       await view.editPostRestructure(event);
     } catch (error) {
-      view.loadErrorPage(error);
+      view.loadErrorPage(new Error('Ooops, something went wrong'));
     }
   }
 
@@ -275,9 +277,31 @@ const controller = (function () {
     view.uploadPostRestructure(event);
   }
 
+  async function authorise(event) {
+    let loginInfo = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('input')[0];
+    let passwordInfo = document.getElementsByClassName('mainplacing')[0].getElementsByTagName('input')[1];
+
+    if (loginInfo.value === '' || passwordInfo.value === '') {
+      view.showLoginErrorText('Some fields are empty');
+      return;
+    }
+
+    try {
+      let result = await model.logIn(loginInfo.value, passwordInfo.value);
+      if (result === 'false') {
+        view.showLoginErrorText('Invalid login or password');
+        return;
+      }
+
+      await view.pressLoginRestructure(event, loginInfo.value);
+    } catch (error) {
+      view.loadErrorPage(new Error('Ooops, something went wrong'));
+    }
+  }
+
   function mainPlacingClickEvent(event) {
     if (event.target.className === 'buttonlogin') {
-      view.pressLoginRestructure(event);
+      authorise(event);
       return;
     }
 

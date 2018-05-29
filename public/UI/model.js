@@ -1,5 +1,4 @@
-function Photopost(id, description, createdAt, author, photolink, likes, hashtags, isDeleted = false) {
-  this.id = id;
+function Photopost(description, createdAt, author, photolink, likes, hashtags, isDeleted = false) {
   this.description = description;
   this.createdAt = createdAt;
   this.author = author;
@@ -270,6 +269,50 @@ const model = (function () {
     });
   }
 
+  async function logIn(login, password) {
+    return new Promise((resolve, reject) => {
+      let xhr = new XMLHttpRequest();
+
+      xhr.open('POST', '/login', true);
+      xhr.setRequestHeader('Content-type', 'application/json');
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState !== 4) {
+          return;
+        }
+        if (xhr.status !== 200) {
+          console.log(`${xhr.status}: ${xhr.responseText || xhr.statusText}`);
+          reject(new Error(xhr.responseText));
+        } else {
+          resolve(xhr.responseText);
+        }
+      };
+
+      xhr.send(JSON.stringify({ username: login, password }));
+    });
+  }
+
+  async function logOut() {
+    return new Promise((resolve, reject) => {
+      let xhr = new XMLHttpRequest();
+      xhr.open('GET', '/logout', true);
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState !== 4) {
+          return;
+        }
+        if (xhr.status !== 200) {
+          console.log(`${xhr.status}: ${xhr.responseText || xhr.statusText}`);
+          reject(new Error(xhr.responseText));
+        } else {
+          resolve(xhr.responseText);
+        }
+      };
+
+      xhr.send();
+    });
+  }
+
   async function longPollingControl() {
     return new Promise((resolve, reject) => {
       let xhr = new XMLHttpRequest();
@@ -317,5 +360,7 @@ const model = (function () {
     findUniqueHashtags,
     findUniqueNames,
     downloadFile,
+    logIn,
+    logOut,
   };
 }());

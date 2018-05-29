@@ -3,6 +3,21 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const dataFunctions = require('./dataFunctions.js');
+const passport = require('passport');
+const JsonStrategy = require('passport-json').Strategy;
+
+const session = require('express-session');
+const authorization = require('./authorization.js');
+const mongoose = require('mongoose');
+
+async function connectToDataBase() {
+  try {
+    await mongoose.connect('mongodb://localhost:27017/photoPostsData');
+    console.log('Successfully connected');
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const storagex = multer.diskStorage({
   destination(req, file, cb) {
@@ -28,6 +43,45 @@ function parseDate(key, value) {
 app.use(bodyParser.json({ reviver: parseDate }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('../public/UI'));
+// app.use(express.cookieParser());
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new JsonStrategy(async function (username, password, done) {
+  try {
+    let user = await authorization.checkPassword(username, password);
+    if (user) {
+      return done(null, user);
+    }
+    return done(null, false);
+  } catch (error) {
+    return done(error);
+  }
+}));
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  console.log('deserializeUser method worked');
+  authorization.Users.findById(id, function (err, user) {
+    done(err, user);
+  });
+});
+
+app.post('/login', passport.authenticate('json', { failureRedirect: '/loginfail' }), async (req, res) => {
+  res.redirect('/');
+});
+
+app.get('/loginfail', async (req, res) => {
+  res.status(200).send(false);
+});
+
+app.get('/logout', async (req, res) => {
+  req.logout();
+  res.status(200).send(true);
+});
 
 app.get('/findUniqueHashtags', async function (req, res) {
   let result = await dataFunctions.findUniqueHashtags();
@@ -124,3 +178,9 @@ app.get('/subscribe', async (req, res, next) => {
 app.listen(3000, function () {
   console.log('Server is running...');
 });
+
+connectToDataBase();
+
+// dataFunctions.cleanDataBase();
+// dataFunctions.fillDataBase();
+// authorization.fillDataBase();
